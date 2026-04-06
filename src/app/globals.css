@@ -5,8 +5,8 @@
 @font-face {
   font-family: 'Arista Pro';
   src: url('/slashdot-website-2026/fonts/AristaProBold.woff2') format('woff2'),
-       url('/slashdot-website-2026/fonts/AristaProBold.woff') format('woff'),
-       url('/slashdot-website-2026/fonts/AristaProBold.ttf') format('truetype');
+    url('/slashdot-website-2026/fonts/AristaProBold.woff') format('woff'),
+    url('/slashdot-website-2026/fonts/AristaProBold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -43,10 +43,25 @@ body {
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+
+  /* CRITICAL FOR MOBILE OFFSET: */
+  /* Ensure the layers fill the absolute screen height/width */
+  height: 100%;
+  width: 100%;
+  /* Prevent any browser-level shifting */
+  inset: 0;
+  object-fit: none;
 }
+
+/* Ensure the group container doesn't have its own transform/offset */
+::view-transition-group(root) {
+  animation-duration: 0s;
+}
+
 ::view-transition-old(root) {
   z-index: 1;
 }
+
 ::view-transition-new(root) {
   z-index: 2;
 }
