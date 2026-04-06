@@ -27,7 +27,7 @@ export function ThemeToggle() {
       return;
     }
 
-    // Prefer exact click/touch coordinates so it originates exactly under the finger
+    // Prefer exact click/touch coordinates
     let x = e.clientX;
     let y = e.clientY;
 
@@ -36,6 +36,15 @@ export function ThemeToggle() {
       const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
       x = rect.left + rect.width / 2;
       y = rect.top + rect.height / 2;
+    }
+
+    // CRITICAL ANDROID CHROME FIX: 
+    // View Transitions ::view-transition-new(root) use Layout Viewport coordinates.
+    // e.clientX/Y and getBoundingClientRect use Visual Viewport coordinates.
+    // When the top address bar hides, these decoupling offsets must be explicitly added!
+    if (window.visualViewport) {
+      x += window.visualViewport.offsetLeft || 0;
+      y += window.visualViewport.offsetTop || 0;
     }
 
     const endRadius = Math.hypot(
@@ -61,7 +70,7 @@ export function ThemeToggle() {
         },
         {
           // Adjust animation speed here (500 for normal speed; 50000 is 100x slower for debugging)
-          duration: 2000,
+          duration: 1000,
           easing: "ease-in",
           pseudoElement: "::view-transition-new(root)",
         }
