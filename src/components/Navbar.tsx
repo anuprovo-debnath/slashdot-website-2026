@@ -16,13 +16,13 @@ export function Navbar() {
             <Link href="/" className="flex-shrink-0 flex items-center">
               {/* Light Mode Logo */}
               <img 
-                src="/slashdot-website-2026/logos/SlashDot_text_White_BG.png" 
+                src="/slashdot-website-2026/logos/Logo_White_BG.png" 
                 alt="Slashdot" 
                 className="h-10 w-auto dark:hidden" 
               />
               {/* Dark Mode Logo */}
               <img 
-                src="/slashdot-website-2026/logos/SlashDot_text_Black_BG.png" 
+                src="/slashdot-website-2026/logos/Logo_Black_BG.png" 
                 alt="Slashdot" 
                 className="h-10 w-auto hidden dark:block" 
               />
