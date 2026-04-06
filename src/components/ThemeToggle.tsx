@@ -27,8 +27,11 @@ export function ThemeToggle() {
       return;
     }
 
-    const x = e.clientX;
-    const y = e.clientY;
+    // Use button center as origin to fix iOS/Safari touch events yielding 0,0
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
     const endRadius = Math.hypot(
       Math.max(x, innerWidth - x),
       Math.max(y, innerHeight - y)
@@ -52,7 +55,7 @@ export function ThemeToggle() {
         },
         {
           // Adjust animation speed here (500 for normal speed; 50000 is 100x slower for debugging)
-          duration: 5000,
+          duration: 2000,
           easing: "ease-in",
           pseudoElement: "::view-transition-new(root)",
         }
