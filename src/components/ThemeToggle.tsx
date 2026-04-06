@@ -48,15 +48,13 @@ export function ThemeToggle() {
 
       document.documentElement.animate(
         {
-          clipPath: isDark ? [...clipPath].reverse() : clipPath,
+          clipPath: clipPath,
         },
         {
           // Adjust animation speed here (500 for normal speed; 50000 is 100x slower for debugging)
-          duration: 50000,
-          easing: "ease-in-out",
-          pseudoElement: isDark
-            ? "::view-transition-old(root)"
-            : "::view-transition-new(root)",
+          duration: 5000,
+          easing: "ease-in",
+          pseudoElement: "::view-transition-new(root)",
         }
       );
     });
