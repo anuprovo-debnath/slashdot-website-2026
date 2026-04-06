@@ -9,7 +9,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <nav className="border-b border-black/10 dark:border-white/10 bg-[var(--color-bg)] sticky top-0 z-50 transition-colors duration-300">
+    <nav className="border-b border-black/10 dark:border-white/10 bg-[var(--color-bg)] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
