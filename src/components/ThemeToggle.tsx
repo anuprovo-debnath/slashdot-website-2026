@@ -3,9 +3,10 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { flushSync } from "react-dom";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -16,10 +17,54 @@ export function ThemeToggle() {
     return <div className="h-9 w-9" />; // Placeholder to avoid layout shift
   }
 
+  const toggleTheme = (e: React.MouseEvent) => {
+    const isDark = resolvedTheme === "dark";
+    const nextTheme = isDark ? "light" : "dark";
+
+    // Fallback if browser doesn't support startViewTransition
+    if (!document.startViewTransition) {
+      setTheme(nextTheme);
+      return;
+    }
+
+    const x = e.clientX;
+    const y = e.clientY;
+    const endRadius = Math.hypot(
+      Math.max(x, innerWidth - x),
+      Math.max(y, innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        setTheme(nextTheme);
+      });
+    });
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ];
+
+      document.documentElement.animate(
+        {
+          clipPath: isDark ? [...clipPath].reverse() : clipPath,
+        },
+        {
+          duration: 500,
+          easing: "ease-in-out",
+          pseudoElement: isDark
+            ? "::view-transition-old(root)"
+            : "::view-transition-new(root)",
+        }
+      );
+    });
+  };
+
   return (
     <button
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="p-2 rounded-md hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+      onClick={toggleTheme}
+      className="p-2 rounded-md hover:bg-black/10 dark:hover:bg-white/10 transition-colors relative z-50"
       aria-label="Toggle theme"
     >
       <Moon className="h-5 w-5 dark:hidden" />

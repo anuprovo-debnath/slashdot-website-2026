@@ -36,5 +36,23 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* View Transition setup for Circular Theme Toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+.dark::view-transition-old(root) {
+  z-index: 2;
+}
+.dark::view-transition-new(root) {
+  z-index: 1;
 }
