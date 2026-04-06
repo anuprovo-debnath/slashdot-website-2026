@@ -7,7 +7,7 @@ export default function Home() {
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">
             Welcome to the <br className="hidden sm:block" />
-            <span className="text-[var(--color-primary)]">SlashDot</span> Competition
+            <span className="text-[var(--color-primary)]">Slashdot</span> Competition
           </h1>
           <p className="text-xl opacity-80 max-w-2xl mx-auto">
             Experience our new responsive design system featuring smooth 0.3s theme transitions, 

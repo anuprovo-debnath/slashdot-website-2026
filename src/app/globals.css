@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Arista Pro';
+  src: url('/slashdot-website-2026/fonts/AristaProBold.woff2') format('woff2'),
+       url('/slashdot-website-2026/fonts/AristaProBold.woff') format('woff'),
+       url('/slashdot-website-2026/fonts/AristaProBold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --color-primary: #0291B2;
   --color-bg: #ffffff;

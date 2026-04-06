@@ -14,13 +14,23 @@ export function Navbar() {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold font-sans">
-                Slash<span className="text-[var(--color-primary)]">Dot</span>
-              </span>
+              {/* Light Mode Logo */}
+              <img 
+                src="/slashdot-website-2026/logos/SlashDot_text_White_BG.png" 
+                alt="Slashdot" 
+                className="h-10 w-auto dark:hidden" 
+              />
+              {/* Dark Mode Logo */}
+              <img 
+                src="/slashdot-website-2026/logos/SlashDot_text_Black_BG.png" 
+                alt="Slashdot" 
+                className="h-10 w-auto hidden dark:block" 
+              />
             </Link>
           </div>
           <div className="hidden md:flex md:items-center md:space-x-8">
             <Link href="/" className="hover:text-[var(--color-primary)] transition-colors">Home</Link>
+            <Link href="/tech" className="hover:text-[var(--color-primary)] transition-colors">Tech</Link>
             <Link href="/about" className="hover:text-[var(--color-primary)] transition-colors">About</Link>
             <Link href="/contact" className="hover:text-[var(--color-primary)] transition-colors">Contact</Link>
             <ThemeToggle />
@@ -46,11 +56,12 @@ export function Navbar() {
       {/* Mobile Menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+          isOpen ? "max-h-72 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="border-t border-black/10 dark:border-white/10 px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[var(--color-bg)]">
           <Link href="/" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Home</Link>
+          <Link href="/tech" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Tech</Link>
           <Link href="/about" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">About</Link>
           <Link href="/contact" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Contact</Link>
         </div>

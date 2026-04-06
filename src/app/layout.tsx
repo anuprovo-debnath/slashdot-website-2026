@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SlashDot Competition - Themed App",
-  description: "A responsive themed website for the SlashDot competition.",
+  title: "Slashdot Competition - Themed App",
+  description: "A responsive themed website for the Slashdot competition.",
 };
 
 export default function RootLayout({
@@ -44,3 +44,4 @@ export default function RootLayout({
     </html>
   );
 }
+
