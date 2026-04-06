@@ -51,7 +51,8 @@ export function ThemeToggle() {
           clipPath: isDark ? [...clipPath].reverse() : clipPath,
         },
         {
-          duration: 500,
+          // Adjust animation speed here (500 for normal speed; 50000 is 100x slower for debugging)
+          duration: 50000,
           easing: "ease-in-out",
           pseudoElement: isDark
             ? "::view-transition-old(root)"
