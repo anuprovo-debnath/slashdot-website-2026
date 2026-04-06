@@ -38,15 +38,6 @@ export function ThemeToggle() {
       y = rect.top + rect.height / 2;
     }
 
-    // CRITICAL ANDROID CHROME FIX: 
-    // View Transitions ::view-transition-new(root) use Layout Viewport coordinates.
-    // e.clientX/Y and getBoundingClientRect use Visual Viewport coordinates.
-    // When the top address bar hides, these decoupling offsets must be explicitly added!
-    if (window.visualViewport) {
-      x += window.visualViewport.offsetLeft || 0;
-      y += window.visualViewport.offsetTop || 0;
-    }
-
     const endRadius = Math.hypot(
       Math.max(x, innerWidth - x),
       Math.max(y, innerHeight - y)
