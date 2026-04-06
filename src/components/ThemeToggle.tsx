@@ -27,10 +27,16 @@ export function ThemeToggle() {
       return;
     }
 
-    // Use button center as origin to fix iOS/Safari touch events yielding 0,0
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
+    // Prefer exact click/touch coordinates so it originates exactly under the finger
+    let x = e.clientX;
+    let y = e.clientY;
+
+    // Fallback to bounding center if coordinates are 0 (e.g., keyboard trigger)
+    if (!x || !y) {
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top + rect.height / 2;
+    }
 
     const endRadius = Math.hypot(
       Math.max(x, innerWidth - x),
