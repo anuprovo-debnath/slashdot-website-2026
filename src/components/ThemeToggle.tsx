@@ -38,6 +38,10 @@ export function ThemeToggle() {
       y = rect.top + rect.height / 2;
     }
 
+    if (window.visualViewport) {
+      x += window.visualViewport.offsetLeft;
+      y += window.visualViewport.offsetTop;
+    }
     const endRadius = Math.hypot(
       Math.max(x, innerWidth - x),
       Math.max(y, innerHeight - y)
