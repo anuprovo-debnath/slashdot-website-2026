@@ -27,12 +27,16 @@ export function ThemeToggle() {
       return;
     }
 
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    // Prefer exact click/touch coordinates
+    let x = e.clientX;
+    let y = e.clientY;
 
-    // Use the center of the button if it's a keyboard event, 
-    // otherwise use the exact click point
-    let x = e.clientX || rect.left + rect.width / 2;
-    let y = e.clientY || rect.top + rect.height / 2;
+    // Fallback to bounding center if coordinates are 0 (e.g., keyboard trigger)
+    if (!x || !y) {
+      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top + rect.height / 2;
+    }
 
     const endRadius = Math.hypot(
       Math.max(x, innerWidth - x),
