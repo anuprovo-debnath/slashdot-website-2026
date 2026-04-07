@@ -14,36 +14,42 @@ export function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return <div className="h-9 w-9" />; // Placeholder to avoid layout shift
+    return <div className="h-9 w-9" />;
   }
 
   const toggleTheme = (e: React.MouseEvent) => {
     const isDark = resolvedTheme === "dark";
     const nextTheme = isDark ? "light" : "dark";
 
-    // Fallback if browser doesn't support startViewTransition
     if (!document.startViewTransition) {
       setTheme(nextTheme);
       return;
     }
 
-    // 1. Get the scroll and viewport offsets
-    // pageX/Y includes the document scroll
-    // visualViewport.offsetTop/Left handles the address bar shift
-    const vOffsetLeft = window.visualViewport?.offsetLeft || 0;
-    const vOffsetTop = window.visualViewport?.offsetTop || 0;
+    // --- MOBILE CORRECTION LOGIC ---
+    // 1. Create a temporary element to measure 100lvh (the snapshot height)
+    const measure = document.createElement("div");
+    measure.style.height = "100lvh";
+    measure.style.position = "fixed";
+    measure.style.visibility = "hidden";
+    document.body.appendChild(measure);
 
-    const x = e.clientX + vOffsetLeft;
-    const y = e.clientY + vOffsetTop;
+    const lvh = measure.getBoundingClientRect().height;
+    const viewH = window.visualViewport?.height || window.innerHeight;
+    const barHeight = lvh - viewH;
 
-    // 2. Use documentElement dimensions for the radius
-    // This ensures the circle covers the Layout Viewport (the snapshot)
-    const { clientWidth: width, clientHeight: height } = document.documentElement;
+    // Clean up measurement element
+    document.body.removeChild(measure);
 
-    const endRadius = Math.hypot(
-      Math.max(x, width - x),
-      Math.max(y, height - y)
-    );
+    // 2. Calculate coordinates
+    // We add barHeight to e.clientY to shift the circle down 
+    // from the browser UI into the snapshot area.
+    const x = e.clientX;
+    const y = e.clientY + barHeight;
+
+    const width = document.documentElement.clientWidth;
+    // We use lvh here for the radius to ensure it covers the full snapshot
+    const endRadius = Math.hypot(width, lvh);
 
     const transition = document.startViewTransition(async () => {
       flushSync(() => {
@@ -52,19 +58,16 @@ export function ThemeToggle() {
     });
 
     transition.ready.then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ];
-
       document.documentElement.animate(
         {
-          clipPath: clipPath,
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ],
         },
         {
-          // Adjust animation speed here (500 for normal speed; 50000 is 100x slower for debugging)
-          duration: 1000,
-          easing: "ease-in",
+          duration: 500, // Back to a snappy 500ms
+          easing: "ease-in-out",
           pseudoElement: "::view-transition-new(root)",
         }
       );
