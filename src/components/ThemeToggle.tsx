@@ -27,27 +27,25 @@ export function ThemeToggle() {
       return;
     }
 
-    // Prefer exact click/touch coordinates
-    let x = e.clientX;
-    let y = e.clientY;
+    // 1. Get the scroll and viewport offsets
+    // pageX/Y includes the document scroll
+    // visualViewport.offsetTop/Left handles the address bar shift
+    const vOffsetLeft = window.visualViewport?.offsetLeft || 0;
+    const vOffsetTop = window.visualViewport?.offsetTop || 0;
 
-    // Fallback to bounding center if coordinates are 0 (e.g., keyboard trigger)
-    if (!x || !y) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      x = rect.left + rect.width / 2;
-      y = rect.top + rect.height / 2;
-    }
+    const x = e.clientX + vOffsetLeft;
+    const y = e.clientY + vOffsetTop;
 
-    // if (window.visualViewport) {
-    //   x += window.visualViewport.offsetLeft;
-    //   y += window.visualViewport.offsetTop;
-    // }
+    // 2. Use documentElement dimensions for the radius
+    // This ensures the circle covers the Layout Viewport (the snapshot)
+    const { clientWidth: width, clientHeight: height } = document.documentElement;
+
     const endRadius = Math.hypot(
-      Math.max(x, innerWidth - x),
-      Math.max(y, innerHeight - y)
+      Math.max(x, width - x),
+      Math.max(y, height - y)
     );
 
-    const transition = document.startViewTransition(() => {
+    const transition = document.startViewTransition(async () => {
       flushSync(() => {
         setTheme(nextTheme);
       });
