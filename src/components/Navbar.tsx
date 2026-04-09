@@ -31,6 +31,7 @@ export function Navbar() {
           <div className="hidden md:flex md:items-center md:space-x-8">
             <Link href="/" className="hover:text-[var(--color-primary)] transition-colors">Home</Link>
             <Link href="/tech" className="hover:text-[var(--color-primary)] transition-colors">Tech</Link>
+            <Link href="/blog" className="hover:text-[var(--color-primary)] transition-colors">Blog</Link>
             <Link href="/about" className="hover:text-[var(--color-primary)] transition-colors">About</Link>
             <Link href="/contact" className="hover:text-[var(--color-primary)] transition-colors">Contact</Link>
             <ThemeToggle />
@@ -62,6 +63,7 @@ export function Navbar() {
         <div className="border-t border-black/10 dark:border-white/10 px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[var(--color-bg)]">
           <Link href="/" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Home</Link>
           <Link href="/tech" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Tech</Link>
+          <Link href="/blog" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Blog</Link>
           <Link href="/about" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">About</Link>
           <Link href="/contact" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Contact</Link>
         </div>
