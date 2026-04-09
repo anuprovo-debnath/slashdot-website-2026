@@ -4,7 +4,6 @@ date: "2026-04-09"
 excerpt: "A deep dive into how we are rebuilding our digital presence at IISER Kolkata."
 author: "Slashdot Core"
 tags: ["Vision", "NextJS", "Web3"]
-coverImage: "/blog/launch-banner.png"
 ---
 # Welcome to the New Slashdot
 

@@ -6,8 +6,8 @@ export default function BlogIndexPage() {
   const posts = getMarkdownFiles('content/blog');
 
   return (
-    <div className="min-h-screen pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen pt-32 pb-16 px-4 sm:px-6 lg:px-12">
+      <div className="max-w-5xl mx-auto">
         <header className="mb-12 text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)]">
             Our Blog
