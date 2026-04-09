@@ -44,7 +44,7 @@ function TagDialogue({
   const maxPopupHeight = 350; // Safe upper limit
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] pointer-events-auto bg-black/60 dark:bg-white/40 backdrop-blur-[8px]" onClick={onClose}>
+    <div className="fixed inset-0 z-[9999] pointer-events-auto bg-white/40 dark:bg-black/60 backdrop-blur-[12px]" onClick={onClose}>
       <div
         className="absolute bg-[var(--background)] border border-[#0291B2]/40 rounded-2xl p-6 shadow-[0_20px_80px_rgba(0,0,0,0.5)] flex flex-col animate-in fade-in zoom-in duration-200"
         style={{
@@ -96,12 +96,10 @@ function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<H
   useEffect(() => {
     const checkOverflow = () => {
       if (containerRef.current) {
-        // Precise check: scrollHeight is the total content height, clientHeight is the visible height.
-        // We add a small 2px tolerance for sub-pixel rendering.
-        const isOverflowing = containerRef.current.scrollHeight > containerRef.current.clientHeight + 2;
-        // Also use a simple length check as a secondary safeguard if desired, 
-        // but scrollHeight is the most accurate for responsive widths.
-        setHasOverflow(isOverflowing && tags.length > 1);
+        // High-precision measurement: A single row often reports scrollHeight up to 26px.
+        // A wrapped second row jumps significantly higher (50px+). 
+        // 30px is the robust threshold to prevent false "..." triggers.
+        setHasOverflow(containerRef.current.scrollHeight > 30);
       }
     };
     checkOverflow();
