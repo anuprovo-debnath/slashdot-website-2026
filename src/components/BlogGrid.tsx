@@ -39,17 +39,17 @@ function TagDialogue({
   // Rule: Horizontally centered with respect to parent card
   const left = cardRect.left + gap;
 
-  // Rule: Bottom sits at card.bottom - 5% width gap. Fixed anchor.
-  const popupBottom = cardRect.bottom - gap;
+  // Rule: Bottom sits at card.bottom - 2.5% width gap. Fixed anchor.
+  const popupBottom = cardRect.bottom - gap / 2;
   const maxPopupHeight = 350; // Safe upper limit
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] pointer-events-auto bg-black/40 dark:bg-white/10 backdrop-blur-[4px]" onClick={onClose}>
-      <div 
+    <div className="fixed inset-0 z-[9999] pointer-events-auto bg-black/60 dark:bg-white/40 backdrop-blur-[8px]" onClick={onClose}>
+      <div
         className="absolute bg-[var(--background)] border border-[#0291B2]/40 rounded-2xl p-6 shadow-[0_20px_80px_rgba(0,0,0,0.5)] flex flex-col animate-in fade-in zoom-in duration-200"
-        style={{ 
+        style={{
           width: `${popupWidth}px`,
-          left: `${left}px`, 
+          left: `${left}px`,
           bottom: `${typeof window !== 'undefined' ? window.innerHeight - popupBottom : 0}px`,
           maxHeight: `${maxPopupHeight}px`
         }}
@@ -74,7 +74,7 @@ function TagDialogue({
 
         {/* Footer: Windows-style Red Close Button (X) at the bottom-right */}
         <div className="absolute bottom-0 right-0 overflow-hidden rounded-br-2xl">
-          <button 
+          <button
             onClick={onClose}
             className="h-7 w-10 flex items-center justify-center bg-red-500/10 text-red-500 border-t border-l border-red-500/20 rounded-tl-lg rounded-br-2xl rounded-tr-none rounded-bl-none text-[14px] font-black hover:bg-red-600 hover:text-white transition-all active:brightness-90"
             title="Close"
@@ -96,7 +96,12 @@ function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<H
   useEffect(() => {
     const checkOverflow = () => {
       if (containerRef.current) {
-        setHasOverflow(containerRef.current.scrollHeight > 24);
+        // Precise check: scrollHeight is the total content height, clientHeight is the visible height.
+        // We add a small 2px tolerance for sub-pixel rendering.
+        const isOverflowing = containerRef.current.scrollHeight > containerRef.current.clientHeight + 2;
+        // Also use a simple length check as a secondary safeguard if desired, 
+        // but scrollHeight is the most accurate for responsive widths.
+        setHasOverflow(isOverflowing && tags.length > 1);
       }
     };
     checkOverflow();
