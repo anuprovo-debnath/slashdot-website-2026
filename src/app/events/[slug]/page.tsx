@@ -3,6 +3,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const events = getMarkdownFiles('events');
   return events.map((event) => ({

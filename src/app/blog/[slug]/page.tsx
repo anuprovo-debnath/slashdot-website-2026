@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const posts = getMarkdownFiles('blog');
   return posts.map((post) => ({
