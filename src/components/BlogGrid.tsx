@@ -7,22 +7,24 @@ import { format, parseISO, differenceInDays } from 'date-fns';
 import { MarkdownData } from '@/lib/markdown';
 
 /**
- * The Floating Dialogue that renders outside the card via Portal
+ * Centered Floating Dialogue with precision X alignment
  */
 function TagDialogue({ 
   tags, 
   onClose, 
-  anchorRect 
+  anchorRect, // "..." button position
+  cardRect   // Parent card position
 }: { 
   tags: string[], 
   onClose: () => void, 
-  anchorRect: DOMRect 
+  anchorRect: DOMRect,
+  cardRect: DOMRect
 }) {
   const [mounted, setMounted] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
-    // Auto-close on scroll or resize as coordinates will shift
     window.addEventListener('scroll', onClose, { passive: true });
     window.addEventListener('resize', onClose);
     return () => {
@@ -33,44 +35,51 @@ function TagDialogue({
 
   if (!mounted) return null;
 
-  // Calculate position: The "X" should be at the same spot as "..."
-  // The popup will be positioned absolute.
-  // We'll calculate the top/left based on the anchorRect (the ... button)
-  const popupWidth = 280;
-  const padding = 16;
+  const popupWidth = Math.min(320, typeof window !== 'undefined' ? window.innerWidth * 0.9 : 320);
   
-  // Pivot point: The right-edge of the trigger tag
-  const left = anchorRect.left - popupWidth + anchorRect.width;
-  const top = anchorRect.top - 120; // Default expansion upwards
+  // Rule 1: Horizontally centered with respect to parent card
+  const left = cardRect.left + (cardRect.width / 2) - (popupWidth / 2);
+  
+  // Rule 2: Vertical position (aligning close button row with trigger row)
+  const top = anchorRect.top - 140; // Default upwards expansion
+
+  // Rule 3: Precise "X" Alignment
+  // We want the X button (which is on the right of the header) to match anchorRect.left
+  // Since X is right-aligned in a flex house, we calculate the offset.
+  const xButtonPositionInPopup = anchorRect.left - left;
 
   return createPortal(
-    <div 
-      className="fixed inset-0 z-[9999] pointer-events-auto"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-[9999] pointer-events-auto bg-black/5" onClick={onClose}>
       <div 
-        className="absolute bg-[var(--background)]/90 backdrop-blur-xl border border-[#0291B2]/40 rounded-2xl p-5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] w-[280px] animate-in fade-in zoom-in duration-200"
+        ref={popupRef}
+        className="absolute bg-[var(--background)]/95 backdrop-blur-2xl border border-[#0291B2]/40 rounded-2xl p-6 shadow-[0_30px_60px_rgba(0,0,0,0.5)] w-[320px] max-w-[90vw] animate-in fade-in zoom-in duration-200 overflow-hidden"
         style={{ 
-          left: `${Math.max(padding, left)}px`, 
-          top: `${Math.max(padding, top)}px` 
+          left: `${Math.max(12, left)}px`, 
+          top: `${Math.max(80, top)}px` 
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-start mb-4">
-          <h4 className="text-[10px] font-black uppercase tracking-widest text-[#0291B2] opacity-60">All Tags</h4>
-          {/* The "X" Button positioned roughly where "..." was relative to the screen */}
+        <div className="relative flex justify-between items-center mb-6 h-8">
+          <h4 className="text-[10px] font-black uppercase tracking-widest text-[#0291B2] opacity-50">Exploration</h4>
+          
+          {/* Precise Close Button: Shifted so its center matches trigger's center */}
           <button 
             onClick={onClose}
-            className="px-3 py-1 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[10px] font-black hover:bg-red-500/20 hover:text-red-500 hover:border-red-500/40 transition-all"
+            className="absolute h-8 px-4 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/40 rounded-full text-[12px] font-black hover:bg-red-500/20 hover:text-red-500 hover:border-red-500/40 transition-all flex items-center justify-center shadow-lg"
+            style={{ 
+              left: `${xButtonPositionInPopup}px`,
+              transform: 'translateX(-50%)' // Center the button on the click point
+            }}
           >
             ×
           </button>
         </div>
-        <div className="flex flex-wrap gap-2">
+        
+        <div className="flex flex-wrap gap-2.5 max-h-[180px] overflow-y-auto pr-1 thin-scrollbar">
           {tags.map((tag) => (
             <span 
               key={tag} 
-              className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] font-bold uppercase tracking-wider"
+              className="px-3.5 py-1.5 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[11px] font-bold uppercase tracking-wider"
             >
               {tag}
             </span>
@@ -82,7 +91,7 @@ function TagDialogue({
   );
 }
 
-function TagArea({ tags }: { tags: string[] }) {
+function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<HTMLDivElement | null> }) {
   const [hasOverflow, setHasOverflow] = useState(false);
   const [isDialogueOpen, setIsDialogueOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
@@ -92,36 +101,35 @@ function TagArea({ tags }: { tags: string[] }) {
   useEffect(() => {
     const checkOverflow = () => {
       if (containerRef.current) {
-        setHasOverflow(containerRef.current.scrollHeight > 28);
+        setHasOverflow(containerRef.current.scrollHeight > 32);
       }
     };
-    
     checkOverflow();
     window.addEventListener('resize', checkOverflow);
     return () => window.removeEventListener('resize', checkOverflow);
   }, [tags]);
 
-  const toggleDialogue = (e: React.MouseEvent) => {
+  const openDialogue = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (triggerRef.current) {
       setAnchorRect(triggerRef.current.getBoundingClientRect());
     }
-    setIsDialogueOpen(!isDialogueOpen);
+    setIsDialogueOpen(true);
   };
 
-  if (!tags || tags.length === 0) return null;
+  if (!tags || tags.length === 0) return <div className="h-[60px]" />;
 
   return (
-    <div className="mt-auto pt-4 border-t border-black/10 dark:border-white/10 relative z-[20]">
+    <div className="h-[60px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-6 relative z-[20]">
       <div 
         ref={containerRef}
-        className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden pr-10 relative"
+        className="flex flex-wrap gap-2 max-h-[30px] overflow-hidden pr-12 w-full justify-center"
       >
         {tags.map((tag) => (
           <span 
             key={tag} 
-            className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap"
+            className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap"
           >
             {tag}
           </span>
@@ -131,18 +139,19 @@ function TagArea({ tags }: { tags: string[] }) {
       {hasOverflow && (
         <button
           ref={triggerRef}
-          onClick={toggleDialogue}
-          className="absolute right-0 bottom-0 px-3 py-1 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[10px] font-black hover:bg-[#0291B2]/20 transition-all z-[25]"
+          onClick={openDialogue}
+          className="absolute right-4 px-3 py-1 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[10px] font-black hover:bg-[#0291B2]/20 transition-all z-[25] shadow-sm"
         >
           ...
         </button>
       )}
 
-      {isDialogueOpen && anchorRect && (
+      {isDialogueOpen && anchorRect && cardRef.current && (
         <TagDialogue 
           tags={tags} 
           onClose={() => setIsDialogueOpen(false)} 
           anchorRect={anchorRect}
+          cardRect={cardRef.current.getBoundingClientRect()}
         />
       )}
     </div>
@@ -157,12 +166,8 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
     setMounted(true);
     try {
       const stored = localStorage.getItem('slashdot_visited_blogs');
-      if (stored) {
-        setVisitedSlugs(JSON.parse(stored));
-      }
-    } catch (e) {
-      console.error("Could not read localstorage", e);
-    }
+      if (stored) setVisitedSlugs(JSON.parse(stored));
+    } catch (e) {}
   }, []);
 
   const handlePostClick = (slug: string) => {
@@ -171,15 +176,14 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
       setVisitedSlugs(updated);
       try {
         localStorage.setItem('slashdot_visited_blogs', JSON.stringify(updated));
-      } catch (e) {
-        console.error("Could not write localstorage", e);
-      }
+      } catch (e) {}
     }
   };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full px-2">
       {posts.map((post, index) => {
+        const cardRef = useRef<HTMLDivElement>(null);
         const isLatest = index === 0;
         const postDate = post.frontmatter.date ? parseISO(post.frontmatter.date) : new Date();
         const daysOld = Math.abs(differenceInDays(new Date(), postDate));
@@ -187,14 +191,14 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
         const wasVisited = visitedSlugs.includes(post.slug);
         const showLatest = isLatest && !wasVisited && mounted;
         const showNew = isNew && !isLatest && mounted;
+        const hasImage = !!post.frontmatter.coverImage;
 
-        const formattedDate = post.frontmatter.date 
-          ? format(postDate, 'MMM do, yyyy')
-          : '';
+        const formattedDate = post.frontmatter.date ? format(postDate, 'MMM do, yyyy') : '';
 
         return (
           <div 
             key={post.slug} 
+            ref={cardRef}
             className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all 
                        hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] 
                        hover:-translate-y-2 overflow-hidden h-[480px] w-full"
@@ -206,6 +210,7 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               aria-label={`Read ${post.frontmatter.title}`}
             />
 
+            {/* Badges */}
             <div className="absolute top-4 left-4 z-[30] flex flex-wrap gap-2 pointer-events-none">
               {showLatest && (
                 <span className="px-5 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border border-white/20">
@@ -219,51 +224,38 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               )}
             </div>
 
-            {post.frontmatter.coverImage && (
-              <div className="relative w-full h-[220px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
-                <img 
-                  src={post.frontmatter.coverImage} 
-                  alt={post.frontmatter.title}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                />
-              </div>
-            )}
-
-            <div className={`p-6 sm:p-7 flex flex-col flex-1 relative ${!post.frontmatter.coverImage ? 'h-full' : ''}`}>
-              <div className="relative flex items-center justify-between w-full mb-5 text-[14px] sm:text-[15px] font-bold tracking-tight">
-                <div className="z-[20] relative text-xl sm:text-[15px]">
-                  {post.frontmatter.authorEmail ? (
-                    <a 
-                      href={post.frontmatter.authorEmail}
-                      className="text-[#0291B2] hover:underline transition-all active:scale-95 inline-block"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {post.frontmatter.author}
-                    </a>
-                  ) : (
-                    <span className="text-[#0291B2]">{post.frontmatter.author}</span>
-                  )}
+            {/* Content Zone (420px) */}
+            <div className={`flex flex-col h-[420px] overflow-hidden ${!hasImage ? 'pt-16' : ''}`}>
+              {hasImage && (
+                <div className="relative w-full h-[220px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
+                  <img src={post.frontmatter.coverImage} alt={post.frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                 </div>
+              )}
 
-                <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">
-                  {formattedDate}
+              {/* Text Area (flexible inside 420px) */}
+              <div className="p-6 sm:p-7 flex flex-col flex-1 overflow-hidden">
+                <div className="relative flex items-center justify-between w-full mb-5 text-[14px] sm:text-[15px] font-bold tracking-tight">
+                  <div className="z-[20] relative text-xl sm:text-[15px]">
+                    {post.frontmatter.authorEmail ? (
+                      <a href={post.frontmatter.authorEmail} className="text-[#0291B2] hover:underline transition-all active:scale-95 inline-block" onClick={(e) => e.stopPropagation()}>{post.frontmatter.author}</a>
+                    ) : (
+                      <span className="text-[#0291B2]">{post.frontmatter.author}</span>
+                    )}
+                  </div>
+                  <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">{formattedDate}</div>
                 </div>
-              </div>
-              
-              <div className="flex flex-col flex-1 gap-4 overflow-hidden">
-                <h3 className="text-2xl sm:text-xl font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0">
-                  {post.frontmatter.title}
-                </h3>
                 
-                <p className="text-xl sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 overflow-hidden">
-                  <span className="line-clamp-3 sm:line-clamp-4">
-                    {post.frontmatter.excerpt}
-                  </span>
-                </p>
+                <div className="flex flex-col flex-1 overflow-hidden">
+                  <h3 className="text-2xl sm:text-xl font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-3">{post.frontmatter.title}</h3>
+                  <p className="text-xl sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 overflow-hidden">
+                    <span className="line-clamp-4 lg:line-clamp-6">{post.frontmatter.excerpt}</span>
+                  </p>
+                </div>
               </div>
-
-              <TagArea tags={post.frontmatter.tags} />
             </div>
+
+            {/* Tag Zone (60px) */}
+            <TagArea tags={post.frontmatter.tags} cardRef={cardRef} />
           </div>
         );
       })}
