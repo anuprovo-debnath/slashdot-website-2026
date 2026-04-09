@@ -230,7 +230,7 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               </div>
 
               <div className="p-6 sm:p-7 flex flex-col flex-1 overflow-hidden">
-                <div className="relative flex items-center justify-between w-full mb-5 text-[14px] sm:text-[15px] font-bold tracking-tight">
+                <div className="relative flex items-center justify-between w-full mb-3 text-[14px] sm:text-[15px] font-bold tracking-tight">
                   <div className="z-[20] relative text-xl sm:text-[15px]">
                     {post.frontmatter.authorEmail ? (
                       <a href={post.frontmatter.authorEmail} className="text-[#0291B2] hover:underline transition-all active:scale-95 inline-block" onClick={(e) => e.stopPropagation()}>{post.frontmatter.author}</a>
@@ -242,9 +242,9 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
                 </div>
 
                 <div className="flex flex-col flex-1 overflow-hidden">
-                  <h3 className="text-2xl sm:text-xl font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-3">{post.frontmatter.title}</h3>
-                  <p className="text-xl sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 overflow-hidden">
-                    <span className="line-clamp-4 lg:line-clamp-6">{post.frontmatter.excerpt}</span>
+                  <h3 className="text-2xl sm:text-xl font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-2">{post.frontmatter.title}</h3>
+                  <p className="text-xl sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 lg:line-clamp-6">
+                    {post.frontmatter.excerpt}
                   </p>
                 </div>
               </div>
