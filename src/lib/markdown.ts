@@ -8,20 +8,19 @@ export interface MarkdownData {
   content: string;
 }
 
-export function getMarkdownFiles(directoryPath: string): MarkdownData[] {
-  // Wrap with process.cwd() inside the function to fix the Turbopack NFT list warning
-  const dirPath = path.join(process.cwd(), directoryPath);
+export function getMarkdownFiles(folderName: string): MarkdownData[] {
+  const targetDirectory = path.join(process.cwd(), folderName);
   
-  if (!fs.existsSync(dirPath)) {
+  if (!fs.existsSync(targetDirectory)) {
     return [];
   }
 
-  const fileNames = fs.readdirSync(dirPath);
+  const fileNames = fs.readdirSync(targetDirectory);
   const allMarkdownData = fileNames
     .filter((fileName) => fileName.endsWith('.md') || fileName.endsWith('.mdx'))
     .map((fileName) => {
       const slug = fileName.replace(/\.mdx?$/, '');
-      const fullPath = path.join(dirPath, fileName);
+      const fullPath = path.join(targetDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const matterResult = matter(fileContents);
 
@@ -41,11 +40,10 @@ export function getMarkdownFiles(directoryPath: string): MarkdownData[] {
   });
 }
 
-export function getMarkdownFileBySlug(directoryPath: string, slug: string): MarkdownData | null {
-  // Wrap with process.cwd() inside the function
-  const dirPath = path.join(process.cwd(), directoryPath);
-  const fullPath = path.join(dirPath, `${slug}.md`);
-  const fullPathMdx = path.join(dirPath, `${slug}.mdx`);
+export function getMarkdownFileBySlug(folderName: string, slug: string): MarkdownData | null {
+  const targetDirectory = path.join(process.cwd(), folderName);
+  const fullPath = path.join(targetDirectory, `${slug}.md`);
+  const fullPathMdx = path.join(targetDirectory, `${slug}.mdx`);
   
   let fileContents;
   try {
