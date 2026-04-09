@@ -3,6 +3,7 @@ title: "The Genesis of Slashdot"
 date: "2026-03-15"
 excerpt: "A retrospective look back at how IISER Kolkata's coding club started, and what the future holds for developers."
 author: "Founders"
+authorEmail: "mailto:founders@slashdot.com"
 tags: ["History", "Community", "Origins"]
 coverImage: "/slashdot-website-2026/logos/Logo_White_BG.png"
 ---

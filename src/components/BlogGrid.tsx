@@ -6,94 +6,141 @@ import { format, parseISO, differenceInDays } from 'date-fns';
 import { MarkdownData } from '@/lib/markdown';
 
 export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
+  const [visitedSlugs, setVisitedSlugs] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Flag client mount to safely render dynamic date states without Hydration errors
     setMounted(true);
+    try {
+      const stored = localStorage.getItem('slashdot_visited_blogs');
+      if (stored) {
+        setVisitedSlugs(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error("Could not read localstorage", e);
+    }
   }, []);
 
+  const handlePostClick = (slug: string) => {
+    if (!visitedSlugs.includes(slug)) {
+      const updated = [...visitedSlugs, slug];
+      setVisitedSlugs(updated);
+      try {
+        localStorage.setItem('slashdot_visited_blogs', JSON.stringify(updated));
+      } catch (e) {
+        console.error("Could not write localstorage", e);
+      }
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-12 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full px-2">
       {posts.map((post, index) => {
-        // Tag Logic & Metrics
         const isLatest = index === 0;
         const postDate = post.frontmatter.date ? parseISO(post.frontmatter.date) : new Date();
         const daysOld = Math.abs(differenceInDays(new Date(), postDate));
         const isNew = daysOld < 7;
+        const wasVisited = visitedSlugs.includes(post.slug);
+        const showLatest = isLatest && !wasVisited && mounted;
+        const showNew = isNew && !isLatest && mounted;
+
         const formattedDate = post.frontmatter.date 
           ? format(postDate, 'MMM do, yyyy')
           : '';
 
         return (
-          <Link 
+          <div 
             key={post.slug} 
-            href={`/blog/${post.slug}`} 
-            className="group relative flex flex-col rounded-xl bg-[var(--background)] ring-1 ring-[#0291B2]/20 shadow-md transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:ring-[#0291B2]/50 hover:-translate-y-1.5 overflow-hidden aspect-[4/5] min-h-[400px]"
+            className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all 
+                       hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] 
+                       hover:-translate-y-2 overflow-hidden h-[500px] w-full"
           >
-            {/* Top Badges overlay area */}
+            {/* Transparent click overlay for the entire card */}
+            <Link 
+              href={`/blog/${post.slug}`} 
+              onClick={() => handlePostClick(post.slug)}
+              className="absolute inset-0 z-0"
+              aria-label={`Read ${post.frontmatter.title}`}
+            />
+
+            {/* Top Badges */}
             <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2 pointer-events-none">
-              {isLatest && mounted && (
-                <span className="px-4 py-1 bg-gradient-to-r from-red-500 to-orange-500 backdrop-blur-sm text-white text-[10px] font-black rounded-full shadow-lg uppercase tracking-widest border border-orange-400">
+              {showLatest && (
+                <span className="px-5 py-2 bg-[#F97316] text-white text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border border-white/20">
                   Latest
                 </span>
               )}
-              {isNew && !isLatest && mounted && (
-                <span className="px-4 py-1 bg-green-500/90 backdrop-blur-sm text-white text-[10px] font-black rounded-full shadow-lg uppercase tracking-widest border border-green-400">
+              {showNew && (
+                <span className="px-5 py-2 bg-[#22C55E] text-white text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border border-white/20">
                   New
                 </span>
               )}
             </div>
 
-            {/* Cover Image Area */}
-            <div className={`relative w-full shrink-0 ${post.frontmatter.coverImage ? 'h-1/2' : 'h-1/3 bg-gradient-to-br from-[#0291B2]/20 to-[#0291B2]/5'} overflow-hidden border-b border-black/5 dark:border-white/5`}>
-              {post.frontmatter.coverImage ? (
+            {/* Image Section (Fixed height if present) */}
+            {post.frontmatter.coverImage && (
+              <div className="relative w-full h-[220px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
                 <img 
                   src={post.frontmatter.coverImage} 
                   alt={post.frontmatter.title}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center opacity-20">
-                   <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-[#0291B2] transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              )}
-            </div>
-
-            {/* Text Content Area */}
-            <div className="flex flex-col flex-1 p-5 z-10 w-full relative bg-[var(--background)]">
-              <div className="text-[11px] font-bold tracking-widest text-[#0291B2] uppercase mb-3 flex items-center gap-2 truncate">
-                <time dateTime={post.frontmatter.date}>{formattedDate}</time>
-                {post.frontmatter.author && (
-                  <>
-                    <span className="text-black/30 dark:text-white/30">•</span>
-                    <span className="truncate">{post.frontmatter.author}</span>
-                  </>
-                )}
               </div>
-              
-              <h3 className="text-lg md:text-xl font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 mb-2">
-                {post.frontmatter.title}
-              </h3>
-              
-              <p className="line-clamp-2 text-xs md:text-sm leading-relaxed text-[var(--foreground)] opacity-75 mb-4 flex-1">
-                {post.frontmatter.excerpt}
-              </p>
+            )}
 
-              {/* Tags Area pinned to bottom */}
-              <div className="mt-auto pt-4 border-t border-black/5 dark:border-white/10 pointer-events-none">
-                <div className="flex flex-wrap gap-2 truncate">
-                  {post.frontmatter.tags && post.frontmatter.tags.slice(0, 3).map((tag: string) => (
-                    <span key={tag} className="px-2.5 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] font-bold whitespace-nowrap">
-                      {tag}
-                    </span>
-                  ))}
+            {/* Content Section */}
+            <div className={`p-6 sm:p-7 flex flex-col flex-1 relative z-10 ${!post.frontmatter.coverImage ? 'h-full' : ''}`}>
+              {/* Header: Author . Date */}
+              <div className="relative flex items-center justify-between w-full mb-5 text-[14px] sm:text-[15px] font-bold tracking-tight">
+                {/* Author (Clickable) */}
+                <div className="z-20 relative">
+                  {post.frontmatter.authorEmail ? (
+                    <a 
+                      href={post.frontmatter.authorEmail}
+                      className="text-[#0291B2] hover:underline transition-all active:scale-95 inline-block"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {post.frontmatter.author}
+                    </a>
+                  ) : (
+                    <span className="text-[#0291B2]">{post.frontmatter.author}</span>
+                  )}
+                </div>
+
+                {/* Centered Dot */}
+                <div className="absolute left-1/2 -translate-x-1/2 text-black/30 dark:text-white/30 font-black scale-150">
+                  •
+                </div>
+
+                {/* Date */}
+                <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">
+                  {formattedDate}
                 </div>
               </div>
+              
+              {/* Title and Excerpt */}
+              <div className="flex flex-col flex-1 gap-4 overflow-hidden">
+                <h3 className="text-2xl sm:text-2xl font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0">
+                  {post.frontmatter.title}
+                </h3>
+                
+                <p className="text-xl sm:text-lg leading-relaxed text-[var(--foreground)] opacity-80 overflow-hidden">
+                  <span className="line-clamp-3 sm:line-clamp-4">
+                    {post.frontmatter.excerpt}
+                  </span>
+                </p>
+              </div>
+
+              {/* Tags fixed at bottom */}
+              <div className="mt-auto pt-6 border-t border-black/10 dark:border-white/10 flex flex-wrap gap-3 pointer-events-none">
+                {post.frontmatter.tags && post.frontmatter.tags.slice(0, 3).map((tag: string) => (
+                  <span key={tag} className="px-4 py-1.5 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[12px] font-black uppercase tracking-wider">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-          </Link>
+          </div>
         );
       })}
     </div>

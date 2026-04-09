@@ -3,6 +3,7 @@ title: "The Future of Slashdot: 2026 and Beyond"
 date: "2026-04-09"
 excerpt: "A deep dive into how we are rebuilding our digital presence at IISER Kolkata."
 author: "Slashdot Core"
+authorEmail: "mailto:slashdot@iiserkol.ac.in"
 tags: ["Vision", "NextJS", "Web3"]
 ---
 # Welcome to the New Slashdot

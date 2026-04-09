@@ -3,6 +3,7 @@ title: "Embracing the Dark Mode: Slashdot's UI Philosophy"
 date: "2026-04-06"
 excerpt: "Why we chose an unapologetically stark aesthetic for our new platform. It reduces eye strain and looks incredible."
 author: "Design Team"
+authorEmail: "mailto:design@slashdot.com"
 tags: ["UI/UX", "Design", "Tailwind"]
 coverImage: "/slashdot-website-2026/logos/Logo_Black_BG.png"
 ---

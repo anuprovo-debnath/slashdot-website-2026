@@ -38,17 +38,30 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)] leading-tight">
             {post.frontmatter.title}
           </h1>
-          <div className="flex items-center gap-4 text-[#0291B2] font-semibold tracking-wide">
+          <div className="flex items-center justify-between w-full border-b border-black/5 dark:border-white/10 pb-4 mb-8 text-[15px] font-bold tracking-tight">
+            {post.frontmatter.author && (
+              <div className="z-20 relative">
+                {post.frontmatter.authorEmail ? (
+                  <a 
+                    href={post.frontmatter.authorEmail}
+                    className="text-[#0291B2] hover:underline transition-all"
+                  >
+                    {post.frontmatter.author}
+                  </a>
+                ) : (
+                  <span className="text-[#0291B2]">{post.frontmatter.author}</span>
+                )}
+              </div>
+            )}
+
+            <div className="text-black/20 dark:text-white/20 font-black">
+              •
+            </div>
+
             {formattedDate && (
-              <time dateTime={post.frontmatter.date}>
+              <time dateTime={post.frontmatter.date} className="text-black/40 dark:text-white/40 uppercase tracking-widest text-[12px]">
                 {formattedDate}
               </time>
-            )}
-            {post.frontmatter.author && (
-              <>
-                <span aria-hidden="true" className="text-gray-400">•</span>
-                <span>{post.frontmatter.author}</span>
-              </>
             )}
           </div>
           {post.frontmatter.tags && (
