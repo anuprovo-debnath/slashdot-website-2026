@@ -7,7 +7,7 @@ import { format, parseISO, differenceInDays } from 'date-fns';
 import { MarkdownData } from '@/lib/markdown';
 
 /**
- * Centered Floating Dialogue with precision X alignment
+ * Centered Floating Dialogue (90% width) with Bottom-X sync
  */
 function TagDialogue({ 
   tags, 
@@ -21,7 +21,6 @@ function TagDialogue({
   cardRect: DOMRect
 }) {
   const [mounted, setMounted] = useState(false);
-  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -35,47 +34,39 @@ function TagDialogue({
 
   if (!mounted) return null;
 
-  const popupWidth = Math.min(320, typeof window !== 'undefined' ? window.innerWidth * 0.9 : 320);
+  // Rule: Breadth = 90% of card breadth
+  const popupWidth = cardRect.width * 0.9;
   
-  // Rule 1: Horizontally centered with respect to parent card
-  const left = cardRect.left + (cardRect.width / 2) - (popupWidth / 2);
+  // Rule: Horizontally centered with respect to parent card
+  const left = cardRect.left + (cardRect.width * 0.05);
   
-  // Rule 2: Vertical position (aligning close button row with trigger row)
-  const top = anchorRect.top - 140; // Default upwards expansion
+  // Rule: Appear above the tag row. Bottom of popup aligns with top of trigger row.
+  const popupHeight = 240; // Max height for the popup
+  const top = anchorRect.top - popupHeight - 8;
 
-  // Rule 3: Precise "X" Alignment
-  // We want the X button (which is on the right of the header) to match anchorRect.left
-  // Since X is right-aligned in a flex house, we calculate the offset.
-  const xButtonPositionInPopup = anchorRect.left - left;
+  // Rule: Precise "X" Alignment (under the cursor)
+  // Since X is at the BOTTOM of the popup, we calculate relative left
+  const xLeftOffset = anchorRect.left - left;
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] pointer-events-auto bg-black/5" onClick={onClose}>
       <div 
-        ref={popupRef}
-        className="absolute bg-[var(--background)]/95 backdrop-blur-2xl border border-[#0291B2]/40 rounded-2xl p-6 shadow-[0_30px_60px_rgba(0,0,0,0.5)] w-[320px] max-w-[90vw] animate-in fade-in zoom-in duration-200 overflow-hidden"
+        className="absolute bg-[var(--background)]/95 backdrop-blur-2xl border border-[#0291B2]/40 rounded-2xl p-6 shadow-[0_-20px_60px_rgba(0,0,0,0.4)] flex flex-col justify-between animate-in fade-in slide-in-from-bottom-4 duration-300"
         style={{ 
-          left: `${Math.max(12, left)}px`, 
-          top: `${Math.max(80, top)}px` 
+          width: `${popupWidth}px`,
+          left: `${left}px`, 
+          top: `${top}px`,
+          height: `${popupHeight}px`
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative flex justify-between items-center mb-6 h-8">
-          <h4 className="text-[10px] font-black uppercase tracking-widest text-[#0291B2] opacity-50">Exploration</h4>
-          
-          {/* Precise Close Button: Shifted so its center matches trigger's center */}
-          <button 
-            onClick={onClose}
-            className="absolute h-8 px-4 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/40 rounded-full text-[12px] font-black hover:bg-red-500/20 hover:text-red-500 hover:border-red-500/40 transition-all flex items-center justify-center shadow-lg"
-            style={{ 
-              left: `${xButtonPositionInPopup}px`,
-              transform: 'translateX(-50%)' // Center the button on the click point
-            }}
-          >
-            ×
-          </button>
+        {/* Header: "TAGS" Centered */}
+        <div className="w-full text-center border-b border-black/5 dark:border-white/5 pb-3">
+          <h4 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#0291B2]">Tags</h4>
         </div>
-        
-        <div className="flex flex-wrap gap-2.5 max-h-[180px] overflow-y-auto pr-1 thin-scrollbar">
+
+        {/* Content: Right Aligned Tags */}
+        <div className="flex-1 py-4 overflow-y-auto thin-scrollbar flex flex-wrap gap-2.5 justify-end content-start">
           {tags.map((tag) => (
             <span 
               key={tag} 
@@ -84,6 +75,20 @@ function TagDialogue({
               {tag}
             </span>
           ))}
+        </div>
+
+        {/* Footer: Close Button (X) synced to trigger position */}
+        <div className="relative w-full h-8 pt-2">
+           <button 
+            onClick={onClose}
+            className="absolute h-8 px-4 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/40 rounded-full text-[14px] font-black hover:bg-red-500/20 hover:text-red-500 hover:border-red-500/40 transition-all flex items-center justify-center shadow-lg transform translate-y-2"
+            style={{ 
+              left: `${xLeftOffset}px`,
+              transform: 'translateX(-2px)' // Minor nudge for visual center sync
+            }}
+          >
+            ×
+          </button>
         </div>
       </div>
     </div>,
@@ -101,7 +106,7 @@ function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<H
   useEffect(() => {
     const checkOverflow = () => {
       if (containerRef.current) {
-        setHasOverflow(containerRef.current.scrollHeight > 32);
+        setHasOverflow(containerRef.current.scrollHeight > 24);
       }
     };
     checkOverflow();
@@ -118,13 +123,24 @@ function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<H
     setIsDialogueOpen(true);
   };
 
-  if (!tags || tags.length === 0) return <div className="h-[60px]" />;
+  if (!tags || tags.length === 0) return <div className="h-[48px]" />;
 
   return (
-    <div className="h-[60px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-6 relative z-[20]">
+    <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
+      {/* Left-Aligned Trigger */}
+      {hasOverflow && (
+        <button
+          ref={triggerRef}
+          onClick={openDialogue}
+          className="mr-3 px-3 py-1 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[10px] font-black hover:bg-[#0291B2]/20 transition-all z-[25] shadow-sm uppercase shrink-0"
+        >
+          ...
+        </button>
+      )}
+
       <div 
         ref={containerRef}
-        className="flex flex-wrap gap-2 max-h-[30px] overflow-hidden pr-12 w-full justify-center"
+        className="flex flex-wrap gap-2 max-h-[22px] overflow-hidden flex-1 justify-center"
       >
         {tags.map((tag) => (
           <span 
@@ -135,16 +151,6 @@ function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<H
           </span>
         ))}
       </div>
-
-      {hasOverflow && (
-        <button
-          ref={triggerRef}
-          onClick={openDialogue}
-          className="absolute right-4 px-3 py-1 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[10px] font-black hover:bg-[#0291B2]/20 transition-all z-[25] shadow-sm"
-        >
-          ...
-        </button>
-      )}
 
       {isDialogueOpen && anchorRect && cardRef.current && (
         <TagDialogue 
@@ -210,7 +216,6 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               aria-label={`Read ${post.frontmatter.title}`}
             />
 
-            {/* Badges */}
             <div className="absolute top-4 left-4 z-[30] flex flex-wrap gap-2 pointer-events-none">
               {showLatest && (
                 <span className="px-5 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border border-white/20">
@@ -224,15 +229,14 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               )}
             </div>
 
-            {/* Content Zone (420px) */}
-            <div className={`flex flex-col h-[420px] overflow-hidden ${!hasImage ? 'pt-16' : ''}`}>
+            {/* Content Zone (432px - 90%) */}
+            <div className={`flex flex-col h-[432px] overflow-hidden ${!hasImage ? 'pt-16' : ''}`}>
               {hasImage && (
                 <div className="relative w-full h-[220px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
                   <img src={post.frontmatter.coverImage} alt={post.frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                 </div>
               )}
 
-              {/* Text Area (flexible inside 420px) */}
               <div className="p-6 sm:p-7 flex flex-col flex-1 overflow-hidden">
                 <div className="relative flex items-center justify-between w-full mb-5 text-[14px] sm:text-[15px] font-bold tracking-tight">
                   <div className="z-[20] relative text-xl sm:text-[15px]">
@@ -254,7 +258,7 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               </div>
             </div>
 
-            {/* Tag Zone (60px) */}
+            {/* Tag Zone (48px - 10%) */}
             <TagArea tags={post.frontmatter.tags} cardRef={cardRef} />
           </div>
         );
