@@ -28,6 +28,7 @@
   --color-primary: var(--color-primary);
   --color-background: var(--color-bg);
   --color-foreground: var(--color-text);
+  --font-heading: 'Arista Pro';
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
