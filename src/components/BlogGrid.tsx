@@ -81,7 +81,7 @@ function TagDialogue({
         <div className="relative w-full h-8 pt-2">
            <button 
             onClick={onClose}
-            className="absolute h-8 px-4 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/40 rounded-full text-[14px] font-black hover:bg-red-500/20 hover:text-red-500 hover:border-red-500/40 transition-all flex items-center justify-center shadow-lg transform translate-y-2"
+            className="absolute h-8 px-4 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/40 rounded-full text-[14px] font-black hover:bg-green-500/20 hover:text-green-500 hover:border-green-500/40 transition-all flex items-center justify-center shadow-lg"
             style={{ 
               left: `${xLeftOffset}px`,
               transform: 'translateX(-2px)' // Minor nudge for visual center sync
@@ -127,20 +127,10 @@ function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<H
 
   return (
     <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-      {/* Left-Aligned Trigger */}
-      {hasOverflow && (
-        <button
-          ref={triggerRef}
-          onClick={openDialogue}
-          className="mr-3 px-3 py-1 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[10px] font-black hover:bg-[#0291B2]/20 transition-all z-[25] shadow-sm uppercase shrink-0"
-        >
-          ...
-        </button>
-      )}
-
+      {/* Tags Container on the Left */}
       <div 
         ref={containerRef}
-        className="flex flex-wrap gap-2 max-h-[22px] overflow-hidden flex-1 justify-center"
+        className="flex flex-wrap gap-2 max-h-[22px] overflow-hidden flex-1 justify-start pr-12"
       >
         {tags.map((tag) => (
           <span 
@@ -151,6 +141,17 @@ function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<H
           </span>
         ))}
       </div>
+
+      {/* Right-Aligned Trigger - only appears if overflow is detected */}
+      {hasOverflow && (
+        <button
+          ref={triggerRef}
+          onClick={openDialogue}
+          className="absolute right-4 px-3 py-1 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[10px] font-black hover:bg-[#0291B2]/20 transition-all z-[25] shadow-sm uppercase shrink-0"
+        >
+          ...
+        </button>
+      )}
 
       {isDialogueOpen && anchorRect && cardRef.current && (
         <TagDialogue 
