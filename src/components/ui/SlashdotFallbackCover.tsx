@@ -7,7 +7,6 @@ export default function SlashdotFallbackCover({ className = "h-48" }: { classNam
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Prevent hydration mismatch by waiting for mount
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -21,44 +20,50 @@ export default function SlashdotFallbackCover({ className = "h-48" }: { classNam
     <div className={`w-full relative overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-background border-b border-gray-200 dark:border-white/5 transition-colors duration-300 ${className}`}>
       <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          {/* Group 1: Moving Up-Right */}
-          <pattern id="slash-slant-up" x="0" y="0" width="40" height="60" patternUnits="userSpaceOnUse">
-            <animateTransform
-              attributeName="patternTransform"
-              type="translate"
-              from="0 0"
-              to="40 -60"
-              dur="8s"
-              repeatCount="indefinite"
-            />
-            <line x1="10" y1="50" x2="30" y2="10" stroke="var(--color-primary)" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.15" />
-          </pattern>
+          {/* Main Pattern Container - Height is 120 to accommodate two distinct 'tracks' */}
+          <pattern id="train-pattern" x="0" y="0" width="40" height="120" patternUnits="userSpaceOnUse">
 
-          {/* Group 2: Moving Down-Left */}
-          <pattern id="slash-slant-down" x="20" y="30" width="40" height="60" patternUnits="userSpaceOnUse">
-            <animateTransform
-              attributeName="patternTransform"
-              type="translate"
-              from="0 0"
-              to="-40 60"
-              dur="8s"
-              repeatCount="indefinite"
-            />
-            <line x1="10" y1="50" x2="30" y2="10" stroke="var(--color-primary)" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.15" />
-          </pattern>
+            {/* TRACK 1: Moving Up-Right */}
+            <g>
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                from="0 0"
+                to="40 -60"
+                dur="8s"
+                repeatCount="indefinite"
+              />
+              {/* Slash in the first track (top 60px) */}
+              <line x1="10" y1="50" x2="30" y2="10" stroke="var(--color-primary)" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.15" />
+            </g>
 
-          {/* Static Pulsing Dots */}
-          <pattern id="dots-static" x="0" y="0" width="40" height="60" patternUnits="userSpaceOnUse">
+            {/* TRACK 2: Moving Down-Left (Offset by 60px vertically) */}
+            <g transform="translate(0, 60)">
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                from="0 0"
+                to="-40 60"
+                dur="8s"
+                repeatCount="indefinite"
+              />
+              {/* Slash in the second track (bottom 60px) */}
+              <line x1="10" y1="50" x2="30" y2="10" stroke="var(--color-primary)" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.15" />
+            </g>
+
+            {/* Pulsing Dots - Static in the middle of each track */}
             <circle cx="30" cy="30" r="2" fill="var(--color-primary)" fillOpacity="0.2">
+              <animate attributeName="r" values="1.5;3;1.5" dur="3s" repeatCount="indefinite" />
+              <animate attributeName="fill-opacity" values="0.1;0.4;0.1" dur="3s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="30" cy="90" r="2" fill="var(--color-primary)" fillOpacity="0.2">
               <animate attributeName="r" values="1.5;3;1.5" dur="3s" repeatCount="indefinite" />
               <animate attributeName="fill-opacity" values="0.1;0.4;0.1" dur="3s" repeatCount="indefinite" />
             </circle>
           </pattern>
         </defs>
 
-        <rect width="100%" height="100%" fill="url(#slash-slant-up)" />
-        <rect width="100%" height="100%" fill="url(#slash-slant-down)" />
-        <rect width="100%" height="100%" fill="url(#dots-static)" />
+        <rect width="100%" height="100%" fill="url(#train-pattern)" />
       </svg>
 
       {/* Theme-Specific Circular Logo Badge */}
