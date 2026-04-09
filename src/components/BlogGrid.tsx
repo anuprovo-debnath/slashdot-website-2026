@@ -55,18 +55,18 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
                        hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] 
                        hover:-translate-y-2 overflow-hidden h-[500px] w-full"
           >
-            {/* Transparent click overlay for the entire card */}
+            {/* Transparent click overlay for the entire card - moved to top z-index except for interactive elements */}
             <Link 
               href={`/blog/${post.slug}`} 
               onClick={() => handlePostClick(post.slug)}
-              className="absolute inset-0 z-0"
+              className="absolute inset-0 z-[10]"
               aria-label={`Read ${post.frontmatter.title}`}
             />
 
-            {/* Top Badges */}
-            <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2 pointer-events-none">
+            {/* Top Badges - increased z-index */}
+            <div className="absolute top-4 left-4 z-[30] flex flex-wrap gap-2 pointer-events-none">
               {showLatest && (
-                <span className="px-5 py-2 bg-[#F97316] text-white text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border border-white/20">
+                <span className="px-5 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border border-white/20">
                   Latest
                 </span>
               )}
@@ -88,12 +88,12 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               </div>
             )}
 
-            {/* Content Section */}
-            <div className={`p-6 sm:p-7 flex flex-col flex-1 relative z-10 ${!post.frontmatter.coverImage ? 'h-full' : ''}`}>
+            {/* Content Section - removed blocking z-index */}
+            <div className={`p-6 sm:p-7 flex flex-col flex-1 relative ${!post.frontmatter.coverImage ? 'h-full' : ''}`}>
               {/* Header: Author . Date */}
               <div className="relative flex items-center justify-between w-full mb-5 text-[14px] sm:text-[15px] font-bold tracking-tight">
-                {/* Author (Clickable) */}
-                <div className="z-20 relative">
+                {/* Author (Clickable) - boosted z-index to stay above the card overlay */}
+                <div className="z-[20] relative">
                   {post.frontmatter.authorEmail ? (
                     <a 
                       href={post.frontmatter.authorEmail}
@@ -107,11 +107,6 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
                   )}
                 </div>
 
-                {/* Centered Dot */}
-                <div className="absolute left-1/2 -translate-x-1/2 text-black/30 dark:text-white/30 font-black scale-150">
-                  •
-                </div>
-
                 {/* Date */}
                 <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">
                   {formattedDate}
@@ -120,11 +115,11 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               
               {/* Title and Excerpt */}
               <div className="flex flex-col flex-1 gap-4 overflow-hidden">
-                <h3 className="text-2xl sm:text-2xl font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0">
+                <h3 className="text-2xl sm:text-xl font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0">
                   {post.frontmatter.title}
                 </h3>
                 
-                <p className="text-xl sm:text-lg leading-relaxed text-[var(--foreground)] opacity-80 overflow-hidden">
+                <p className="text-xl sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 overflow-hidden">
                   <span className="line-clamp-3 sm:line-clamp-4">
                     {post.frontmatter.excerpt}
                   </span>

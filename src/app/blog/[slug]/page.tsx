@@ -54,10 +54,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             )}
 
-            <div className="text-black/20 dark:text-white/20 font-black">
-              •
-            </div>
-
             {formattedDate && (
               <time dateTime={post.frontmatter.date} className="text-black/40 dark:text-white/40 uppercase tracking-widest text-[12px]">
                 {formattedDate}
