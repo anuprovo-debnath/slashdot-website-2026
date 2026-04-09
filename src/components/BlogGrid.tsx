@@ -39,8 +39,8 @@ function TagDialogue({
   // Rule: Horizontally centered with respect to parent card
   const left = cardRect.left + gap;
 
-  // Rule: Bottom sits at card.bottom + 5% width gap
-  const popupBottom = cardRect.bottom + gap;
+  // Rule: Bottom sits at card.bottom - 5% width gap
+  const popupBottom = cardRect.bottom - gap;
   const popupHeight = 240;
   const top = popupBottom - popupHeight;
 
@@ -73,11 +73,11 @@ function TagDialogue({
           ))}
         </div>
 
-        {/* Footer: Red Close Button (X) at the bottom-right */}
-        <div className="flex justify-end pt-2">
-          <button
+        {/* Footer: Windows-style Red Close Button (X) at the bottom-right */}
+        <div className="absolute bottom-0 right-0 overflow-hidden rounded-br-2xl">
+          <button 
             onClick={onClose}
-            className="h-9 w-9 flex items-center justify-center bg-red-500/10 text-red-500 border border-red-500/30 rounded-full text-[18px] font-black hover:bg-red-500 hover:text-white transition-all shadow-md active:scale-95"
+            className="h-10 w-14 flex items-center justify-center bg-red-500/10 text-red-500 border-t border-l border-red-500/20 rounded-tl-2xl rounded-br-2xl rounded-tr-none rounded-bl-none text-[22px] font-light hover:bg-red-600 hover:text-white transition-all active:brightness-90"
             title="Close"
           >
             ×
