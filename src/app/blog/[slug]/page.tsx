@@ -7,15 +7,15 @@ import Link from 'next/link';
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  const posts = getMarkdownFiles('blog');
-  return posts.map((post) => ({
-    slug: post.slug,
+  const items = await getMarkdownFiles('content/blog');
+  return items.map((item) => ({
+    slug: item.slug,
   }));
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = getMarkdownFileBySlug('blog', slug);
+  const post = getMarkdownFileBySlug('content/blog', slug);
 
   if (!post) {
     notFound();

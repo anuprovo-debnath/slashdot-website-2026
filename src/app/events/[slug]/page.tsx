@@ -6,15 +6,15 @@ import { format, parseISO } from 'date-fns';
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  const events = getMarkdownFiles('events');
-  return events.map((event) => ({
-    slug: event.slug,
+  const items = await getMarkdownFiles('content/events');
+  return items.map((item) => ({
+    slug: item.slug,
   }));
 }
 
 export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const event = getMarkdownFileBySlug('events', slug);
+  const event = getMarkdownFileBySlug('content/events', slug);
 
   if (!event) {
     notFound();

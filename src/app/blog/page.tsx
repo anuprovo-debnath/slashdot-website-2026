@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 
 export default function BlogIndexPage() {
-  const posts = getMarkdownFiles('blog');
+  const posts = getMarkdownFiles('content/blog');
 
   return (
     <div className="min-h-screen pt-32 pb-16 px-4 sm:px-6 lg:px-8">
