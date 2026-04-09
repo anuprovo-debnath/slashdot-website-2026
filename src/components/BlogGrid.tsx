@@ -46,7 +46,7 @@ function TagDialogue({
   return createPortal(
     <div className="fixed inset-0 z-[9999] pointer-events-auto bg-white/40 dark:bg-black/60 backdrop-blur-[12px]" onClick={onClose}>
       <div
-        className="absolute bg-[var(--background)] border border-[#0291B2]/40 rounded-2xl p-6 shadow-[0_20px_80px_rgba(0,0,0,0.5)] flex flex-col animate-in fade-in zoom-in duration-200"
+        className="absolute bg-[var(--background)] border border-[#0291B2]/40 rounded-lg p-6 shadow-[0_20px_80px_rgba(0,0,0,0.5)] flex flex-col animate-in fade-in zoom-in duration-200"
         style={{
           width: `${popupWidth}px`,
           left: `${left}px`,
@@ -73,10 +73,10 @@ function TagDialogue({
         </div>
 
         {/* Footer: Windows-style Red Close Button (X) at the bottom-right */}
-        <div className="absolute bottom-0 right-0 overflow-hidden rounded-br-2xl">
+        <div className="absolute bottom-0 right-0 overflow-hidden rounded-br-lg">
           <button
             onClick={onClose}
-            className="h-7 w-10 flex items-center justify-center bg-red-500/10 text-red-500 border-t border-l border-red-500/20 rounded-tl-lg rounded-br-2xl rounded-tr-none rounded-bl-none text-[14px] font-black hover:bg-red-600 hover:text-white transition-all active:brightness-90"
+            className="h-7 w-10 flex items-center justify-center bg-red-500/10 text-red-500 border-t border-l border-red-500/20 rounded-tl-lg rounded-br-lg rounded-tr-none rounded-bl-none text-[14px] font-black hover:bg-red-600 hover:text-white transition-all active:brightness-90"
             title="Close"
           >
             ×
@@ -120,7 +120,7 @@ function TagArea({ tags, cardRef }: { tags: string[], cardRef: React.RefObject<H
       {/* Tags on the left */}
       <div
         ref={containerRef}
-        className="flex flex-wrap gap-2 max-h-[22px] overflow-hidden flex-1 justify-start pr-12"
+        className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12"
       >
         {tags.map((tag) => (
           <span
@@ -185,7 +185,7 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
         const isNew = daysOld < 7;
         const wasVisited = visitedSlugs.includes(post.slug);
         const showLatest = isLatest && !wasVisited && mounted;
-        const showNew = isNew && !isLatest && mounted;
+        const showNew = isNew && (!isLatest || wasVisited) && mounted;
         const hasImage = !!post.frontmatter.coverImage;
 
         const formattedDate = post.frontmatter.date ? format(postDate, 'MMM do, yyyy') : '';
