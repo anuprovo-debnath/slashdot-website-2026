@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { format, parseISO, differenceInDays } from 'date-fns';
 import { MarkdownData } from '@/lib/markdown';
+import SlashdotFallbackCover from './ui/SlashdotFallbackCover';
 
 /**
  * Centered Floating Dialogue (90% width) with Red Bottom-Right X
@@ -218,12 +219,15 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               )}
             </div>
 
-            <div className={`flex flex-col h-[432px] overflow-hidden ${!hasImage ? 'pt-16' : ''}`}>
-              {hasImage && (
-                <div className="relative w-full h-[220px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
+            {/* Content Zone (432px - 90%) */}
+            <div className="flex flex-col h-[432px] overflow-hidden">
+              <div className="relative w-full h-[220px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
+                {hasImage ? (
                   <img src={post.frontmatter.coverImage} alt={post.frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                </div>
-              )}
+                ) : (
+                  <SlashdotFallbackCover className="h-full" />
+                )}
+              </div>
 
               <div className="p-6 sm:p-7 flex flex-col flex-1 overflow-hidden">
                 <div className="relative flex items-center justify-between w-full mb-5 text-[14px] sm:text-[15px] font-bold tracking-tight">
