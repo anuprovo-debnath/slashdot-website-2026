@@ -5,6 +5,49 @@ import Link from 'next/link';
 import { format, parseISO, differenceInDays } from 'date-fns';
 import { MarkdownData } from '@/lib/markdown';
 
+/**
+ * Sub-component to manage the interactive tag expansion state for each card.
+ */
+function TagArea({ tags }: { tags: string[] }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!tags || tags.length === 0) return null;
+
+  return (
+    <div className="mt-auto pt-6 border-t border-black/10 dark:border-white/10 relative z-[20]">
+      <div 
+        className={`flex flex-wrap gap-2 transition-all duration-300 ease-in-out ${
+          isExpanded ? 'max-h-[200px]' : 'max-h-[34px]'
+        } overflow-hidden pr-8`}
+      >
+        {tags.map((tag) => (
+          <span 
+            key={tag} 
+            className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* Expansion Toggle ("...") */}
+      {tags.length > 2 && (
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsExpanded(!isExpanded);
+          }}
+          className="absolute right-0 top-6 w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#0291B2]/10 text-[#0291B2] font-black text-lg transition-colors"
+          title={isExpanded ? "Show less" : "Show all tags"}
+        >
+          {isExpanded ? "×" : "..."}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
   const [visitedSlugs, setVisitedSlugs] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -55,7 +98,7 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
                        hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] 
                        hover:-translate-y-2 overflow-hidden h-[500px] w-full"
           >
-            {/* Transparent click overlay for the entire card - moved to top z-index except for interactive elements */}
+            {/* Transparent click overlay for the entire card */}
             <Link 
               href={`/blog/${post.slug}`} 
               onClick={() => handlePostClick(post.slug)}
@@ -63,7 +106,7 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               aria-label={`Read ${post.frontmatter.title}`}
             />
 
-            {/* Top Badges - increased z-index */}
+            {/* Top Badges */}
             <div className="absolute top-4 left-4 z-[30] flex flex-wrap gap-2 pointer-events-none">
               {showLatest && (
                 <span className="px-5 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border border-white/20">
@@ -88,12 +131,12 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
               </div>
             )}
 
-            {/* Content Section - removed blocking z-index */}
+            {/* Content Section */}
             <div className={`p-6 sm:p-7 flex flex-col flex-1 relative ${!post.frontmatter.coverImage ? 'h-full' : ''}`}>
               {/* Header: Author . Date */}
               <div className="relative flex items-center justify-between w-full mb-5 text-[14px] sm:text-[15px] font-bold tracking-tight">
-                {/* Author (Clickable) - boosted z-index to stay above the card overlay */}
-                <div className="z-[20] relative">
+                {/* Author (Clickable) */}
+                <div className="z-[20] relative text-xl sm:text-[15px]">
                   {post.frontmatter.authorEmail ? (
                     <a 
                       href={post.frontmatter.authorEmail}
@@ -126,14 +169,8 @@ export function BlogGrid({ posts }: { posts: MarkdownData[] }) {
                 </p>
               </div>
 
-              {/* Tags fixed at bottom */}
-              <div className="mt-auto pt-6 border-t border-black/10 dark:border-white/10 flex flex-wrap gap-3 pointer-events-none">
-                {post.frontmatter.tags && post.frontmatter.tags.slice(0, 3).map((tag: string) => (
-                  <span key={tag} className="px-4 py-1.5 bg-[#0291B2]/10 text-[#0291B2] border border-[#0291B2]/30 rounded-full text-[12px] font-black uppercase tracking-wider">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              {/* Tags Area */}
+              <TagArea tags={post.frontmatter.tags} />
             </div>
           </div>
         );
