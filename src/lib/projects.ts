@@ -15,6 +15,7 @@ export interface ProjectData {
       youtube?: string;
     };
     coverImage?: string;
+    excerpt?: string;
     date?: string;
   };
   content: string;

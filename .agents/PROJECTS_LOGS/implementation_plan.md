@@ -5,33 +5,22 @@ This plan details the implementation of the project showcase system as defined i
 ## User Review Required
 
 > [!IMPORTANT]
-> The project system will reuse the `SlashdotFallbackCover` component to maintain brand consistency.
-> The layout strictly adheres to the **450px card height** mandate.
+> The project system will be refined to mirror the `blog` page's layout (max-width, typography, and spacing) for a seamless brand experience.
+> The layout strictly adheres to the **450px card height** mandate and uses the same **"Greedy Clamping"** logic as the blogs.
 
 ## Proposed Changes
 
-### Data & Logic
+### Design Alignment (Iteration 2)
 
-#### [NEW] [projects.ts](file:///d:/Github/slashdot-website-2026/src/lib/projects.ts)
-- Implement `getProjects()` to fetch and parse Markdown files from `content/projects/`.
-- Ensure sorting by date or status (Active first).
+#### [MODIFY] [page.tsx](file:///d:/Github/slashdot-website-2026/src/app/projects/page.tsx)
+- Align container width (`max-w-5xl`) and vertical spacing with the blog page.
+- Sync header typography (font-size, tracking) with `BlogIndexPage`.
 
-### Components
+#### [MODIFY] [ProjectGrid.tsx](file:///d:/Github/slashdot-website-2026/src/components/ProjectGrid.tsx)
+- Sync card internal spacing and text sizes (Title, Excerpt) with `BlogGrid`.
+- Redesign the footer area to mirror the Blog's `TagArea` structural layout (height-locked, bordered).
+- Use brand fonts for consistency.
 
-#### [NEW] [ProjectGrid.tsx](file:///d:/Github/slashdot-website-2026/src/components/ProjectGrid.tsx)
-- Create a responsive grid (1, 2, or 3 columns).
-- Implement `ProjectCard` with:
-    - **Header**: Image or `SlashdotFallbackCover`.
-    - **Status Badge**: Using themed colors for `Active`, `Maintained`, and `Archived`.
-    - **Tech Stack**: Responsive list of tags.
-    - **Links**: Actionable links for GitHub, Demo, and YouTube using `lucide-react`.
-    - **Height**: Fixed at 450px.
-
-### Pages
-
-#### [NEW] [page.tsx](file:///d:/Github/slashdot-website-2026/src/app/projects/page.tsx)
-- Main projects page fetching data from `src/lib/projects.ts`.
-- Integrated with the site's layout and transitions.
 
 ### Content
 
