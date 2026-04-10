@@ -43,7 +43,7 @@ export default function SlashdotFallbackCover({ className = "h-48" }: { classNam
             </circle>
             {/* R1C0 */}
             <circle cx="10" cy="90" r="1.5" fill="var(--color-primary)" fillOpacity="0.4">
-              <animate attributeName="r" values="1;2.2;1" dur="3s" repeatCount="indefinite" />
+              <animate attributeName="r" values="1;3;1" dur="3s" repeatCount="indefinite" />
               <animate attributeName="fill-opacity" values="0.2;0.7;0.2" dur="3s" repeatCount="indefinite" />
             </circle>
           </pattern>
