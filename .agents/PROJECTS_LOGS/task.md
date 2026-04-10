@@ -1,0 +1,6 @@
+- [/] Create `src/lib/projects.ts`
+- [ ] Create `src/components/ProjectGrid.tsx`
+- [ ] Create `src/app/projects/page.tsx`
+- [ ] Create sample content in `content/projects/example-project.md`
+- [ ] Verify implementation and build
+- [ ] Finalize walkthrough
