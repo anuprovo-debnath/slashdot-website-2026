@@ -72,23 +72,42 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
     };
   }, [filteredEvents]); // Re-bind observer when list changes
 
+  // Shift search bar on scroll
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Trigger the shift when scrolled past standard header offset
+      if (window.scrollY > 120) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full">
       {/* 30% Sidebar */}
       <aside className="w-full md:w-[30%] shrink-0 flex flex-col gap-6 sticky top-24 self-start">
-        {/* Search Bar (Sticky alongside Calendar) */}
-        <div className="relative z-10">
+        {/* Search Bar (Shifted to Sidebar on Scroll) */}
+        <div className={`relative z-10 transition-all duration-300 origin-top ${isScrolled ? 'opacity-100 max-h-24 scale-y-100 mb-0' : 'opacity-0 max-h-0 scale-y-0 mb-[-24px] pointer-events-none'}`}>
           <input 
             type="text" 
             placeholder="Search events or filter by #tag..." 
             value={searchTag}
             onChange={(e) => setSearchTag(e.target.value)}
-            className="w-full bg-background border border-foreground/20 rounded-xl px-4 py-4 placeholder-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm"
+            className="w-full bg-background border border-foreground/20 rounded-xl px-4 py-4 placeholder-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm"
           />
         </div>
 
-        {/* Calendar */}
-        <div>
+        {/* Global Sticky Calendar */}
+        <div className="transition-all duration-300">
           <InteractiveCalendar 
             events={calendarEvents} 
             selectedDate={selectedDate}
@@ -100,6 +119,17 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
 
       {/* 70% Main Feed */}
       <main className="w-full md:w-[70%] flex flex-col gap-6">
+
+        {/* Search Bar (Initial Right-Panel Position) */}
+        <div className={`relative z-10 transition-all duration-300 origin-top ${!isScrolled ? 'opacity-100 max-h-24 scale-y-100 mb-0' : 'opacity-0 max-h-0 scale-y-0 mb-[-24px] pointer-events-none'}`}>
+          <input 
+            type="text" 
+            placeholder="Search events or filter by #tag..." 
+            value={searchTag}
+            onChange={(e) => setSearchTag(e.target.value)}
+            className="w-full bg-background border border-foreground/20 rounded-xl px-4 py-4 placeholder-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm"
+          />
+        </div>
 
         {/* Feed */}
         <div className="flex flex-col gap-6 pb-20">

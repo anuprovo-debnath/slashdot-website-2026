@@ -17,9 +17,9 @@ export function EventCard({ event }: EventCardProps) {
     <div className="flex flex-col md:flex-row bg-background border border-foreground/10 rounded-xl overflow-hidden hover:border-primary/50 transition-colors p-6 group gap-6 w-full relative z-10">
       <div className="flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start md:w-32 shrink-0">
         <div className="flex flex-col">
-          <span className="text-xs text-foreground/60 uppercase font-mono tracking-wider">{category}</span>
-          <span className="text-2xl font-bold font-heading text-foreground mt-1 tracking-tight">{formattedDate}</span>
-          <span className="text-sm text-foreground/70 mt-1">{time}</span>
+          <span className="text-[10px] text-[var(--color-primary)] uppercase font-bold tracking-[0.2em] mb-1">{category}</span>
+          <span className="text-2xl font-bold font-heading text-foreground tracking-tight">{formattedDate}</span>
+          <span className="text-xs text-foreground/50 mt-1 uppercase tracking-widest font-medium">{time}</span>
         </div>
         <div className="mt-0 md:mt-4">
           <StatusBadge status={status} />
@@ -28,10 +28,10 @@ export function EventCard({ event }: EventCardProps) {
 
       <div className="flex flex-col flex-grow justify-between">
         <div>
-          <h3 className="text-xl font-bold font-heading group-hover:text-primary transition-colors line-clamp-2">
+          <h3 className="text-2xl font-extrabold font-heading group-hover:text-primary transition-colors line-clamp-2 leading-tight">
             {title}
           </h3>
-          <p className="text-foreground/70 mt-3 line-clamp-3 leading-relaxed">
+          <p className="text-md text-foreground/70 mt-3 line-clamp-3 leading-relaxed opacity-90">
             {event.content}
           </p>
         </div>
@@ -44,7 +44,7 @@ export function EventCard({ event }: EventCardProps) {
                 href={url as string} 
                 target="_blank" 
                 rel="noreferrer"
-                className="text-xs font-medium px-3 py-1.5 rounded-full border border-foreground/10 text-foreground hover:bg-primary hover:text-white hover:border-primary transition-all uppercase tracking-wider"
+                className="text-[10px] font-black px-4 py-2 rounded-full border border-foreground/10 text-foreground hover:bg-primary hover:text-white hover:border-primary transition-all uppercase tracking-[0.15em] shadow-sm"
               >
                 {type}
               </a>

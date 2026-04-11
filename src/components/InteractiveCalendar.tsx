@@ -104,14 +104,11 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
           onClick={() => onSelectDate(isSelected ? null : dStr)}
           className={`h-8 w-8 rounded-full flex flex-col items-center justify-center text-sm transition-all z-10 cursor-pointer ${colorClasses}
             ${isToday && isSelected ? 'ring-2 ring-offset-2 ring-offset-background ring-foreground' : ''}
-            ${isToday && !isSelected && !hasEvent ? 'border border-foreground/40' : ''}`}
+            ${isToday && !isSelected && !hasEvent ? 'border border-foreground/40' : ''}
+            ${isToday ? 'underline decoration-2 underline-offset-4' : ''}`}
         >
           {i}
-          {/* 3. Differentiate today below the number physically if possible, or border */}
         </button>
-        {isToday && !isSelected && (
-           <div className="absolute bottom-[-1px] w-1 h-1 rounded-full bg-foreground pointer-events-none" />
-        )}
       </div>
     );
   }
@@ -126,9 +123,9 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
         </div>
       </div>
       
-      <div className="grid grid-cols-7 gap-y-2 place-items-center mb-2">
+      <div className="grid grid-cols-7 gap-y-2 place-items-center mb-4">
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
-          <div key={d} className="text-xs text-foreground/50 font-bold">{d}</div>
+          <div key={d} className="text-[10px] text-foreground/40 font-black uppercase tracking-widest">{d}</div>
         ))}
       </div>
       <div className="grid grid-cols-7 gap-y-2 place-items-center gap-y-4">
@@ -136,10 +133,10 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
       </div>
 
       {/* 1. Shift color coding legend below calendar */}
-      <div className="flex gap-3 justify-center mt-8 pt-4 border-t border-foreground/10 text-[10px] font-bold uppercase tracking-wider">
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500/80"></span> Live</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500/80"></span> Upcoming</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary/80"></span> Past</span>
+      <div className="flex gap-4 justify-center mt-8 pt-6 border-t border-foreground/5 text-[9px] font-black uppercase tracking-[0.2em] opacity-60">
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500/80 shadow-[0_0_8px_rgba(239,68,68,0.4)]"></span> Live</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></span> Upcoming</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary/80 shadow-[0_0_8px_rgba(2,145,178,0.4)]"></span> Past</span>
       </div>
       
       {selectedDate && (
