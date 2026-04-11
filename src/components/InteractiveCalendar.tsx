@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 type CalendarEvent = { date: string; status: 'Live' | 'Upcoming' | 'Past' };
 
@@ -14,25 +14,35 @@ interface InteractiveCalendarProps {
 export function InteractiveCalendar({ events, selectedDate, activeDate, onSelectDate }: InteractiveCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 3, 1)); 
   const [mounted, setMounted] = useState(false);
+  
+  // Track today
+  const d = new Date();
+  const todayFormat = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  const lastActiveDate = useRef<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Sync calendar month when activeDate changes via scrolling
+  // 4. Sync calendar month ONLY when activeDate changes via scrolling.
+  //    This fixes manual scrolling by preventing `currentMonth` dependency loop.
   useEffect(() => {
-    if (activeDate) {
+    if (activeDate && activeDate !== lastActiveDate.current) {
+      lastActiveDate.current = activeDate;
       const parts = activeDate.split('-');
-      if (parts.length === 3) {
+      if (parts.length >= 2) {
         const year = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10) - 1;
-        // Only update if it's a different month to prevent unnecessary re-renders
-        if (currentMonth.getFullYear() !== year || currentMonth.getMonth() !== month) {
-          setCurrentMonth(new Date(year, month, 1));
-        }
+        setCurrentMonth(prev => {
+          if (prev.getFullYear() !== year || prev.getMonth() !== month) {
+            return new Date(year, month, 1);
+          }
+          return prev;
+        });
       }
     }
-  }, [activeDate, currentMonth]);
+  }, [activeDate]);
 
   if (!mounted) return <div className="h-64 border border-foreground/10 rounded-xl animate-pulse" />;
 
@@ -56,15 +66,25 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
   for (let i = 1; i <= daysInMonth; i++) {
     const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
     
-    // Check if event exists and get its status to determine coloring
     const eventForDay = events.find(e => e.date === dStr);
     const hasEvent = !!eventForDay;
     const isSelected = selectedDate === dStr;
-    const isActive = activeDate === dStr && !selectedDate; // Only show scroll highlight if nothing is manually selected
+    const isActive = activeDate === dStr && !selectedDate; 
+    const isToday = dStr === todayFormat;
 
-    let colorClasses = 'text-foreground hover:bg-foreground/10'; // Default
+    // 2. Color assignment for Selected / HasEvent / NoEvent
+    // Less importance for no events
+    let colorClasses = 'text-foreground/40 hover:bg-foreground/10'; 
+    
     if (isSelected) {
-      colorClasses = 'bg-primary text-white font-bold shadow-md';
+      // Keep event colors if selected, but solid
+      if (hasEvent) {
+        if (eventForDay.status === 'Live') colorClasses = 'bg-red-500 text-white font-bold shadow-md';
+        else if (eventForDay.status === 'Upcoming') colorClasses = 'bg-emerald-500 text-white font-bold shadow-md';
+        else colorClasses = 'bg-primary text-white font-bold shadow-md';
+      } else {
+        colorClasses = 'bg-foreground/20 text-foreground font-bold shadow-sm';
+      }
     } else if (hasEvent) {
       if (eventForDay.status === 'Live') {
         colorClasses = 'bg-red-500/20 text-red-600 dark:text-red-400 font-bold hover:bg-red-500/40';
@@ -78,14 +98,20 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
     days.push(
       <div key={dStr} className="relative flex items-center justify-center">
         {isActive && !isSelected && (
-          <div className="absolute inset-0 border-2 border-primary/50 rounded-full animate-pulse" />
+          <div className="absolute inset-0 border-2 border-primary/50 rounded-full animate-pulse pointer-events-none" />
         )}
         <button
           onClick={() => onSelectDate(isSelected ? null : dStr)}
-          className={`h-8 w-8 rounded-full flex items-center justify-center text-sm transition-all z-10 ${colorClasses}`}
+          className={`h-8 w-8 rounded-full flex flex-col items-center justify-center text-sm transition-all z-10 cursor-pointer ${colorClasses}
+            ${isToday && isSelected ? 'ring-2 ring-offset-2 ring-offset-background ring-foreground' : ''}
+            ${isToday && !isSelected && !hasEvent ? 'border border-foreground/40' : ''}`}
         >
           {i}
+          {/* 3. Differentiate today below the number physically if possible, or border */}
         </button>
+        {isToday && !isSelected && (
+           <div className="absolute bottom-[-1px] w-1 h-1 rounded-full bg-foreground pointer-events-none" />
+        )}
       </div>
     );
   }
@@ -95,31 +121,34 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
       <div className="flex justify-between items-center mb-6">
         <h3 className="font-heading font-bold text-lg">{monthNames[month]} {year}</h3>
         <div className="flex gap-2">
-          <button onClick={prevMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/5 transition-colors">&lt;</button>
-          <button onClick={nextMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/5 transition-colors">&gt;</button>
+          <button onClick={prevMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/10 transition-colors cursor-pointer">&lt;</button>
+          <button onClick={nextMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/10 transition-colors cursor-pointer">&gt;</button>
         </div>
       </div>
-      <div className="flex gap-4 justify-center mb-4 text-[10px] font-bold uppercase tracking-wider">
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500/50"></span> Live</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500/50"></span> Upcoming</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary/50"></span> Past</span>
-      </div>
+      
       <div className="grid grid-cols-7 gap-y-2 place-items-center mb-2">
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
           <div key={d} className="text-xs text-foreground/50 font-bold">{d}</div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-y-2 place-items-center">
+      <div className="grid grid-cols-7 gap-y-2 place-items-center gap-y-4">
         {days}
+      </div>
+
+      {/* 1. Shift color coding legend below calendar */}
+      <div className="flex gap-3 justify-center mt-8 pt-4 border-t border-foreground/10 text-[10px] font-bold uppercase tracking-wider">
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500/80"></span> Live</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500/80"></span> Upcoming</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary/80"></span> Past</span>
       </div>
       
       {selectedDate && (
-        <div className="mt-4 pt-4 border-t border-foreground/10 text-center animate-in fade-in">
+        <div className="mt-3 text-center animate-in fade-in">
           <button 
             onClick={() => onSelectDate(null)}
-             className="text-xs font-semibold text-primary/80 hover:text-primary transition-colors"
+             className="text-xs font-semibold text-primary/80 hover:text-primary transition-colors cursor-pointer"
           >
-            Clear Search Date
+            Clear Selected Date
           </button>
         </div>
       )}
