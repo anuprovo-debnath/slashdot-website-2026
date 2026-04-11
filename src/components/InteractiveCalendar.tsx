@@ -92,17 +92,17 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
     if (isSelected) {
       // Keep event colors if selected, but solid
       if (hasEvent) {
-        if (eventForDay.status === 'Live') colorClasses = 'bg-red-500 text-white font-bold shadow-md';
-        else if (eventForDay.status === 'Upcoming') colorClasses = 'bg-emerald-500 text-white font-bold shadow-md';
+        if (eventForDay.status === 'Live') colorClasses = 'bg-live text-white font-bold shadow-md';
+        else if (eventForDay.status === 'Upcoming') colorClasses = 'bg-upcoming text-white font-bold shadow-md';
         else colorClasses = 'bg-primary text-white font-bold shadow-md';
       } else {
         colorClasses = 'bg-foreground/20 text-foreground font-bold shadow-sm';
       }
     } else if (hasEvent) {
       if (eventForDay.status === 'Live') {
-        colorClasses = 'bg-red-500/20 text-red-600 dark:text-red-400 font-bold hover:bg-red-500/40';
+        colorClasses = 'bg-live/20 text-live font-bold hover:bg-live/40';
       } else if (eventForDay.status === 'Upcoming') {
-        colorClasses = 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold hover:bg-emerald-500/40';
+        colorClasses = 'bg-upcoming/20 text-upcoming font-bold hover:bg-upcoming/40';
       } else {
         colorClasses = 'bg-primary/20 text-primary font-bold hover:bg-primary/40';
       }
@@ -213,8 +213,8 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
 
       {/* 1. Shift color coding legend below calendar */}
       <div className="flex gap-4 justify-center mt-8 pt-6 border-t border-foreground/5 text-[9px] font-black uppercase tracking-[0.2em] opacity-60">
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500/80 shadow-[0_0_8px_rgba(239,68,68,0.4)]"></span> Live</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></span> Upcoming</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-live shadow-[0_0_8px_rgba(var(--color-live-rgb),0.5)]"></span> Live</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-upcoming shadow-[0_0_8px_rgba(var(--color-upcoming-rgb),0.5)]"></span> Upcoming</span>
         <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary/80 shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.4)]"></span> Past</span>
       </div>
       

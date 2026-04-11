@@ -17,6 +17,10 @@
   --color-primary-rgb: 2, 145, 178;
   --color-bg: #ffffff;
   --color-text: #171717;
+  --color-live: #ef4444;
+  --color-live-rgb: 239, 68, 68;
+  --color-upcoming: #10b981;
+  --color-upcoming-rgb: 16, 185, 129;
 }
 
 .dark {
@@ -24,12 +28,18 @@
   --color-primary-rgb: 2, 145, 178;
   --color-bg: #262626;
   --color-text: #ffffff;
+  --color-live: #ef4444;
+  --color-live-rgb: 239, 68, 68;
+  --color-upcoming: #10b981;
+  --color-upcoming-rgb: 16, 185, 129;
 }
 
 @theme inline {
   --color-primary: var(--color-primary);
   --color-background: var(--color-bg);
   --color-foreground: var(--color-text);
+  --color-live: var(--color-live);
+  --color-upcoming: var(--color-upcoming);
   --font-heading: 'Arista Pro';
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

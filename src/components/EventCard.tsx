@@ -78,11 +78,9 @@ export function EventCard({ event }: EventCardProps) {
         {resources && Object.keys(resources).length > 0 && (
           <div className="flex flex-wrap gap-2 mt-6 relative z-[20] pointer-events-none">
             {Object.entries(resources).map(([type]) => {
-              let colorClass = 'bg-[var(--color-primary)]/5 text-[var(--color-primary)] border-[var(--color-primary)]/20';
-              if (type.toLowerCase() === 'youtube') colorClass = 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20';
+              let colorClass = 'bg-primary/5 text-primary border-primary/20';
+              if (type.toLowerCase() === 'youtube') colorClass = 'bg-live/10 text-live dark:text-live/90 border-live/20';
               if (type.toLowerCase() === 'github') colorClass = 'bg-foreground/5 text-foreground border-foreground/10';
-              if (type.toLowerCase() === 'slides') colorClass = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20';
-              if (type.toLowerCase() === 'docs') colorClass = 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20';
 
               return (
                 <span 
@@ -105,8 +103,8 @@ function StatusBadge({ status }: { status: EventData['frontmatter']['status'] })
   
   if (status === 'Live') {
     return (
-      <span className={`${baseClasses} border-red-500/30 text-red-500 bg-red-500/10 shadow-[0_0_10px_rgba(239,68,68,0.2)]`}>
-        <span className="w-2 h-2 mr-2 bg-red-500 rounded-full animate-pulse" />
+      <span className={`${baseClasses} border-live/30 text-live bg-live/10 shadow-[0_0_10px_rgba(var(--color-live-rgb),0.2)]`}>
+        <span className="w-2 h-2 mr-2 bg-live rounded-full animate-pulse" />
         LIVE
       </span>
     );
@@ -114,7 +112,7 @@ function StatusBadge({ status }: { status: EventData['frontmatter']['status'] })
   
   if (status === 'Upcoming') {
     return (
-      <span className={`${baseClasses} border-primary/30 text-primary bg-primary/10`}>
+      <span className={`${baseClasses} border-upcoming/30 text-upcoming bg-upcoming/10`}>
         UPCOMING
       </span>
     );
