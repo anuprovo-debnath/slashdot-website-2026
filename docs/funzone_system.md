@@ -19,9 +19,10 @@ The underlying grid architecture is built for strict visual uniformity across al
 
 ### Layout Logic
 - **Geometry Inheritance (Blog Parity):** All Fun Zone card components operate strictly as identical visual derivatives of the primary `BlogGrid` elements, effectively overriding previous independent 450px hard-coded mandates isolated to this section. Any variations extending beyond standard blog layout specs map dynamically to these defaults.
-- **Top/Bottom Internal Column Split:** Content structure leverages Flexbox mapping exactly identically to Blog pages. The visual asset (Image/Game/Art) claims the fixed upper frame (`180px` height shrink-blocked), leaving the bottom stretch dynamically mapped to centered titles, descriptive tags, and UI interactions embedded above the strict `48px` footer boundary.
+- **Top/Bottom Internal Column Split:** Content structure leverages Flexbox mapping exactly identically to Blog pages. The visual asset claims the fixed upper frame (`180px` height shrink-blocked), leaving the bottom stretch dynamically mapped to centered titles, descriptive tags, and UI interactions embedded above the strict `48px` footer boundary.
+- **Embedded Game Sources (iframes):** The 180px visual bounds wrap direct externally-hosted games via `sandbox` iframes. Sources currently map to `https://gabrielecirulli.github.io/2048/`, `https://hextris.github.io/hextris/`, and `https://ellisonleao.github.io/clumsy-bird/`.
+- **Interactive Leaderboards:** Real-time mini leaderboards swap out primary descriptions in interactive widgets (GameCard). Elements strictly require `mounted` hydration logic to bypass initial export errors. Mock data utilizes a specifically styled visual 3-tier array: `[{"👑 Neo": "24,400"}, {"Trinity": "18,200"}, {"Morpheus": "12,100"}]`.
 - **Subtle Background Animation:** The outer Card wrapper integrates an ambient hover glow (ex: `hover:bg-foreground/[0.02] transform-gpu scale`) synchronized entirely alongside precise ring-box transitions duplicating standard site-wide interactions.
-- **Interactive Leaderboards:** Real-time mini leaderboards swap out descriptions in interactive widgets (GameCard). Elements strictly require `mounted` hydration logic returning placeholder arrays to dodge statically exported mismatches.
 
 ---
 

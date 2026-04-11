@@ -27,23 +27,38 @@ const SlashPattern = ({ className = "" }: { className?: string }) => (
   </svg>
 );
 
+const StatusBadge = ({ status }: { status: string }) => {
+  const styles: Record<string, string> = {
+    Active: 'bg-gradient-to-r from-[#0291B2] to-[#06b6d4] text-white border-white/20',
+    Trending: 'bg-gradient-to-r from-red-500 to-orange-500 text-white border-white/20',
+    New: 'bg-[#22C55E] text-white border-white/20',
+  };
+  return (
+    <span className={`px-5 py-2 text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border ${styles[status] ?? 'bg-white/20 text-white border-white/20'}`}>
+      {status}
+    </span>
+  );
+};
+
 const MemeCard = ({ title, category, img }: { title: string; category: string; img: string }) => (
-  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all duration-500 hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 hover:bg-foreground/[0.02] overflow-hidden h-[450px] w-full text-center">
-    <div className="flex flex-col h-[406px] overflow-hidden relative z-10 w-full pointer-events-none">
-      <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center">
+  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+    <div className="flex flex-col h-[406px] overflow-hidden">
+      <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
         <Image
-          src={img}
+          src={img.startsWith('http') ? img : `/slashdot-website-2026${img}`}
           alt={title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover group-hover:scale-[1.05] transition-transform duration-700 transform-gpu"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           unoptimized
         />
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
       </div>
-      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto items-center justify-center">
-        <div className="flex flex-col flex-1 min-h-0 items-center">
-          <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
+      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden">
+        <div className="flex flex-col flex-1 min-h-0 text-center items-center justify-start">
+          <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 shrink-0 mb-1">
+            {title}
+          </h3>
           <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
             Curated dev humor collected from the corners of the network. High visual fidelity, low productivity.
           </p>
@@ -51,9 +66,9 @@ const MemeCard = ({ title, category, img }: { title: string; category: string; i
       </div>
     </div>
     <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12">
+      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center">
         <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
-          {category}
+          #{category.toUpperCase()}
         </span>
       </div>
     </div>
@@ -61,103 +76,68 @@ const MemeCard = ({ title, category, img }: { title: string; category: string; i
   </div>
 );
 
-const GameCard = ({ title, description }: { title: string; description: string }) => {
-  const [score, setScore] = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const leaderboardEntries = [
-    { rank: 1, player: "Terminal God", score: 15400 },
-    { rank: 2, player: "KernelPanic", score: 12200 },
-    { rank: 3, player: "StackOvrflv", score: 9000 },
-  ];
-  
+const GameCard = ({ title, description, url, tags }: { title: string; description: string; url: string; tags: string[] }) => {
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all duration-500 hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 hover:bg-foreground/[0.02] overflow-hidden h-[450px] w-full text-center">
-      <div className="flex flex-col h-[406px] overflow-hidden relative z-10 w-full pointer-events-none">
-        
-        {/* Game Area mapped to Image area length of 180px */}
-        <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center pointer-events-auto bg-[var(--background)] transition-transform duration-700 group-hover:scale-[1.03]">
-          <SlashPattern className="opacity-5 text-[#0291B2] pointer-events-none" />
-          <div className="text-primary font-heading text-6xl font-bold tabular-nums tracking-tighter drop-shadow-md z-10">
-            {score}
-          </div>
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full text-center">
+      <div className="flex flex-col h-[406px] overflow-hidden">
+        <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-[var(--background)] pointer-events-auto">
+          <iframe 
+            src={url} 
+            className="w-full h-full border-0 pointer-events-auto transition-opacity duration-700" 
+            title={title} 
+            sandbox="allow-scripts allow-same-origin text-center"
+          ></iframe>
         </div>
-
-        {/* Info Area mapped to Blog text block */}
-        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto items-center">
-          <div className="flex flex-col flex-1 min-h-0 w-full items-center">
-            <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-1 shrink-0 mb-1">{title}</h3>
-            
-            {/* Embedded Mini Leaderboard replaces strict description block */}
-            <div className="flex-1 w-full bg-black/5 dark:bg-white/5 rounded-lg mb-2 p-3 overflow-hidden border border-black/10 dark:border-white/10">
-              <h4 className="text-[10px] font-black uppercase tracking-widest text-primary mb-2">Live Leaderboard</h4>
-              {!mounted ? (
-                <div className="animate-pulse space-y-2">
-                  <div className="h-3 bg-foreground/10 rounded w-full"></div>
-                  <div className="h-3 bg-foreground/10 rounded w-[80%] mx-auto"></div>
-                </div>
-              ) : (
-                <ul className="text-xs space-y-1.5 w-full text-center text-foreground/80 font-medium">
-                  {leaderboardEntries.map((l) => (
-                     <li key={l.rank} className="flex justify-between items-center px-2">
-                       <span className="opacity-50 w-4 text-left">{l.rank}.</span>
-                       <span className="flex-1 text-left ml-2 truncate">{l.player}</span>
-                       <span className="text-primary font-bold">{l.score}</span>
-                     </li>
-                  ))}
-                </ul>
-              )}
+        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden text-center items-center">
+          <div className="flex flex-col flex-1 min-h-0 w-full text-center items-center justify-start">
+            <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-1 shrink-0 mb-1">
+              {title}
+            </h3>
+            <p className="text-[14px] leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-2 overflow-hidden text-ellipsis mb-1">
+              {description}
+            </p>
+            <div className="w-full mt-2 border-t border-black/5 dark:border-white/5 pt-2 flex-1">
+              <table className="w-full text-center text-[12px] opacity-70 mt-1 mx-auto">
+                <tbody>
+                  <tr><td className="py-0.5 text-left pl-4">👑 Neo</td><td className="text-right pr-4 font-bold">24,400</td></tr>
+                  <tr><td className="py-0.5 text-left pl-4">Trinity</td><td className="text-right pr-4 font-bold">18,200</td></tr>
+                  <tr><td className="py-0.5 text-left pl-4">Morpheus</td><td className="text-right pr-4 font-bold">12,100</td></tr>
+                </tbody>
+              </table>
             </div>
-
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                setScore(s => s + 10);
-              }}
-              className="px-6 py-1.5 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white rounded-full font-bold text-sm active:scale-95 transition-transform transform-gpu flex items-center justify-center gap-1 mx-auto mt-auto shrink-0 z-20"
-            >
-              <span>Play Now</span>
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M13 10V3L4 14h7v8l9-11h-7z" />
-              </svg>
-            </button>
           </div>
         </div>
       </div>
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
         <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
-          <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
-            Interactive
-          </span>
+          {tags.map(tag => (
+             <span key={tag} className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+               #{tag.toUpperCase()}
+             </span>
+          ))}
         </div>
       </div>
-      <SlashPattern className="opacity-0 group-hover:opacity-[0.03] text-[var(--color-primary)] transition-opacity duration-500 pointer-events-none" />
     </div>
   );
 };
 
 const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => {
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all duration-500 hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 hover:bg-foreground/[0.02] overflow-hidden h-[450px] w-full text-center">
-      <div className="flex flex-col h-[406px] overflow-hidden relative z-10 w-full pointer-events-none">
-        
-        {/* CSS Mathematical Generator Art */}
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+      <div className="flex flex-col h-[406px] overflow-hidden">
         <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-black/5 dark:bg-white/5 pointer-events-auto">
-          <div className="relative w-32 h-32 group-hover:scale-110 transition-transform duration-1000 transform-gpu" style={{ animation: 'spin 20s linear infinite' }}>
+          <div className="relative w-32 h-32 transition-transform duration-700 ease-out group-hover:scale-110" style={{ animation: 'spin 20s linear infinite' }}>
             <div className="absolute inset-0 rounded-full blur-[30px] opacity-40 group-hover:opacity-70 transition-opacity duration-1000" style={{ backgroundColor: blurColor }}></div>
             <div className="absolute top-0 left-0 w-full h-full border-[6px] border-[#0291B2]/60 mix-blend-multiply dark:mix-blend-screen transition-all duration-700 group-hover:border-[10px]" style={{ borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%' }}></div>
             <div className="absolute top-[-10px] left-[-10px] w-[calc(100%+20px)] h-[calc(100%+20px)] border-[2px] border-foreground/40 transition-all duration-1000 group-hover:rotate-45" style={{ borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' }}></div>
             <div className="absolute top-[10px] left-[10px] w-[calc(100%-20px)] h-[calc(100%-20px)] border-[1px] border-[#0291B2]/40 transition-all duration-1000 group-hover:-rotate-45" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%' }}></div>
           </div>
         </div>
-
-        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto items-center justify-center">
-          <div className="flex flex-col flex-1 min-h-0 items-center">
-            <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
+        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden">
+          <div className="flex flex-col flex-1 min-h-0 text-center items-center justify-start">
+            <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 shrink-0 mb-1">
+              {title}
+            </h3>
             <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
               Procedurally generated geometric patterns running raw via CSS variables without external dependencies.
             </p>
@@ -167,7 +147,7 @@ const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => 
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
         <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
           <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
-            Generative
+            #GENERATIVE
           </span>
         </div>
       </div>
@@ -244,33 +224,23 @@ export default function FunZonePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full px-2">
             <GameCard 
-              title="Incremental Stack" 
-              description="A client-side only clicker using React state. Maximize your operations per second before the eventual browser tab crash." 
+              title="2048" 
+              description="Join the numbers and get to the 2048 tile!" 
+              url="https://gabrielecirulli.github.io/2048/"
+              tags={["Puzzles"]}
             />
-            
-            {/* Disabled Game Card Placeholder */}
-            <div className="h-[450px] bg-background border-2 border-dashed border-foreground/20 rounded-xl overflow-hidden relative flex flex-col group justify-center items-center p-8 text-center transform-gpu">
-              <SlashPattern className="opacity-[0.03] text-foreground" />
-              <div className="z-10 bg-background/90 p-8 rounded-2xl backdrop-blur-xl border border-foreground/10 shadow-2xl">
-                <svg className="w-10 h-10 mx-auto text-primary mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                <h3 className="font-heading text-2xl font-bold text-foreground mb-3 text-opacity-50">Terminal Pong</h3>
-                <p className="text-foreground/50 text-sm font-medium uppercase tracking-wider">Awaiting Deployment v2.4</p>
-              </div>
-            </div>
-            
-            {/* Disabled Game Card Placeholder */}
-            <div className="h-[450px] bg-background border-2 border-dashed border-foreground/20 rounded-xl overflow-hidden relative flex flex-col group justify-center items-center p-8 text-center transform-gpu">
-              <SlashPattern className="opacity-[0.03] text-foreground" />
-              <div className="z-10 bg-background/90 p-8 rounded-2xl backdrop-blur-xl border border-foreground/10 shadow-2xl">
-                <svg className="w-10 h-10 mx-auto text-primary mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                <h3 className="font-heading text-2xl font-bold text-foreground mb-3 text-opacity-50">Regex Golf</h3>
-                <p className="text-foreground/50 text-sm font-medium uppercase tracking-wider">Awaiting Deployment v3.0</p>
-              </div>
-            </div>
+            <GameCard 
+              title="Hextris" 
+              description="Fast-paced hexagonal puzzle inspired by Tetris." 
+              url="https://hextris.github.io/hextris/"
+              tags={["Arcade"]}
+            />
+            <GameCard 
+              title="Clumsy Bird" 
+              description="A retro-style arcade challenge. Don't hit the pipes!" 
+              url="https://ellisonleao.github.io/clumsy-bird/"
+              tags={["Retro"]}
+            />
           </div>
         </section>
 
