@@ -40,19 +40,23 @@ export function EventCard({ event }: EventCardProps) {
         </div>
         
         {resources && Object.keys(resources).length > 0 && (
-          <div className="flex flex-wrap gap-3 mt-6">
-            {Object.entries(resources).map(([type, url]) => (
-              <a 
-                key={type} 
-                href={url as string} 
-                target="_blank" 
-                rel="noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="pointer-events-auto text-[10px] font-black px-4 py-2 rounded-full border border-foreground/10 text-foreground bg-background hover:bg-primary hover:text-white hover:border-primary transition-all uppercase tracking-[0.15em] shadow-sm z-[30]"
-              >
-                {type}
-              </a>
-            ))}
+          <div className="flex flex-wrap gap-2 mt-6 relative z-[20] pointer-events-none">
+            {Object.entries(resources).map(([type]) => {
+              let colorClass = 'bg-[var(--color-primary)]/5 text-[var(--color-primary)] border-[var(--color-primary)]/20';
+              if (type.toLowerCase() === 'youtube') colorClass = 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20';
+              if (type.toLowerCase() === 'github') colorClass = 'bg-foreground/5 text-foreground border-foreground/10';
+              if (type.toLowerCase() === 'slides') colorClass = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20';
+              if (type.toLowerCase() === 'docs') colorClass = 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20';
+
+              return (
+                <span 
+                  key={type} 
+                  className={`px-3 py-1 rounded-full border text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap ${colorClass}`}
+                >
+                  {type}
+                </span>
+              );
+            })}
           </div>
         )}
       </div>
