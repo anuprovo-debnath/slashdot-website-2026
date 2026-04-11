@@ -14,7 +14,7 @@ export function EventCard({ event }: EventCardProps) {
     : date;
 
   return (
-    <div className="flex flex-col md:flex-row bg-background border border-foreground/10 rounded-xl overflow-hidden hover:border-primary/50 transition-colors p-6 group gap-6 w-full relative z-10 hover:-translate-y-1 hover:shadow-lg shadow-sm duration-300">
+    <div className="group relative flex flex-col md:flex-row rounded-2xl bg-[var(--background)] ring-[3px] ring-[var(--color-primary)]/30 shadow-xl transition-all hover:ring-[var(--color-primary)]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden p-6 gap-6 w-full z-10">
       {/* Absolute link mapping the card to details page */}
       <Link href={`/events/${event.slug}`} className="absolute inset-0 z-[10]" aria-label={`View details for ${title}`} />
       
