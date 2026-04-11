@@ -44,6 +44,12 @@ export function Navbar() {
             <Link href="/fun-zone" className="hover:text-[var(--color-primary)] transition-colors">Fun Zone</Link>
             <Link href="/about" className="hover:text-[var(--color-primary)] transition-colors">About</Link>
             <Link href="/contact" className="hover:text-[var(--color-primary)] transition-colors">Contact</Link>
+            <Link 
+              href="#join-us" 
+              className="bg-[var(--color-primary)] text-white px-5 py-2 rounded-full font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-[var(--color-primary)]/20 active:scale-95"
+            >
+              JOIN
+            </Link>
             <ThemeToggle />
           </div>
           <div className="flex items-center md:hidden space-x-4">
@@ -79,6 +85,13 @@ export function Navbar() {
           <Link href="/fun-zone" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Fun Zone</Link>
           <Link href="/about" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">About</Link>
           <Link href="/contact" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Contact</Link>
+          <Link 
+            href="#join-us" 
+            onClick={() => setIsOpen(false)}
+            className="block px-3 py-2 rounded-md font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 transition-colors"
+          >
+            JOIN
+          </Link>
         </div>
       </div>
     </nav>

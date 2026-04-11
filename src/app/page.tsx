@@ -18,7 +18,7 @@ export default function Home() {
         {/* Call to action buttons */}
         <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mt-8">
           <a
-            href="#join"
+            href="#join-us"
             className="inline-flex justify-center items-center px-8 py-3 text-base font-medium rounded-md text-white bg-[var(--color-primary)] hover:opacity-90 transition-opacity duration-300 shadow-md"
           >
             Join Competition

@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "A responsive themed website for the Slashdot competition.",
 };
 
+import { Footer } from "@/components/Footer";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,6 +41,7 @@ export default function RootLayout({
           <main className="flex-1 flex flex-col">
             {children}
           </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
