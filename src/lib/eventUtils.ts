@@ -1,27 +1,94 @@
-export function getEventStatus(date: string, time: string): 'Live' | 'Upcoming' | 'Past' {
-  const now = new Date();
-  
-  // Format: "10:00 - 22:00 IST"
-  const timeMatch = time.match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})\s*(IST)?/);
-  if (!timeMatch) return 'Upcoming';
+import type { EventData } from './events';
 
+export const parseTimeRange = (dateStr: string, timeStr: string) => {
+  const timeMatch = timeStr.match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})\s*(IST)?/);
+  if (!timeMatch) return null;
   const [_, start, end, tz] = timeMatch;
 
-  const createDate = (t: string) => {
-    let isoStr = `${date}T${t.padStart(5, '0')}:00`;
+  const createDate = (d: string, t: string) => {
+    let isoStr = `${d}T${t.padStart(5, '0')}:00`;
     if (tz === 'IST') isoStr += '+05:30';
-    else isoStr += 'Z'; // Default to UTC
+    else isoStr += 'Z';
     return new Date(isoStr);
   };
 
-  try {
-    const startDate = createDate(start);
-    const endDate = createDate(end);
+  return {
+    start: createDate(dateStr, start),
+    end: createDate(dateStr, end)
+  };
+};
 
-    if (now >= startDate && now <= endDate) return 'Live';
-    if (now < startDate) return 'Upcoming';
-    return 'Past';
-  } catch (e) {
+export function getEventStatus(
+  frontmatter: Pick<EventData['frontmatter'], 'date' | 'time' | 'schedule'>
+): 'Live' | 'Upcoming' | 'Past' {
+  const now = new Date();
+
+  // Option B: Custom Schedule
+  if (frontmatter.schedule && frontmatter.schedule.length > 0) {
+    let hasUpcoming = false;
+
+    for (const session of frontmatter.schedule) {
+      const dates = session.date.split(' - ');
+      const startDateStr = dates[0];
+      const endDateStr = dates.length > 1 ? dates[1] : dates[0];
+      
+      const parsedStart = parseTimeRange(startDateStr, session.time);
+      const parsedEnd = parseTimeRange(endDateStr, session.time);
+      
+      if (!parsedStart || !parsedEnd) continue;
+
+      if (now >= parsedStart.start && now <= parsedEnd.end) {
+        return 'Live';
+      }
+      if (now < parsedStart.start) {
+        hasUpcoming = true; // A future session exists
+      }
+    }
+
+    if (hasUpcoming) {
+      return 'Upcoming'; // Oscillate back to Upcoming between sessions
+    }
+    return 'Past'; // Only past when ALL sessions are exhausted
+  }
+
+  // Option A: Continuous range or single day
+  const dates = frontmatter.date.split(' - ');
+  const startDateStr = dates[0];
+  const endDateStr = dates.length > 1 ? dates[1] : dates[0];
+
+  const parsedStart = parseTimeRange(startDateStr, frontmatter.time);
+  const parsedEnd = parseTimeRange(endDateStr, frontmatter.time);
+
+  if (!parsedStart || !parsedEnd) return 'Upcoming';
+
+  if (now >= parsedStart.start && now <= parsedEnd.end) {
+    return 'Live';
+  }
+  if (now < parsedStart.start) {
     return 'Upcoming';
   }
+  return 'Past';
+}
+
+export function isDayInEvent(targetDateStr: string, frontmatter: Pick<EventData['frontmatter'], 'date' | 'schedule'>) {
+    const targetDate = new Date(targetDateStr);
+    targetDate.setHours(0, 0, 0, 0);
+    const target = targetDate.getTime();
+
+    if (frontmatter.schedule && frontmatter.schedule.length > 0) {
+        return frontmatter.schedule.some(s => {
+             const sessionDate = new Date(s.date);
+             sessionDate.setHours(0, 0, 0, 0);
+             return target === sessionDate.getTime();
+        });
+    }
+
+    const dates = frontmatter.date.split(' - ');
+    const startDate = new Date(dates[0]);
+    startDate.setHours(0, 0, 0, 0);
+    
+    const endDate = new Date(dates.length > 1 ? dates[1] : dates[0]);
+    endDate.setHours(0, 0, 0, 0);
+    
+    return target >= startDate.getTime() && target <= endDate.getTime();
 }

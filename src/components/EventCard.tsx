@@ -10,23 +10,44 @@ interface EventCardProps {
 export function EventCard({ event }: EventCardProps) {
   // Initialize with the status calculated during the build/fetch phase
   const [status, setStatus] = useState<'Live' | 'Upcoming' | 'Past'>(event.frontmatter.status);
-  const { title, date, time, category, resources } = event.frontmatter;
+  const { title, date, time, category, resources, schedule } = event.frontmatter;
 
   useEffect(() => {
     // Immediate update on mount to catch shifts since the server-render
-    const current = getEventStatus(date, time);
+    const current = getEventStatus(event.frontmatter);
     setStatus(current);
 
     const timer = setInterval(() => {
-      setStatus(getEventStatus(date, time));
+      setStatus(getEventStatus(event.frontmatter));
     }, 30000); 
     return () => clearInterval(timer);
-  }, [date, time]);
-  
-  const parsedDate = new Date(date);
-  const formattedDate = !isNaN(parsedDate.getTime()) 
-    ? parsedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-    : date;
+  }, [event.frontmatter]);
+  const formatRange = (rangeStr: string) => {
+    const parts = rangeStr.split(' - ');
+    if (parts.length === 1) {
+      const parsed = new Date(parts[0]);
+      return !isNaN(parsed.getTime()) ? parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : rangeStr;
+    }
+    const d1 = new Date(parts[0]);
+    const d2 = new Date(parts[1]);
+    if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return rangeStr;
+
+    const m1 = d1.toLocaleDateString('en-US', { month: 'short' });
+    const m2 = d2.toLocaleDateString('en-US', { month: 'short' });
+    const y1 = d1.getFullYear();
+    const y2 = d2.getFullYear();
+
+    if (y1 !== y2) {
+      return `${m1} ${d1.getDate()}, ${y1} - ${m2} ${d2.getDate()}, ${y2}`;
+    }
+    if (m1 === m2) {
+       return `${m1} ${d1.getDate()} - ${d2.getDate()}, ${y1}`;
+    }
+    return `${m1} ${d1.getDate()} - ${m2} ${d2.getDate()}, ${y1}`;
+  };
+
+  const formattedDate = schedule && schedule.length > 0 ? "Multiple Dates" : formatRange(date);
+  const displayTime = schedule && schedule.length > 0 ? "Scheduled Sessions" : time;
 
   return (
     <div className="group relative flex flex-col md:flex-row rounded-2xl bg-[var(--background)] ring-[3px] ring-[var(--color-primary)]/30 shadow-xl transition-all duration-300 ease-out transform-gpu hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.4)] dark:hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.25)] hover:ring-[var(--color-primary)]/80 overflow-hidden p-6 gap-6 w-full z-10">
@@ -36,8 +57,8 @@ export function EventCard({ event }: EventCardProps) {
       <div className="flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start md:w-32 shrink-0 relative z-[20] pointer-events-none">
         <div className="flex flex-col">
           <span className="text-[10px] text-[var(--color-primary)] uppercase font-bold tracking-[0.2em] mb-1">{category}</span>
-          <span className="text-2xl font-extrabold text-foreground tracking-tight font-sans">{formattedDate}</span>
-          <span className="text-xs text-foreground/50 mt-1 uppercase tracking-widest font-medium">{time}</span>
+          <span className="text-2xl font-extrabold text-foreground tracking-tight font-sans leading-tight">{formattedDate}</span>
+          <span className="text-xs text-foreground/50 mt-1 uppercase tracking-widest font-medium">{displayTime}</span>
         </div>
         <div className="mt-0 md:mt-4">
           <StatusBadge status={status} />

@@ -41,7 +41,8 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
 
   const calendarEvents = initialEvents.map(e => ({
     date: e.frontmatter.date,
-    status: getEventStatus(e.frontmatter.date, e.frontmatter.time)
+    schedule: e.frontmatter.schedule,
+    status: getEventStatus(e.frontmatter)
   }));
 
   const filteredEvents = initialEvents.filter(event => {

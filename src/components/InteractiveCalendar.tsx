@@ -1,8 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { isDayInEvent } from '@/lib/eventUtils';
 
-type CalendarEvent = { date: string; status: 'Live' | 'Upcoming' | 'Past' };
+type CalendarEvent = { 
+  date: string; 
+  status: 'Live' | 'Upcoming' | 'Past';
+  schedule?: { date: string; time: string }[];
+};
 
 interface InteractiveCalendarProps {
   events: CalendarEvent[];
@@ -73,7 +78,8 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
   for (let i = 1; i <= daysInMonth; i++) {
     const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
     
-    const eventForDay = events.find(e => e.date === dStr);
+    const overlappingEvents = events.filter(e => isDayInEvent(dStr, { date: e.date, schedule: e.schedule }));
+    const eventForDay = overlappingEvents.length > 0 ? overlappingEvents[0] : null; // Optionally we could sort by status LIVE > UPCOMING
     const hasEvent = !!eventForDay;
     const isSelected = selectedDate === dStr;
     const isActive = activeDate === dStr && !selectedDate; 
@@ -129,8 +135,15 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
           const isActualTodayMonth = today.getFullYear() === year && today.getMonth() === index;
           
           const eventsInMonth = events.filter(e => {
-            const d = new Date(e.date);
-            return d.getFullYear() === year && d.getMonth() === index;
+            // Check if any day 1..daysInMonth is inside this event
+            const daysInThisMonth = new Date(year, index + 1, 0).getDate();
+            for (let d = 1; d <= daysInThisMonth; d++) {
+                const targetDayStr = `${year}-${String(index + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                if (isDayInEvent(targetDayStr, { date: e.date, schedule: e.schedule })) {
+                    return true;
+                }
+            }
+            return false;
           }).length;
 
           // GitHub-style contribution intensity

@@ -26,6 +26,17 @@ The system utilizes a client-safe utility, [`eventUtils.ts`](file:///d:/Github/s
 - **Heartbeat Sync**: Every `EventCard` maintains a 30-second heartbeat. If an event starts while a user is on-page, the **"LIVE"** pulse badge triggers instantly.
 - **Hydration Stability**: Status is synced post-mount to ensure the server-rendered HTML perfectly matches the client's local clock without flickering.
 
+### 📅 Hybrid Multi-Day Events
+The engine natively supports two formats for events spanning multiple days, properly parsing strict ` - ` delimiters to avoid ISO date collision bugs:
+
+#### Option A: Continuous Ranges
+- **Frontmatter**: `date: "2026-04-13 - 2026-04-15"` with a single `time`.
+- **Behavior**: Handled as one continuous block. Stays **LIVE** 24/7 from the start time on Day 1 until the end time on the final day.
+
+#### Option B: Custom Schedules (Oscillating)
+- **Frontmatter**: An array of `schedule: [{ date: "...", time: "..." }]` overriding the top-level time.
+- **Behavior (Oscillation)**: The badge shows **LIVE** during each scheduled session. Between sessions (e.g., overnight), it intelligently flips back to **UPCOMING** instead of prematurely dying. It only shifts to **PAST** when the absolute final session concludes.
+
 ---
 
 ## 3. Interactive Calendar & Year View

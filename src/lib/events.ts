@@ -9,6 +9,7 @@ export interface EventData {
     title: string;
     date: string;
     time: string;
+    schedule?: { date: string; time: string }[];
     category: 'Workshop' | 'Seminar' | 'Hackathon';
     status: 'Live' | 'Upcoming' | 'Past';
     resources?: {
@@ -46,8 +47,8 @@ export function getEvents(): EventData[] {
     });
 
   return allEvents.sort((a, b) => {
-    const statusA = getEventStatus(a.frontmatter.date, a.frontmatter.time);
-    const statusB = getEventStatus(b.frontmatter.date, b.frontmatter.time);
+    const statusA = getEventStatus(a.frontmatter);
+    const statusB = getEventStatus(b.frontmatter);
 
     const statusWeight = { Live: 3, Upcoming: 2, Past: 1 };
     const aWeight = statusWeight[statusA] || 0;
