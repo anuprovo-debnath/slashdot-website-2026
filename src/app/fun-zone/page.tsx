@@ -177,6 +177,8 @@ const ArtCard = ({ title, blurColor, slug, onClick }: { title: string; blurColor
 export default function FunZonePage() {
   const [mounted, setMounted] = useState(false);
   const [visitedSlugs, setVisitedSlugs] = useState<string[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -185,6 +187,34 @@ export default function FunZonePage() {
       if (stored) setVisitedSlugs(JSON.parse(stored));
     } catch (e) { }
   }, []);
+
+  // Auto-scroll logic for Memes
+  useEffect(() => {
+    if (!mounted || isHovered) return;
+    
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        
+        if (scrollLeft >= maxScroll - 10) {
+          scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          // Card width (350) + Gap (32) = 382
+          scrollRef.current.scrollBy({ left: 382, behavior: "smooth" });
+        }
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [mounted, isHovered]);
+
+  const scrollManual = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const amount = direction === 'left' ? -382 : 382;
+      scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
+    }
+  };
 
   const handleCardClick = (slug: string) => {
     if (!visitedSlugs.includes(slug)) {
@@ -227,11 +257,36 @@ export default function FunZonePage() {
         
         {/* MEMES SECTION */}
         <section>
-          <div className="text-left mb-2 group">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Memes</h2>
-            <div className="h-[3px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-2 mb-10" />
+          <div className="text-left mb-2 group flex items-center justify-between">
+            <div className="flex-1">
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Memes</h2>
+              <div className="h-[3px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-2 mb-10" />
+            </div>
+            {/* Manual Navigation Buttons */}
+            <div className="flex gap-3 mb-8 pl-8">
+              <button 
+                onClick={() => scrollManual('left')}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] transition-all active:scale-95"
+                aria-label="Scroll Left"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button 
+                onClick={() => scrollManual('right')}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] transition-all active:scale-95"
+                aria-label="Scroll Right"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory pb-6 hide-scrollbar transform-gpu gap-8 w-full px-2 mt-12">
+          
+          <div 
+            ref={scrollRef}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className="flex overflow-x-auto snap-x snap-mandatory pb-6 hide-scrollbar transform-gpu gap-8 w-full px-2 mt-12"
+          >
             <MemeCard 
               title="When the code compiles cleanly on the first try and you don't know why." 
               category="compilation-panic"

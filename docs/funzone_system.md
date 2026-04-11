@@ -21,12 +21,19 @@ The underlying grid architecture is built for strict visual uniformity across al
 - **Geometry Inheritance (Blog Parity):** All Fun Zone card components operate strictly as identical visual derivatives of the primary `BlogGrid` elements, effectively overriding previous independent 450px hard-coded mandates isolated to this section. Any variations extending beyond standard blog layout specs map dynamically to these defaults.
 - **Top/Bottom Internal Column Split:** Content structure leverages Flexbox mapping exactly identically to Blog pages. The visual asset claims the fixed upper frame (`180px` height shrink-blocked), leaving the bottom stretch dynamically mapped to centered titles, descriptive tags, and UI interactions embedded above the strict `48px` footer boundary.
 - **Section Headers:** Section titles (Memes, Games, Art Gallery) are left-aligned for distinct visual separation. Each header is followed by a 3px horizontal gradient bar spanning the full width of the container, transitioning from `var(--color-primary)` to transparent.
-- **Horizontal Sidelong Scroll (Memes):** The "Memes" section specifically utilizes a horizontal `flex` container configured with `overflow-x-auto snap-x snap-mandatory hide-scrollbar transform-gpu`. Cards here enforce a fixed width (`w-[350px]`) and `shrink-0` to guarantee high-performance, swipeable carousel interactions.
+- **Horizontal Sidelong Scroll (Memes):** The "Memes" section specifically utilizes a horizontal `flex` container configured with `overflow-x-auto snap-x snap-mandatory hide-scrollbar transform-gpu`. 
+    - **Auto-Scroll Engine:** Features an intelligent auto-scroll mechanism that advances every 4 seconds, automatically looping back to the beginning upon reaching the last card.
+    - **Interaction Logic:** Auto-scrolling automatically pauses on `mouseEnter` to allow users to examine specific memes, resuming only on `mouseLeave`.
+    - **Manual Controls:** Integrated `<` and `>` navigation buttons allow manual smooth-scroll overrides.
+    - **Card Geometry:** Cards enforce a fixed width (`w-[350px]`) and `shrink-0` to guarantee high-performance, swipeable carousel interactions.
 - **Card Content Alignment:** Internal card content (titles, descriptions, leaderboards, and action buttons) is centrally aligned (`text-center`) to maintain balanced visual weight within the 450px constraints.
 - **Author Attribution:** The Art Gallery section features distinct "By Slashdot Labs" attribution in place of standard category/date metadata, distinguishing procedurally generated assets from curated content.
 - **External Game Integrations:** The 180px visual bounds act purely as scaled cover images mapped to standard system animations. Playability is decoupled from the iframe body; a dedicated "Play Game" button (`target="_blank"`) center-aligned in the card body intercepts bottom-section clicks routing precisely to external URLs.
 - **Interactive Leaderboards:** Real-time mini leaderboards swap out primary descriptions in interactive widgets (GameCard). Elements strictly require `mounted` hydration logic to bypass initial export errors. Mock data utilizes a specifically styled visual 3-tier array: `[{"👑 Neo": "24,400"}, {"Trinity": "18,200"}, {"Morpheus": "12,100"}]`.
 - **Subtle Background Animation:** The outer Card wrapper integrates precision ring-box transitions duplicating standard site-wide interactions.
+- **High-Motion Visuals:** The 180px top visual zone is designed for motion-first assets.
+    - **GIF Integration:** Supports animated Giphy assets (e.g., 2048, Clumsy Bird) with `object-cover` to fill boundaries without distortion.
+    - **CSS Pulse Engine:** Leverages a custom `@keyframes pulseScale` loop (`.animate-pulse-scale`) for continuous rhythmic scaling (Hextris), synchronized alongside state-driven hover transitions.
 
 ---
 
@@ -46,6 +53,9 @@ Colors are synchronized seamlessly via Tailwind v4 referencing CSS variables fro
 - **Primary:** `var(--color-primary)`
 - **Background:** `var(--color-background)` (Supporting dynamic light/dark mode transitions).
 - **Fonts:** Core typographic variables applied via standard utility classes.
+- **Global Utilities:** Specific Fun Zone requirements leverage global CSS utilities defined in `src/app/globals.css`:
+    - `.hide-scrollbar`: Disables native scrollbars in horizontal carousels while preserving swipe/touch functionality.
+    - `.animate-pulse-scale`: Provides hardware-accelerated rhythmic scaling for static game assets.
 - Zero hardcoded colors are permitted; style updates must rely entirely on global state.
 
 ---
