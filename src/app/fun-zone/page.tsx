@@ -38,7 +38,7 @@ const MemeCard = ({ title, category, img, slug, onClick }: { title: string; cate
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
       </div>
       <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden font-sans">
-        <div className="flex flex-col flex-1 min-h-0 text-left">
+        <div className="flex flex-col flex-1 min-h-0 text-center items-center justify-start">
           <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 shrink-0 mb-1">
             {title}
           </h3>
@@ -49,7 +49,7 @@ const MemeCard = ({ title, category, img, slug, onClick }: { title: string; cate
       </div>
     </div>
     <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12">
+      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center">
         <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
           {category}
         </span>
@@ -86,7 +86,7 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
           <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
         </div>
         <div className="px-5 pt-4 pb-3 flex flex-col flex-1 overflow-hidden pointer-events-none font-sans">
-          <div className="flex flex-col flex-1 min-h-0 w-full text-left items-start justify-start">
+          <div className="flex flex-col flex-1 min-h-0 w-full text-center items-center justify-start">
             <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-1 shrink-0 mb-1 pointer-events-auto">
               {title}
             </h3>
@@ -94,11 +94,11 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
               {description}
             </p>
             <div className="w-full mt-1 border-t border-black/5 dark:border-white/5 pt-1.5 flex-1 pointer-events-auto">
-              <table className="w-full text-left text-[12px] opacity-70 mt-1">
+              <table className="w-full text-center text-[12px] opacity-70 mt-1 mx-auto">
                 <tbody>
-                   <tr><td className="py-0.5 pl-2">👑 Neo</td><td className="text-right pr-4 font-bold">24,400</td></tr>
-                   <tr><td className="py-0.5 pl-2">Trinity</td><td className="text-right pr-4 font-bold">18,200</td></tr>
-                   <tr><td className="py-0.5 pl-2">Morpheus</td><td className="text-right pr-4 font-bold">12,100</td></tr>
+                   <tr><td className="py-0.5 text-left pl-4">👑 Neo</td><td className="text-right pr-4 font-bold">24,400</td></tr>
+                   <tr><td className="py-0.5 text-left pl-4">Trinity</td><td className="text-right pr-4 font-bold">18,200</td></tr>
+                   <tr><td className="py-0.5 text-left pl-4">Morpheus</td><td className="text-right pr-4 font-bold">12,100</td></tr>
                 </tbody>
               </table>
             </div>
@@ -117,7 +117,7 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
         </div>
       </div>
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12 w-full">
+        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
           {tags.map(tag => (
              <span key={tag} className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
                #{tag.toUpperCase()}
@@ -148,12 +148,12 @@ const ArtCard = ({ title, blurColor, slug, onClick }: { title: string; blurColor
           </div>
         </div>
         <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden font-sans">
-          <div className="relative flex items-center justify-between w-full mb-1 text-[13px] font-bold tracking-tight">
-            <div className="z-[20] relative">
+          <div className="relative flex items-center justify-center w-full mb-1 text-[13px] font-bold tracking-tight">
+            <div className="z-[20] relative text-center">
               <span className="text-[var(--color-primary)] opacity-80 uppercase">By Slashdot Labs</span>
             </div>
           </div>
-          <div className="flex flex-col flex-1 min-h-0 text-left">
+          <div className="flex flex-col flex-1 min-h-0 text-center items-center">
             <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 shrink-0 mb-1">
               {title}
             </h3>
@@ -164,7 +164,7 @@ const ArtCard = ({ title, blurColor, slug, onClick }: { title: string; blurColor
         </div>
       </div>
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12 w-full">
+        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
           <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
             #GENERATIVE
           </span>
@@ -227,10 +227,11 @@ export default function FunZonePage() {
         
         {/* MEMES SECTION */}
         <section>
-          <div className="mb-10 text-center">
+          <div className="text-left mb-2 group">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Memes</h2>
+            <div className="h-[3px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-2 mb-10" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <MemeCard 
               title="When the code compiles cleanly on the first try and you don't know why." 
               category="compilation-panic"
@@ -257,10 +258,11 @@ export default function FunZonePage() {
 
         {/* GAMES SECTION */}
         <section>
-          <div className="mb-10 text-center">
+          <div className="text-left mb-2 group">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Games</h2>
+            <div className="h-[3px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-2 mb-10" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <GameCard 
               title="2048" 
               description="Join the numbers and get to the 2048 tile!" 
@@ -293,10 +295,11 @@ export default function FunZonePage() {
 
         {/* ART GALLERY SECTION */}
         <section>
-          <div className="mb-10 text-center">
+          <div className="text-left mb-2 group">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Art Gallery</h2>
+            <div className="h-[3px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-2 mb-10" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <ArtCard title="Morphing Anomalies" blurColor="var(--color-primary)" slug="art-morphing-anomalies" onClick={() => handleCardClick('art-morphing-anomalies')} />
             <ArtCard title="Fluid Chaos Engine" blurColor="#ff4500" slug="art-fluid-chaos" onClick={() => handleCardClick('art-fluid-chaos')} />
             <ArtCard title="Geometric Recursion" blurColor="#8a2be2" slug="art-geometric-recursion" onClick={() => handleCardClick('art-geometric-recursion')} />
