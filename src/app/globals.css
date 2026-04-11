@@ -14,12 +14,14 @@
 
 :root {
   --color-primary: #0291B2;
+  --color-primary-rgb: 2, 145, 178;
   --color-bg: #ffffff;
   --color-text: #171717;
 }
 
 .dark {
   --color-primary: #0291B2;
+  --color-primary-rgb: 2, 145, 178;
   --color-bg: #262626;
   --color-text: #ffffff;
 }

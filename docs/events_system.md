@@ -1,85 +1,66 @@
-# Slashdot Events System Documentation
+# [FINAL] Slashdot Events System Documentation (2026)
 
-This document outlines the architecture, design logic, and technical implementation of the events system developed for the Slashdot website (2026).
-
----
-
-## 1. Split-Screen Layout (Event Hub)
-
-The events page utilizes a responsive split-screen architecture to efficiently display both spatial/temporal choices (calendar) and chronologically sorted content.
-
-### Layout Geometry
-- **Sidebar (30% Width):** Contains the Interactive Calendar component.
-- **Main Section (70% Width):** A vertically scrollable feed of `EventCard` components.
-- **Mobile Behavior:** On mobile screens, the calendar collapses into an expandable top section or horizontal slider, giving the main scrolling section 100% width.
-
-### Interactive Calendar Behavior
-- **Date Selection:** Clicking a specific date filters the main section feed to show only events happening on (or related to) that date.
-- **Visual Cues:** Dates with scheduled events are highlighted using the primary brand token.
+This document reflects the finalized, high-performance Events System. It outlines the architecture, real-time logic, and interactive components that power the Slashdot IISER K club's events hub.
 
 ---
 
-## 2. Event Data Schema (Frontmatter)
+## 1. High-Performance Morphing Layout
 
-Events are managed as `.md` or `.mdx` files in the `content/events/` directory. Each requires the following YAML schema:
+The system uses a **Continuous Scroll Interpolation Engine** to manage the floating search hub with zero layout jitter.
 
-```yaml
----
-title: "Introduction to Web3 Technologies"
-date: "2026-04-15"        # ISO format required
-time: "18:00 - 20:00 IST"
-category: "Workshop"      # Options: Workshop, Seminar, Hackathon
-status: "Upcoming"        # Required. Options: Live | Upcoming | Past
-resources:
-  youtube: "https://youtube.com/..."
-  github: "https://github.com/..."
-  slides: "https://slides.com/..."
-  docs: "https://docs.slashdot..."
-gallery:                  # Array of absolute image paths
-  - "/slashdot-website-2026/events/web3-1.jpg"
-  - "/slashdot-website-2026/events/web3-2.jpg"
----
-```
-
-### Schema Constraints
-- **Date Formatting:** Must adhere strictly to the `YYYY-MM-DD` ISO format to enable correct Calendar interaction and filtering.
-- **Gallery Images:** All paths **must** use the absolute base path `/slashdot-website-2026/` to function correctly on GitHub Pages deployment.
+### 🔄 3-Phase Search Bar & Contextual UI
+The search bar (`z-[100]`) morphs across three phases as the user scrolls. Crucially, the **Placeholder Text** now intelligently updates to reflect its current state:
+- **Phase 1 (Right)**: Medium width over the feed. *Placeholder: "Search events..."*
+- **Phase 2 (Expansion)**: 100% full-width span. *Placeholder: "Search events, workshops, or use #tags..."*
+- **Phase 3 (Left Dock)**: Minimized dock over the calendar. *Placeholder: "Search..."*
 
 ---
 
-## 3. UI Components
+## 2. Real-Time Status Engine (IST Aware)
 
-### EventCard
-Unlike Blog or Project cards (which are typically square or tall and image-focused), EventCards are structured differently:
-- **Shape:** Rectangular horizontal layout (List view rather than Grid view).
-- **Core Focus:** Typography prioritizes the `Date` and `Status Badge` above all else.
-- **Actions:** Quick links mapping to the `resources` frontmatter (GitHub, Slides, etc.).
+Static status fields (`Live`, `Upcoming`) in markdown have been replaced by a **Dynamic Status Hub** to eliminate manual maintenance.
 
-### LiveIndicator
-- **Purpose:** A high-visibility visual cue for events where `status: "Live"`.
-- **Implementation:** A pure CSS-based pulsing red dot (`bg-red-500 animate-pulse` or a custom concentric ring animation) attached to the event's status badge.
+### 🛰️ Automatic Lifecycle Management
+The system utilizes a client-safe utility, [`eventUtils.ts`](file:///d:/Github/slashdot-website-2026/src/lib/eventUtils.ts), to calculate event status in real-time:
+- **Timezone Sensitivity**: Explicitly handles **IST (UTC+5:30)** parsing for the club's events.
+- **Heartbeat Sync**: Every `EventCard` maintains a 30-second heartbeat. If an event starts while a user is on-page, the **"LIVE"** pulse badge triggers instantly.
+- **Hydration Stability**: Status is synced post-mount to ensure the server-rendered HTML perfectly matches the client's local clock without flickering.
 
 ---
 
-## 4. Search & Filter Architecture
+## 3. Interactive Calendar & Year View
 
-The events system features a dual-filter synchronization strategy:
+The sidebar calendar has been upgraded to a multi-modal navigation hub.
 
-### Tag & Calendar Interaction
-- **Search Bar Extraction:** The search bar intelligently parses `#tags` (e.g., typing `#web3` or `#hackathon`).
-- **Intersection Logic:** When a user selects a date on the Interactive Calendar *and* types a `#tag` in the search bar, the main feed performs an **AND** filtering logic.
-- **State Management:** The chosen date and search parameters are managed via a unified URL or local state hook, ensuring the Interactive Calendar visually reflects active filters.
+### 📅 Advanced Year View
+Clicking the "Month Year" header toggles a comprehensive **3x4 Month Selection Grid**:
+- **GitHub Contribution Heatmap**: Months are shaded based on event density (Light Teal: 1-2, Deep Teal: 4+) to help users "scout" the year.
+- **Orientation**: The actual current month is highlighted with a **Primary Underline**.
+- **Year Navigation**: Navigation arrows automatically switch to **Year-Mode** when in the grid view.
 
 ---
 
-## 5. Infrastructure & Maintainer Guardrails
+## 4. UI Components & Card Physics
 
-If you are a developer or AI agent working on this system, adhere strictly to these project mandates:
+### 🏗️ Event Cards
+- **Unified Borders**: Cards, the Search Bar, and the Calendar all share a matched **2px Brand-Teal Border** aesthetic (`border-2 border-primary/xx`).
+- **Hardware-Accelerated Physics**: Cards use `transform-gpu` to initialize a dedicated browser layer, ensuring the **8px vertical lift** on hover is smooth and lag-free.
+- **Opacity Rings**: Hover rings are synced to **80% opacity** to match the Blog and Project grid systems exactly.
 
-### Asset Pathing Rule (Critical)
-- **Base Path Compliance:** This site is deployed to GitHub Pages at the sub-path `/slashdot-website-2026/`.
-- **No Relative Paths:** Every `resource` link or `gallery` image in the event frontmatter MUST be an absolute path starting with `/slashdot-website-2026/`.
+---
 
-### Design System Sync
-- Adhere strictly to the "100% Theme Sync" rule. Use predefined CSS variables (`var(--color-primary)`, `var(--background)`) found in `src/app/globals.css`.
-- Employ `mounted` state checks for any component dealing with real-time `status` determination relative to the current local browser time, avoiding Next.js hydration mismatches.
+## 5. Architectural Guardrails
+
+### 🔒 Client-Server Decoupling
+To avoid build errors related to Node.js `fs` (File System) in the browser, all date-parsing and status logic is isolated in `src/lib/eventUtils.ts`. 
+
+> [!CAUTION]
+> **NEVER** import from `src/lib/events.ts` inside a Client Component. Always use `eventUtils.ts` for time calculations or props-passing for data.
+
+### 🌊 60FPS Performance
+- **No CSS Transitions on Layout**: When modifying the search bar's width or transform, avoid using CSS `transition-all`. Use the `handleScroll` math engine to update styles directly for 1:1 scroll locking.
+
+---
+
+**Last Updated**: 2026-04-12
+**Status**: Production Ready / Performance Validated

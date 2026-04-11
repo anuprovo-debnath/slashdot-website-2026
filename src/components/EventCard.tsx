@@ -1,12 +1,27 @@
-import type { EventData } from '@/lib/events';
+import { EventData } from '@/lib/events';
+import { getEventStatus } from '@/lib/eventUtils';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 interface EventCardProps {
   event: EventData;
 }
 
 export function EventCard({ event }: EventCardProps) {
-  const { title, date, time, category, status, resources } = event.frontmatter;
+  // Initialize with the status calculated during the build/fetch phase
+  const [status, setStatus] = useState<'Live' | 'Upcoming' | 'Past'>(event.frontmatter.status);
+  const { title, date, time, category, resources } = event.frontmatter;
+
+  useEffect(() => {
+    // Immediate update on mount to catch shifts since the server-render
+    const current = getEventStatus(date, time);
+    setStatus(current);
+
+    const timer = setInterval(() => {
+      setStatus(getEventStatus(date, time));
+    }, 30000); 
+    return () => clearInterval(timer);
+  }, [date, time]);
   
   const parsedDate = new Date(date);
   const formattedDate = !isNaN(parsedDate.getTime()) 
@@ -14,14 +29,14 @@ export function EventCard({ event }: EventCardProps) {
     : date;
 
   return (
-    <div className="group relative flex flex-col md:flex-row rounded-2xl bg-[var(--background)] ring-[3px] ring-[var(--color-primary)]/30 shadow-xl transition-all hover:ring-[var(--color-primary)]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden p-6 gap-6 w-full z-10">
+    <div className="group relative flex flex-col md:flex-row rounded-2xl bg-[var(--background)] ring-[3px] ring-[var(--color-primary)]/30 shadow-xl transition-all duration-300 ease-out transform-gpu hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.4)] dark:hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.25)] hover:ring-[var(--color-primary)]/80 overflow-hidden p-6 gap-6 w-full z-10">
       {/* Absolute link mapping the card to details page */}
       <Link href={`/events/${event.slug}`} className="absolute inset-0 z-[10]" aria-label={`View details for ${title}`} />
       
       <div className="flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start md:w-32 shrink-0 relative z-[20] pointer-events-none">
         <div className="flex flex-col">
           <span className="text-[10px] text-[var(--color-primary)] uppercase font-bold tracking-[0.2em] mb-1">{category}</span>
-          <span className="text-2xl font-extrabold text-foreground tracking-tight">{formattedDate}</span>
+          <span className="text-2xl font-extrabold text-foreground tracking-tight font-sans">{formattedDate}</span>
           <span className="text-xs text-foreground/50 mt-1 uppercase tracking-widest font-medium">{time}</span>
         </div>
         <div className="mt-0 md:mt-4">

@@ -13,6 +13,7 @@ interface InteractiveCalendarProps {
 
 export function InteractiveCalendar({ events, selectedDate, activeDate, onSelectDate }: InteractiveCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date(2026, 3, 1)); 
+  const [viewMode, setViewMode] = useState<'month' | 'year'>('month');
   const [mounted, setMounted] = useState(false);
   
   // Track today
@@ -52,8 +53,14 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfMonth = new Date(year, month, 1).getDay();
 
-  const prevMonth = () => setCurrentMonth(new Date(year, month - 1, 1));
-  const nextMonth = () => setCurrentMonth(new Date(year, month + 1, 1));
+  const prevMonth = () => {
+    if (viewMode === 'month') setCurrentMonth(new Date(year, month - 1, 1));
+    else setCurrentMonth(new Date(year - 1, month, 1));
+  };
+  const nextMonth = () => {
+    if (viewMode === 'month') setCurrentMonth(new Date(year, month + 1, 1));
+    else setCurrentMonth(new Date(year + 1, month, 1));
+  };
 
   const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"];
@@ -113,30 +120,89 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
     );
   }
 
+  const renderYearView = () => {
+    return (
+      <div className="grid grid-cols-3 gap-2 animate-in fade-in zoom-in-95 duration-200">
+        {monthNames.map((name, index) => {
+          const isCurrentMonthInYear = index === month;
+          const today = new Date();
+          const isActualTodayMonth = today.getFullYear() === year && today.getMonth() === index;
+          
+          const eventsInMonth = events.filter(e => {
+            const d = new Date(e.date);
+            return d.getFullYear() === year && d.getMonth() === index;
+          }).length;
+
+          // GitHub-style contribution intensity
+          let intensityClasses = 'bg-primary/5 border-foreground/5 text-foreground/60';
+          if (eventsInMonth > 0) {
+            if (eventsInMonth === 1) intensityClasses = 'bg-primary/10 border-primary/20 text-foreground';
+            else if (eventsInMonth < 4) intensityClasses = 'bg-primary/25 border-primary/40 text-foreground';
+            else intensityClasses = 'bg-primary/50 border-primary/60 text-white';
+          }
+
+          return (
+            <button
+              key={name}
+              onClick={() => {
+                setCurrentMonth(new Date(year, index, 1));
+                setViewMode('month');
+              }}
+              className={`py-3 rounded-lg text-xs font-bold transition-all hover:scale-105 active:scale-95 border
+                ${isCurrentMonthInYear ? 'ring-2 ring-primary ring-offset-1 z-10' : ''}
+                ${intensityClasses}`}
+            >
+              <span className={isActualTodayMonth ? 'underline decoration-2 underline-offset-4 decoration-primary' : ''}>
+                {name.substring(0, 3)}
+              </span>
+              {eventsInMonth > 0 && (
+                <div className={`absolute top-1 right-1.5 text-[8px] opacity-70 ${eventsInMonth >= 4 ? 'text-white' : 'text-primary'}`}>
+                  {eventsInMonth}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
-    <div className="bg-background border border-foreground/10 rounded-xl p-6 shadow-sm">
+    <div className="bg-background border-2 border-primary/30 rounded-xl p-6">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="font-extrabold text-lg">{monthNames[month]} {year}</h3>
+        <button 
+          onClick={() => setViewMode(viewMode === 'month' ? 'year' : 'month')}
+          className="font-extrabold text-lg flex items-center gap-2 hover:text-primary transition-colors group"
+        >
+          {viewMode === 'month' ? `${monthNames[month]} ${year}` : year}
+          <span className={`text-[10px] opacity-20 group-hover:opacity-100 transition-all ${viewMode === 'year' ? 'rotate-180' : ''}`}>▼</span>
+        </button>
         <div className="flex gap-2">
           <button onClick={prevMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/10 transition-colors cursor-pointer">&lt;</button>
           <button onClick={nextMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/10 transition-colors cursor-pointer">&gt;</button>
         </div>
       </div>
       
-      <div className="grid grid-cols-7 gap-y-2 place-items-center mb-4">
-        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
-          <div key={d} className="text-[10px] text-foreground/40 font-black uppercase tracking-widest">{d}</div>
-        ))}
-      </div>
-      <div className="grid grid-cols-7 gap-y-2 place-items-center gap-y-4">
-        {days}
-      </div>
+      {viewMode === 'month' ? (
+        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="grid grid-cols-7 gap-y-2 place-items-center mb-4">
+            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
+              <div key={d} className="text-[10px] text-foreground/40 font-black uppercase tracking-widest">{d}</div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7 gap-y-2 place-items-center gap-y-4">
+            {days}
+          </div>
+        </div>
+      ) : (
+        renderYearView()
+      )}
 
       {/* 1. Shift color coding legend below calendar */}
       <div className="flex gap-4 justify-center mt-8 pt-6 border-t border-foreground/5 text-[9px] font-black uppercase tracking-[0.2em] opacity-60">
         <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500/80 shadow-[0_0_8px_rgba(239,68,68,0.4)]"></span> Live</span>
         <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></span> Upcoming</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary/80 shadow-[0_0_8px_rgba(2,145,178,0.4)]"></span> Past</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary/80 shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.4)]"></span> Past</span>
       </div>
       
       {selectedDate && (

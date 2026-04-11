@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { getEventStatus } from './eventUtils';
 
 export interface EventData {
   slug: string;
@@ -45,9 +46,12 @@ export function getEvents(): EventData[] {
     });
 
   return allEvents.sort((a, b) => {
+    const statusA = getEventStatus(a.frontmatter.date, a.frontmatter.time);
+    const statusB = getEventStatus(b.frontmatter.date, b.frontmatter.time);
+
     const statusWeight = { Live: 3, Upcoming: 2, Past: 1 };
-    const aWeight = statusWeight[a.frontmatter.status] || 0;
-    const bWeight = statusWeight[b.frontmatter.status] || 0;
+    const aWeight = statusWeight[statusA] || 0;
+    const bWeight = statusWeight[statusB] || 0;
 
     if (aWeight !== bWeight) {
       return bWeight - aWeight; 
@@ -56,7 +60,7 @@ export function getEvents(): EventData[] {
     const dateA = a.frontmatter.date || '';
     const dateB = b.frontmatter.date || '';
 
-    if (a.frontmatter.status === 'Upcoming') {
+    if (statusA === 'Upcoming') {
       return dateA.localeCompare(dateB);
     }
     
