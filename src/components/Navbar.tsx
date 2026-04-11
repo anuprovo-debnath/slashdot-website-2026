@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -15,16 +16,22 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
               {/* Light Mode Logo */}
-              <img 
+              <Image 
                 src="/slashdot-website-2026/logos/Logo_White_BG.png" 
                 alt="Slashdot" 
+                width={200}
+                height={40}
                 className="h-10 w-auto dark:hidden" 
+                unoptimized
               />
               {/* Dark Mode Logo */}
-              <img 
+              <Image 
                 src="/slashdot-website-2026/logos/Logo_Black_BG.png" 
                 alt="Slashdot" 
+                width={200}
+                height={40}
                 className="h-10 w-auto hidden dark:block" 
+                unoptimized
               />
             </Link>
           </div>
@@ -33,6 +40,7 @@ export function Navbar() {
             <Link href="/tech" className="hover:text-[var(--color-primary)] transition-colors">Tech</Link>
             <Link href="/blog" className="hover:text-[var(--color-primary)] transition-colors">Blog</Link>
             <Link href="/projects" className="hover:text-[var(--color-primary)] transition-colors text-[var(--color-primary)] font-bold">Projects</Link>
+            <Link href="/fun-zone" className="hover:text-[var(--color-primary)] transition-colors">Fun Zone</Link>
             <Link href="/about" className="hover:text-[var(--color-primary)] transition-colors">About</Link>
             <Link href="/contact" className="hover:text-[var(--color-primary)] transition-colors">Contact</Link>
             <ThemeToggle />
@@ -66,6 +74,7 @@ export function Navbar() {
           <Link href="/tech" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Tech</Link>
           <Link href="/blog" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Blog</Link>
           <Link href="/projects" className="block px-3 py-2 rounded-md font-bold text-[var(--color-primary)] bg-black/5 dark:bg-white/5 transition-colors">Projects</Link>
+          <Link href="/fun-zone" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Fun Zone</Link>
           <Link href="/about" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">About</Link>
           <Link href="/contact" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Contact</Link>
         </div>

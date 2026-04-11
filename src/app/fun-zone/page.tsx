@@ -30,11 +30,13 @@ const SlashPattern = ({ className = "" }: { className?: string }) => (
 const MemeCard = ({ title, category, img }: { title: string; category: string; img: string }) => (
   <div className="h-[450px] bg-background border border-foreground/10 rounded-xl overflow-hidden relative flex flex-col group hover:border-primary transition-colors transform-gpu focus-within:ring-2 focus-within:ring-primary">
     <div className="h-[210px] w-full bg-foreground/5 relative overflow-hidden flex items-center justify-center transform-gpu">
-      <img
+      <Image
         src={img}
         alt={title}
-        className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-700 transform-gpu"
-        loading="lazy"
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="object-cover group-hover:scale-[1.03] transition-transform duration-700 transform-gpu"
+        unoptimized
       />
       <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
     </div>
