@@ -241,7 +241,7 @@ export default function FunZonePage() {
   }
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-16 lg:py-24 min-h-screen transform-gpu transition-all">
+    <main className="max-w-6xl mx-auto px-8 py-16 lg:py-24 min-h-screen transform-gpu transition-all">
       
       {/* HEADER */}
       <header className="mb-20 relative text-center">
@@ -285,7 +285,7 @@ export default function FunZonePage() {
             ref={scrollRef}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="flex overflow-x-auto snap-x snap-mandatory pb-6 hide-scrollbar transform-gpu gap-8 w-full px-2 mt-12"
+            className="flex overflow-x-auto snap-x snap-mandatory pt-10 pb-10 hide-scrollbar transform-gpu gap-8 w-full px-12 mt-2"
           >
             <MemeCard 
               title="When the code compiles cleanly on the first try and you don't know why." 
@@ -338,7 +338,7 @@ export default function FunZonePage() {
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Games</h2>
             <div className="h-[3px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-2 mb-10" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-12 pt-10 pb-10">
             <GameCard 
               title="2048" 
               description="Join the numbers and get to the 2048 tile!" 
@@ -376,7 +376,7 @@ export default function FunZonePage() {
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Art Gallery</h2>
             <div className="h-[3px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-2 mb-10" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-12 pt-10 pb-10">
             <ArtCard title="Morphing Anomalies" blurColor="var(--color-primary)" slug="art-morphing-anomalies" onClick={() => handleCardClick('art-morphing-anomalies')} />
             <ArtCard title="Fluid Chaos Engine" blurColor="#ff4500" slug="art-fluid-chaos" onClick={() => handleCardClick('art-fluid-chaos')} />
             <ArtCard title="Geometric Recursion" blurColor="#8a2be2" slug="art-geometric-recursion" onClick={() => handleCardClick('art-geometric-recursion')} />
