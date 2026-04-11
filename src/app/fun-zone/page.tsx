@@ -28,7 +28,7 @@ const SlashPattern = ({ className = "" }: { className?: string }) => (
 );
 
 const MemeCard = ({ title, category, img }: { title: string; category: string; img: string }) => (
-  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+  <div className="relative overflow-hidden group rounded-xl border border-black/10 dark:border-white/10 h-[450px] w-full flex flex-col bg-[var(--background)] transition-all hover:border-[var(--color-primary)] dark:hover:border-[var(--color-primary)] hover:-translate-y-1 shadow-sm hover:shadow-lg">
     <div className="flex flex-col h-[402px] overflow-hidden relative z-10 w-full pointer-events-none">
       <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
         <Image
@@ -65,7 +65,7 @@ const GameCard = ({ title, description }: { title: string; description: string }
   const [score, setScore] = useState(0);
   
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+    <div className="relative overflow-hidden group rounded-xl border border-black/10 dark:border-white/10 h-[450px] w-full flex flex-col bg-[var(--background)] transition-all hover:border-[var(--color-primary)] dark:hover:border-[var(--color-primary)] hover:-translate-y-1 shadow-sm hover:shadow-lg">
       <SlashPattern className="opacity-5 text-[var(--color-primary)]" />
       <div className="p-8 flex-1 flex flex-col z-10 relative h-full text-center">
         <h3 className="text-2xl font-extrabold leading-tight text-[var(--foreground)] mb-2 truncate">{title}</h3>
@@ -92,7 +92,7 @@ const GameCard = ({ title, description }: { title: string; description: string }
 
 const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => {
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+    <div className="relative overflow-hidden group rounded-xl border border-black/10 dark:border-white/10 h-[450px] w-full flex flex-col bg-[var(--background)] transition-all hover:border-[var(--color-primary)] dark:hover:border-[var(--color-primary)] hover:-translate-y-1 shadow-sm hover:shadow-lg">
       <div className="flex-1 relative overflow-hidden bg-black/5 dark:bg-white/5 flex items-center justify-center border-b border-foreground/10">
         {/* CSS Mathematical Generator Art */}
         <div className="relative w-40 h-40 group-hover:scale-110 transition-transform duration-1000 transform-gpu" style={{ animation: 'spin 20s linear infinite' }}>
@@ -154,7 +154,7 @@ export default function FunZonePage() {
           <div className="mb-10 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Memes</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <MemeCard 
               title="When the code compiles cleanly on the first try and you don't know why." 
               category="compilation-panic"
@@ -178,7 +178,7 @@ export default function FunZonePage() {
           <div className="mb-10 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Games</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <GameCard 
               title="Incremental Stack" 
               description="A client-side only clicker using React state. Maximize your operations per second before the eventual browser tab crash." 
@@ -215,7 +215,7 @@ export default function FunZonePage() {
           <div className="mb-10 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Art Gallery</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <ArtCard title="Morphing Anomalies" blurColor="var(--color-primary)" />
             <ArtCard title="Fluid Chaos Engine" blurColor="#ff4500" />
             <ArtCard title="Geometric Recursion" blurColor="#8a2be2" />

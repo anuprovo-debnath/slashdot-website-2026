@@ -18,7 +18,7 @@ The Fun Zone is divided into three distinct, highly engaging sub-sections design
 The underlying grid architecture is built for strict visual uniformity across all resolutions.
 
 ### Layout Logic
-- **Total Height:** Strictly fixed at **450px** across all grid cards and primary containers across all device classes. This mirrors the global "Matrix" grid constraint established in the blog system.
+- **Total Height (Blog Parity):** Strictly fixed at **450px** across all grid cards and primary containers across all device classes. The Fun Zone card component explicitly functions as a visual derivative of the main Blog card component, inheriting its exact `450px` height standard and wrapper layout constraints (e.g. `relative overflow-hidden group rounded-xl border border-black/10`).
 - **Internal Clamping:** Maintains tight control of inner content to fit entirely inside the 450px boundary. Overflows must be strictly managed without scroll-breaking the grid layout.
 - **Grid Structure Compliance:** The Fun Zone framework rigidly implements the blog standard structural footprint (`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2`) enabling perfect visual continuity mapping.
 - **Centered Typography (Visual Sync):** All grid sub-components, standalone headers, and general descriptions prioritize clean, distraction-free geometry enforced through explicit `text-center` alignment rules, eliminating supplementary boundary lines.
