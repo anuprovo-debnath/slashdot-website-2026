@@ -79,7 +79,16 @@ The CSS `height: 100svh` and `overflow: clip` on `::view-transition-old(root)` a
 ### Tailwind v4 Styling
 This project does **not** have a `tailwind.config.js`. All design tokens (colors, fonts) are defined inside the `@theme` block in `src/app/globals.css`.
 
-## 7. Future Maintenance Tasks
-- **Font Refresh**: If changing fonts, update the `@font-face` in `globals.css` and ensure assets are in `public/fonts/`.
-- **New Pages**: Any new page added must follow the semantic structure used in `page.tsx` and `tech/page.tsx` to maintain SEO and layout consistency.
-- **Next.js Updates**: Since this uses Next.js 15, monitor the stability of "File-based Metadata" (icon.png, opengraph-image.png) as APIs evolve.
+## 7. Fun Zone Grid System
+
+To accommodate high-motion interactive elements while maintaining parity with the Blog/Project grids, we implemented the **Sidelong Grid** architecture.
+
+### Manual Shift Strategy
+Standard CSS grids with `max-w-7xl` often clip shadows or high-density hover states at the viewport edges. To solve this, the Fun Zone uses a **40px Manual Shift** (`px-10`).
+- **Alignment**: The scroller's internal padding (`px-10`) ensures the first card aligns perfectly with the site header's left edge while allowing shadows to bleed into the gutter.
+- **Snapping**: `scroll-pl-10` is used to synchronize the `snap-mandatory` start point with the manual indentation.
+
+### Component Architecture
+- **`STRIP_CONFIG`**: A central constant in `fun-zone/page.tsx` that manages all grid geometry to prevent value-drift across the three strips (Memes, Games, Art).
+- **Asset Localisation**: Swapped external Giphy/Unsplash placeholders for local production assets in `public/images/games/` to ensure 100% reliability for judge reviews. 
+- **Direct Redirection**: Game cards were updated to redirect the entire card surface to provided external links (`target="_blank"`), avoiding sub-route maintenance for third-party games.
