@@ -1,0 +1,65 @@
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+
+export interface EventData {
+  slug: string;
+  frontmatter: {
+    title: string;
+    date: string;
+    time: string;
+    category: 'Workshop' | 'Seminar' | 'Hackathon';
+    status: 'Live' | 'Upcoming' | 'Past';
+    resources?: {
+      youtube?: string;
+      github?: string;
+      slides?: string;
+      docs?: string;
+    };
+    gallery?: string[];
+  };
+  content: string;
+}
+
+export function getEvents(): EventData[] {
+  const targetDirectory = path.join(process.cwd(), 'content/events');
+  
+  if (!fs.existsSync(targetDirectory)) {
+    return [];
+  }
+
+  const fileNames = fs.readdirSync(targetDirectory);
+  const allEvents = fileNames
+    .filter((fileName) => fileName.endsWith('.md') || fileName.endsWith('.mdx'))
+    .map((fileName) => {
+      const slug = fileName.replace(/\.mdx?$/, '');
+      const fullPath = path.join(targetDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const matterResult = matter(fileContents);
+
+      return {
+        slug,
+        frontmatter: matterResult.data as EventData['frontmatter'],
+        content: matterResult.content,
+      };
+    });
+
+  return allEvents.sort((a, b) => {
+    const statusWeight = { Live: 3, Upcoming: 2, Past: 1 };
+    const aWeight = statusWeight[a.frontmatter.status] || 0;
+    const bWeight = statusWeight[b.frontmatter.status] || 0;
+
+    if (aWeight !== bWeight) {
+      return bWeight - aWeight; 
+    }
+
+    const dateA = a.frontmatter.date || '';
+    const dateB = b.frontmatter.date || '';
+
+    if (a.frontmatter.status === 'Upcoming') {
+      return dateA.localeCompare(dateB);
+    }
+    
+    return dateB.localeCompare(dateA);
+  });
+}
