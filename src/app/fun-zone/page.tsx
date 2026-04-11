@@ -18,7 +18,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 const MemeCard = ({ title, category, img, slug, onClick }: { title: string; category: string; img: string; slug: string; onClick: () => void }) => (
-  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-[350px] shrink-0 snap-center">
     <Link
       href={`/slashdot-website-2026/fun-zone/${slug}`}
       onClick={onClick}
@@ -58,7 +58,7 @@ const MemeCard = ({ title, category, img, slug, onClick }: { title: string; cate
   </div>
 );
 
-const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { title: string; description: string; url: string; imgUrl: string; tags: string[]; slug: string; onClick: () => void }) => {
+const GameCard = ({ title, description, url, imgUrl, imgClassName = "object-cover transition-transform duration-700 ease-out group-hover:scale-110", tags, slug, onClick }: { title: string; description: string; url: string; imgUrl: string; imgClassName?: string; tags: string[]; slug: string; onClick: () => void }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
             alt={title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            className={imgClassName}
             unoptimized
           />
           <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
@@ -231,13 +231,34 @@ export default function FunZonePage() {
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Memes</h2>
             <div className="h-[3px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-2 mb-10" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
+          <div className="flex overflow-x-auto snap-x snap-mandatory pb-6 hide-scrollbar transform-gpu gap-8 w-full px-2 mt-12">
             <MemeCard 
               title="When the code compiles cleanly on the first try and you don't know why." 
               category="compilation-panic"
               img="https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&auto=format&fit=crop&q=80" 
               slug="compilation-panic-meme"
               onClick={() => handleCardClick('compilation-panic-meme')}
+            />
+            <MemeCard 
+              title="Centering a div with CSS in 2026: Still googling it." 
+              category="css-centering"
+              img="https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=800&auto=format&fit=crop&q=80" 
+              slug="css-centering-meme"
+              onClick={() => handleCardClick('css-centering-meme')}
+            />
+            <MemeCard 
+              title="The Junior Dev pushing directly to production on Friday afternoon." 
+              category="friday-deploy"
+              img="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=80" 
+              slug="friday-deploy-meme"
+              onClick={() => handleCardClick('friday-deploy-meme')}
+            />
+            <MemeCard 
+              title="Senior dev looking at the new intern's pull request." 
+              category="senior-dev"
+              img="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80" 
+              slug="senior-dev-meme"
+              onClick={() => handleCardClick('senior-dev-meme')}
             />
             <MemeCard 
               title="Reacting to the new hydration mismatch in production." 
@@ -267,7 +288,7 @@ export default function FunZonePage() {
               title="2048" 
               description="Join the numbers and get to the 2048 tile!" 
               url="https://play2048.co/"
-              imgUrl="https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=800&auto=format&fit=crop&q=80"
+              imgUrl="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJndnZpZnNqNmZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxV4P72p6nu/giphy.gif"
               tags={["Puzzles"]}
               slug="game-2048"
               onClick={() => handleCardClick('game-2048')}
@@ -276,7 +297,8 @@ export default function FunZonePage() {
               title="Hextris" 
               description="Fast-paced hexagonal puzzle inspired by Tetris." 
               url="https://hextris.io/"
-              imgUrl="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&auto=format&fit=crop&q=80"
+              imgUrl="https://raw.githubusercontent.com/Hextris/hextris/gh-pages/images/facebook-og.png"
+              imgClassName="object-cover transition-transform duration-700 ease-out group-hover:scale-110 animate-pulse-scale"
               tags={["Arcade"]}
               slug="game-hextris"
               onClick={() => handleCardClick('game-hextris')}
@@ -285,7 +307,7 @@ export default function FunZonePage() {
               title="Clumsy Bird" 
               description="A retro-style arcade challenge. Don't hit the pipes!" 
               url="https://ellisonleao.github.io/clumsy-bird/"
-              imgUrl="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=800&auto=format&fit=crop&q=80"
+              imgUrl="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4ZWZ4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/10YxX8YpWv6LpS/giphy.gif"
               tags={["Retro"]}
               slug="game-clumsy-bird"
               onClick={() => handleCardClick('game-clumsy-bird')}
