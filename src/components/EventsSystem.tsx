@@ -76,18 +76,8 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
     <div className="flex flex-col md:flex-row gap-8 w-full">
       {/* 30% Sidebar */}
       <aside className="w-full md:w-[30%] shrink-0 flex flex-col gap-6 sticky top-24 self-start">
-        <InteractiveCalendar 
-          events={calendarEvents} 
-          selectedDate={selectedDate}
-          activeDate={activeDate}
-          onSelectDate={setSelectedDate} 
-        />
-      </aside>
-
-      {/* 70% Main Feed */}
-      <main className="w-full md:w-[70%] flex flex-col gap-6">
-        {/* Search Bar */}
-        <div className="relative">
+        {/* Search Bar (Sticky alongside Calendar) */}
+        <div className="relative z-10">
           <input 
             type="text" 
             placeholder="Search events or filter by #tag..." 
@@ -96,6 +86,20 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
             className="w-full bg-background border border-foreground/20 rounded-xl px-4 py-4 placeholder-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm"
           />
         </div>
+
+        {/* Calendar */}
+        <div>
+          <InteractiveCalendar 
+            events={calendarEvents} 
+            selectedDate={selectedDate}
+            activeDate={activeDate}
+            onSelectDate={setSelectedDate} 
+          />
+        </div>
+      </aside>
+
+      {/* 70% Main Feed */}
+      <main className="w-full md:w-[70%] flex flex-col gap-6">
 
         {/* Feed */}
         <div className="flex flex-col gap-6 pb-20">
