@@ -38,12 +38,6 @@ const MemeCard = ({ title, category, img, slug, onClick }: { title: string; cate
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
       </div>
       <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden font-sans">
-        <div className="relative flex items-center justify-between w-full mb-1 text-[14px] sm:text-[15px] font-bold tracking-tight">
-          <div className="z-[20] relative">
-            <span className="text-[var(--color-primary)]">#{category.toUpperCase()}</span>
-          </div>
-          <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">Apr 11, 2026</div>
-        </div>
         <div className="flex flex-col flex-1 min-h-0 text-left">
           <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 shrink-0 mb-1">
             {title}
@@ -92,12 +86,6 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
           <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
         </div>
         <div className="px-5 pt-4 pb-3 flex flex-col flex-1 overflow-hidden pointer-events-none font-sans">
-          <div className="relative flex items-center justify-between w-full mb-1 text-[14px] sm:text-[15px] font-bold tracking-tight">
-            <div className="z-[20] relative">
-              <span className="text-[var(--color-primary)]">GAMES</span>
-            </div>
-            <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">Apr 11, 2026</div>
-          </div>
           <div className="flex flex-col flex-1 min-h-0 w-full text-left items-start justify-start">
             <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-1 shrink-0 mb-1 pointer-events-auto">
               {title}
@@ -115,14 +103,16 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
               </table>
             </div>
 
-            <a 
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 w-[85%] max-w-[200px] py-1.5 bg-[var(--color-primary)] hover:bg-[#06b6d4] text-white rounded-full font-black text-[12px] uppercase tracking-widest shadow-md hover:shadow-[0_0_15px_rgba(2,145,178,0.5)] transition-all pointer-events-auto shrink-0 z-[20] flex items-center justify-center gap-1.5"
-            >
-              Play Game
-            </a>
+            <div className="w-full flex justify-center mt-2 pointer-events-auto">
+              <a 
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full max-w-[200px] py-1.5 bg-[var(--color-primary)] hover:bg-[#06b6d4] text-white rounded-full font-black text-[12px] uppercase tracking-widest shadow-md hover:shadow-[0_0_15px_rgba(2,145,178,0.5)] transition-all shrink-0 z-[20] flex items-center justify-center gap-1.5"
+              >
+                Play Game
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -158,11 +148,10 @@ const ArtCard = ({ title, blurColor, slug, onClick }: { title: string; blurColor
           </div>
         </div>
         <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden font-sans">
-          <div className="relative flex items-center justify-between w-full mb-1 text-[14px] sm:text-[15px] font-bold tracking-tight">
+          <div className="relative flex items-center justify-between w-full mb-1 text-[13px] font-bold tracking-tight">
             <div className="z-[20] relative">
-              <span className="text-[var(--color-primary)]">#GENERATIVE</span>
+              <span className="text-[var(--color-primary)] opacity-80 uppercase">By Slashdot Labs</span>
             </div>
-            <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">Apr 11, 2026</div>
           </div>
           <div className="flex flex-col flex-1 min-h-0 text-left">
             <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 shrink-0 mb-1">
@@ -276,7 +265,7 @@ export default function FunZonePage() {
               title="2048" 
               description="Join the numbers and get to the 2048 tile!" 
               url="https://play2048.co/"
-              imgUrl="https://images.unsplash.com/photo-1526367790938-ca305e55e3a0?w=800&auto=format&fit=crop&q=80"
+              imgUrl="https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=800&auto=format&fit=crop&q=80"
               tags={["Puzzles"]}
               slug="game-2048"
               onClick={() => handleCardClick('game-2048')}
