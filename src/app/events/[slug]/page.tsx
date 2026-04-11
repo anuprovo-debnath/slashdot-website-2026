@@ -3,6 +3,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
+import { TagPill } from '@/components/ui/TagPill';
 
 export const dynamicParams = false;
 
@@ -40,7 +41,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         <header className="mb-12">
           {/* Category Top Label */}
           <div className="mb-4">
-            <span className="text-[11px] text-[var(--color-primary)] uppercase font-bold tracking-[0.2em]">{category}</span>
+            <TagPill tag={category} />
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 text-[var(--foreground)] leading-tight">

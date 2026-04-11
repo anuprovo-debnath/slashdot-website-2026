@@ -2,6 +2,7 @@ import { EventData } from '@/lib/events';
 import { getEventStatus } from '@/lib/eventUtils';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { TagPill } from './ui/TagPill';
 
 interface EventCardProps {
   event: EventData;
@@ -54,9 +55,9 @@ export function EventCard({ event }: EventCardProps) {
       {/* Absolute link mapping the card to details page */}
       <Link href={`/events/${event.slug}`} className="absolute inset-0 z-[10]" aria-label={`View details for ${title}`} />
       
-      <div className="flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start md:w-32 shrink-0 relative z-[20] pointer-events-none">
-        <div className="flex flex-col">
-          <span className="text-[10px] text-[var(--color-primary)] uppercase font-bold tracking-[0.2em] mb-1">{category}</span>
+      <div className="flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start md:w-32 shrink-0 relative z-[20]">
+        <div className="flex flex-col gap-2 pointer-events-none">
+          <TagPill tag={category} className="w-fit pointer-events-auto" />
           <span className="text-2xl font-extrabold text-foreground tracking-tight font-sans leading-tight">{formattedDate}</span>
           <span className="text-xs text-foreground/50 mt-1 uppercase tracking-widest font-medium">{displayTime}</span>
         </div>

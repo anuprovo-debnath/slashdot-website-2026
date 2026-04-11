@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
@@ -16,21 +16,21 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
               {/* Light Mode Logo */}
-              <Image 
-                src="/slashdot-website-2026/logos/Logo_White_BG.png" 
-                alt="Slashdot" 
+              <Image
+                src="/slashdot-website-2026/logos/Logo_White_BG.png"
+                alt="Slashdot"
                 width={200}
                 height={40}
-                className="h-10 w-auto dark:hidden" 
+                className="h-10 w-auto dark:hidden"
                 unoptimized
               />
               {/* Dark Mode Logo */}
-              <Image 
-                src="/slashdot-website-2026/logos/Logo_Black_BG.png" 
-                alt="Slashdot" 
+              <Image
+                src="/slashdot-website-2026/logos/Logo_Black_BG.png"
+                alt="Slashdot"
                 width={200}
                 height={40}
-                className="h-10 w-auto hidden dark:block" 
+                className="h-10 w-auto hidden dark:block"
                 unoptimized
               />
             </Link>
@@ -44,15 +44,32 @@ export function Navbar() {
             <Link href="/fun-zone" className="hover:text-[var(--color-primary)] transition-colors">Fun Zone</Link>
             <Link href="/about" className="hover:text-[var(--color-primary)] transition-colors">About</Link>
             <Link href="/contact" className="hover:text-[var(--color-primary)] transition-colors">Contact</Link>
-            <Link 
-              href="#join-us" 
+            <Link
+              href="#join-us"
               className="bg-[var(--color-primary)] text-white px-5 py-2 rounded-full font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-[var(--color-primary)]/20 active:scale-95"
             >
               JOIN
             </Link>
             <ThemeToggle />
+            <div className="flex items-center gap-4 ml-4">
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent('slashdot:open-search'))}
+                className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-all group"
+                aria-label="Search"
+              >
+                <Search className="w-5 h-5 text-neutral-600 dark:text-neutral-400 group-hover:text-primary transition-colors" />
+              </button>
+              <ThemeToggle />
+            </div>
           </div>
-          <div className="flex items-center md:hidden space-x-4">
+          <div className="flex items-center md:hidden space-x-2">
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('slashdot:open-search'))}
+              className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-all"
+              aria-label="Search"
+            >
+              <Search className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
+            </button>
             <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -72,9 +89,8 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-72 opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-72 opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <div className="border-t border-black/10 dark:border-white/10 px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[var(--color-bg)]">
           <Link href="/" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Home</Link>
@@ -85,8 +101,8 @@ export function Navbar() {
           <Link href="/fun-zone" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Fun Zone</Link>
           <Link href="/about" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">About</Link>
           <Link href="/contact" className="block px-3 py-2 rounded-md font-medium hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">Contact</Link>
-          <Link 
-            href="#join-us" 
+          <Link
+            href="#join-us"
             onClick={() => setIsOpen(false)}
             className="block px-3 py-2 rounded-md font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 transition-colors"
           >

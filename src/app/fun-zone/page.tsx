@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { TagPill } from "@/components/ui/TagPill";
 
 // --- CONSTANTS ---
 const REPO_NAME = "/slashdot-website-2026";
@@ -63,9 +64,7 @@ const MemeCard = ({ title, category, img, slug, onClick, className = "" }: { tit
     </div>
     <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
       <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center">
-        <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
-          {category}
-        </span>
+        <TagPill tag={category} />
       </div>
     </div>
   </div>
@@ -128,9 +127,7 @@ const GameCard = ({ title, description, url, imgUrl, imgClassName = "object-cove
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
         <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
           {tags.map(tag => (
-            <span key={tag} className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
-              #{tag.toUpperCase()}
-            </span>
+            <TagPill key={tag} tag={tag} />
           ))}
         </div>
       </div>
@@ -173,9 +170,7 @@ const ArtCard = ({ title, blurColor, slug, onClick, className = "" }: { title: s
     </div>
     <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
       <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
-        <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
-          #GENERATIVE
-        </span>
+        <TagPill tag="Generative" />
       </div>
     </div>
   </div>

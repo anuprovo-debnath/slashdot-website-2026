@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import SlashdotFallbackCover from '@/components/ui/SlashdotFallbackCover';
+import { TagPill } from '@/components/ui/TagPill';
+import { TypePill } from '@/components/ui/TypePill';
 
 export const dynamicParams = false;
 
@@ -62,9 +64,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             <div className="flex items-center gap-3">
               <StatusBadge status={frontmatter.status} />
               {frontmatter.category && (
-                <span className="text-black/40 dark:text-white/40 uppercase tracking-widest text-[12px]">
-                  {frontmatter.category.replace('_', ' ')}
-                </span>
+                <TypePill category={frontmatter.category} />
               )}
             </div>
             {formattedDate && (
@@ -78,9 +78,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           {frontmatter.tech_stack?.length > 0 && (
             <div className="flex flex-wrap gap-2.5 mb-6">
               {frontmatter.tech_stack.map((tech: string) => (
-                <span key={tech} className="px-4 py-1.5 bg-[#0291B2]/10 text-[#0291B2] rounded-full text-sm font-bold shadow-sm ring-1 ring-inset ring-[#0291B2]/20">
-                  {tech}
-                </span>
+                <TagPill key={tech} tag={tech} />
               ))}
             </div>
           )}

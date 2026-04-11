@@ -3,6 +3,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
+import { TagPill } from '@/components/ui/TagPill';
+import { AuthorPill } from '@/components/ui/AuthorPill';
 
 export const dynamicParams = false;
 
@@ -41,16 +43,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="flex items-center justify-between w-full border-b border-black/5 dark:border-white/10 pb-4 mb-8 text-[15px] font-bold tracking-tight">
             {post.frontmatter.author && (
               <div className="z-20 relative">
-                {post.frontmatter.authorEmail ? (
-                  <a 
-                    href={post.frontmatter.authorEmail}
-                    className="text-[#0291B2] hover:underline transition-all"
-                  >
-                    {post.frontmatter.author}
-                  </a>
-                ) : (
-                  <span className="text-[#0291B2]">{post.frontmatter.author}</span>
-                )}
+                <AuthorPill author={post.frontmatter.author} />
               </div>
             )}
 
@@ -63,9 +56,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {post.frontmatter.tags && (
             <div className="flex flex-wrap gap-3 mt-6">
               {post.frontmatter.tags.map((tag: string) => (
-                <span key={tag} className="px-4 py-1.5 bg-[#0291B2]/10 text-[#0291B2] rounded-full text-sm font-bold shadow-sm ring-1 ring-inset ring-[#0291B2]/20">
-                  {tag}
-                </span>
+                <TagPill key={tag} tag={tag} />
               ))}
             </div>
           )}
