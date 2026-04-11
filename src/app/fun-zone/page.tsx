@@ -28,8 +28,8 @@ const SlashPattern = ({ className = "" }: { className?: string }) => (
 );
 
 const MemeCard = ({ title, category, img }: { title: string; category: string; img: string }) => (
-  <div className="relative overflow-hidden group rounded-xl border border-black/10 dark:border-white/10 h-[450px] w-full flex flex-col bg-[var(--background)] transition-all hover:border-[var(--color-primary)] dark:hover:border-[var(--color-primary)] hover:-translate-y-1 shadow-sm hover:shadow-lg">
-    <div className="flex flex-col h-[402px] overflow-hidden relative z-10 w-full pointer-events-none">
+  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+    <div className="flex flex-col h-[406px] overflow-hidden relative z-10 w-full pointer-events-none">
       <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
         <Image
           src={img}
@@ -41,17 +41,17 @@ const MemeCard = ({ title, category, img }: { title: string; category: string; i
         />
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
       </div>
-      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto text-center">
+      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto">
         <div className="flex flex-col flex-1 min-h-0">
           <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
-          <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis mx-auto">
+          <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
             Curated dev humor collected from the corners of the network. High visual fidelity, low productivity.
           </p>
         </div>
       </div>
     </div>
     <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
+      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12">
         <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
           {category}
         </span>
@@ -65,11 +65,11 @@ const GameCard = ({ title, description }: { title: string; description: string }
   const [score, setScore] = useState(0);
   
   return (
-    <div className="relative overflow-hidden group rounded-xl border border-black/10 dark:border-white/10 h-[450px] w-full flex flex-col bg-[var(--background)] transition-all hover:border-[var(--color-primary)] dark:hover:border-[var(--color-primary)] hover:-translate-y-1 shadow-sm hover:shadow-lg">
-      <SlashPattern className="opacity-5 text-[var(--color-primary)]" />
-      <div className="p-8 flex-1 flex flex-col z-10 relative h-full text-center">
-        <h3 className="text-2xl font-extrabold leading-tight text-[var(--foreground)] mb-2 truncate">{title}</h3>
-        <p className="text-foreground/70 mb-6 text-sm mx-auto max-w-sm">{description}</p>
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+      <SlashPattern className="opacity-5 text-[#0291B2]" />
+      <div className="px-5 pt-6 pb-1 flex-1 flex flex-col z-10 relative h-full">
+        <h3 className="text-2xl font-extrabold leading-tight text-[var(--foreground)] mb-2 group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0">{title}</h3>
+        <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 mb-6 line-clamp-2 sm:line-clamp-3">{description}</p>
         
         <div className="flex-1 flex flex-col items-center justify-center bg-foreground/5 rounded-xl border border-foreground/10 shadow-inner group-hover:bg-foreground/[0.03] transition-colors">
           <div className="text-primary font-heading text-6xl mb-6 font-bold tabular-nums tracking-tighter drop-shadow-md">
@@ -92,20 +92,20 @@ const GameCard = ({ title, description }: { title: string; description: string }
 
 const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => {
   return (
-    <div className="relative overflow-hidden group rounded-xl border border-black/10 dark:border-white/10 h-[450px] w-full flex flex-col bg-[var(--background)] transition-all hover:border-[var(--color-primary)] dark:hover:border-[var(--color-primary)] hover:-translate-y-1 shadow-sm hover:shadow-lg">
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
       <div className="flex-1 relative overflow-hidden bg-black/5 dark:bg-white/5 flex items-center justify-center border-b border-foreground/10">
         {/* CSS Mathematical Generator Art */}
         <div className="relative w-40 h-40 group-hover:scale-110 transition-transform duration-1000 transform-gpu" style={{ animation: 'spin 20s linear infinite' }}>
           <div className="absolute inset-0 rounded-full blur-[30px] opacity-40 group-hover:opacity-70 transition-opacity duration-1000" style={{ backgroundColor: blurColor }}></div>
-          <div className="absolute top-0 left-0 w-full h-full border-[6px] border-primary/60 mix-blend-multiply dark:mix-blend-screen transition-all duration-700 group-hover:border-[10px]" style={{ borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%' }}></div>
+          <div className="absolute top-0 left-0 w-full h-full border-[6px] border-[#0291B2]/60 mix-blend-multiply dark:mix-blend-screen transition-all duration-700 group-hover:border-[10px]" style={{ borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%' }}></div>
           <div className="absolute top-[-15px] left-[-15px] w-[calc(100%+30px)] h-[calc(100%+30px)] border-[2px] border-foreground/40 transition-all duration-1000 group-hover:rotate-45" style={{ borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' }}></div>
-          <div className="absolute top-[15px] left-[15px] w-[calc(100%-30px)] h-[calc(100%-30px)] border-[1px] border-primary/40 transition-all duration-1000 group-hover:-rotate-45" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%' }}></div>
+          <div className="absolute top-[15px] left-[15px] w-[calc(100%-30px)] h-[calc(100%-30px)] border-[1px] border-[#0291B2]/40 transition-all duration-1000 group-hover:-rotate-45" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%' }}></div>
         </div>
       </div>
       {/* 44px + text block => 140px reserved area roughly to match grid */}
-      <div className="p-6 bg-background relative z-10 h-[120px] flex flex-col justify-end shrink-0 text-center">
-        <h3 className="text-2xl font-extrabold leading-tight text-[var(--foreground)] mb-1">{title}</h3>
-        <p className="text-primary font-bold text-sm tracking-widest uppercase">Pure CSS Geometry</p>
+      <div className="px-5 pt-4 pb-4 bg-[var(--background)] relative z-10 h-[100px] flex flex-col justify-end shrink-0">
+        <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
+        <p className="text-[#0291B2] font-bold text-[11px] sm:text-[12px] tracking-widest uppercase mb-auto">Pure CSS Geometry</p>
       </div>
       <SlashPattern className="opacity-0 group-hover:opacity-[0.03] text-primary transition-opacity duration-500" />
     </div>
