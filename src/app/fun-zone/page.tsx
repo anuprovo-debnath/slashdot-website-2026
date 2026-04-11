@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 // Functional SVG background ensuring a strict Tan=3 (71-degree) mathematical weave
 const SlashPattern = ({ className = "" }: { className?: string }) => (
@@ -40,8 +41,14 @@ const StatusBadge = ({ status }: { status: string }) => {
   );
 };
 
-const MemeCard = ({ title, category, img }: { title: string; category: string; img: string }) => (
-  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+const MemeCard = ({ title, category, img, slug, onClick }: { title: string; category: string; img: string; slug: string; onClick: () => void }) => (
+  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full text-center">
+    <Link
+      href={`/slashdot-website-2026/fun-zone/${slug}`}
+      onClick={onClick}
+      className="absolute inset-0 z-[10]"
+      aria-label={`View ${title}`}
+    />
     <div className="flex flex-col h-[406px] overflow-hidden">
       <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
         <Image
@@ -76,17 +83,37 @@ const MemeCard = ({ title, category, img }: { title: string; category: string; i
   </div>
 );
 
-const GameCard = ({ title, description, url, tags }: { title: string; description: string; url: string; tags: string[] }) => {
+const GameCard = ({ title, description, url, tags, slug, onClick }: { title: string; description: string; url: string; tags: string[]; slug: string; onClick: () => void }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
   return (
     <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full text-center">
+      <Link
+        href={`/slashdot-website-2026/fun-zone/${slug}`}
+        onClick={onClick}
+        className="absolute inset-0 z-[10]"
+        aria-label={`View ${title}`}
+      />
       <div className="flex flex-col h-[406px] overflow-hidden">
-        <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-[var(--background)] pointer-events-auto">
+        <div className={`relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-[var(--background)] z-[20] ${isPlaying ? 'pointer-events-auto' : 'pointer-events-none'}`}>
           <iframe 
             src={url} 
-            className="w-full h-full border-0 pointer-events-auto transition-opacity duration-700" 
+            className="w-full h-full border-0 transition-opacity duration-700" 
             title={title} 
-            sandbox="allow-scripts allow-same-origin text-center"
+            sandbox="allow-scripts allow-same-origin"
           ></iframe>
+          {!isPlaying && (
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsPlaying(true);
+              }}
+              className="absolute px-6 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white rounded-full font-bold text-sm active:scale-95 transition-transform transform-gpu z-[30]"
+            >
+              Play Game
+            </button>
+          )}
         </div>
         <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden text-center items-center">
           <div className="flex flex-col flex-1 min-h-0 w-full text-center items-center justify-start">
@@ -121,9 +148,15 @@ const GameCard = ({ title, description, url, tags }: { title: string; descriptio
   );
 };
 
-const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => {
+const ArtCard = ({ title, blurColor, slug, onClick }: { title: string; blurColor: string; slug: string; onClick: () => void }) => {
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full text-center">
+      <Link
+        href={`/slashdot-website-2026/fun-zone/${slug}`}
+        onClick={onClick}
+        className="absolute inset-0 z-[10]"
+        aria-label={`View ${title}`}
+      />
       <div className="flex flex-col h-[406px] overflow-hidden">
         <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-black/5 dark:bg-white/5 pointer-events-auto">
           <div className="relative w-32 h-32 transition-transform duration-700 ease-out group-hover:scale-110" style={{ animation: 'spin 20s linear infinite' }}>
@@ -157,12 +190,26 @@ const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => 
 };
 
 export default function FunZonePage() {
-  // Strict Hydration boundary to prevent Client/Server mismatches on static export
   const [mounted, setMounted] = useState(false);
+  const [visitedSlugs, setVisitedSlugs] = useState<string[]>([]);
 
   useEffect(() => {
     setMounted(true);
+    try {
+      const stored = localStorage.getItem('slashdot_visited_funzone');
+      if (stored) setVisitedSlugs(JSON.parse(stored));
+    } catch (e) { }
   }, []);
+
+  const handleCardClick = (slug: string) => {
+    if (!visitedSlugs.includes(slug)) {
+      const updated = [...visitedSlugs, slug];
+      setVisitedSlugs(updated);
+      try {
+        localStorage.setItem('slashdot_visited_funzone', JSON.stringify(updated));
+      } catch (e) { }
+    }
+  };
 
   // Hydration skeleton maintaining layout geometry and transform-gpu hardware acceleration
   if (!mounted) {
@@ -203,16 +250,22 @@ export default function FunZonePage() {
               title="When the code compiles cleanly on the first try and you don't know why." 
               category="compilation-panic"
               img="https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&auto=format&fit=crop&q=80" 
+              slug="compilation-panic-meme"
+              onClick={() => handleCardClick('compilation-panic-meme')}
             />
             <MemeCard 
               title="Reacting to the new hydration mismatch in production." 
               category="next-tears"
               img="https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop&q=80" 
+              slug="hydration-mismatch-meme"
+              onClick={() => handleCardClick('hydration-mismatch-meme')}
             />
             <MemeCard 
               title="Convincing the team to rewrite the entire backend in Rust." 
               category="blazingly-fast"
               img="https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=800&auto=format&fit=crop&q=80" 
+              slug="rust-rewrite-meme"
+              onClick={() => handleCardClick('rust-rewrite-meme')}
             />
           </div>
         </section>
@@ -228,18 +281,24 @@ export default function FunZonePage() {
               description="Join the numbers and get to the 2048 tile!" 
               url="https://gabrielecirulli.github.io/2048/"
               tags={["Puzzles"]}
+              slug="game-2048"
+              onClick={() => handleCardClick('game-2048')}
             />
             <GameCard 
               title="Hextris" 
               description="Fast-paced hexagonal puzzle inspired by Tetris." 
               url="https://hextris.github.io/hextris/"
               tags={["Arcade"]}
+              slug="game-hextris"
+              onClick={() => handleCardClick('game-hextris')}
             />
             <GameCard 
               title="Clumsy Bird" 
               description="A retro-style arcade challenge. Don't hit the pipes!" 
               url="https://ellisonleao.github.io/clumsy-bird/"
               tags={["Retro"]}
+              slug="game-clumsy-bird"
+              onClick={() => handleCardClick('game-clumsy-bird')}
             />
           </div>
         </section>
@@ -250,9 +309,9 @@ export default function FunZonePage() {
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Art Gallery</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full px-2">
-            <ArtCard title="Morphing Anomalies" blurColor="var(--color-primary)" />
-            <ArtCard title="Fluid Chaos Engine" blurColor="#ff4500" />
-            <ArtCard title="Geometric Recursion" blurColor="#8a2be2" />
+            <ArtCard title="Morphing Anomalies" blurColor="var(--color-primary)" slug="art-morphing-anomalies" onClick={() => handleCardClick('art-morphing-anomalies')} />
+            <ArtCard title="Fluid Chaos Engine" blurColor="#ff4500" slug="art-fluid-chaos" onClick={() => handleCardClick('art-fluid-chaos')} />
+            <ArtCard title="Geometric Recursion" blurColor="#8a2be2" slug="art-geometric-recursion" onClick={() => handleCardClick('art-geometric-recursion')} />
           </div>
         </section>
         
