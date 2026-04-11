@@ -4,30 +4,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Functional SVG background ensuring a strict Tan=3 (71-degree) mathematical weave
-const SlashPattern = ({ className = "" }: { className?: string }) => (
-  <svg
-    className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <defs>
-      <pattern
-        id="slashWeave"
-        width="30"
-        height="90"
-        patternUnits="userSpaceOnUse"
-        patternTransform="scale(1.5)"
-      >
-        {/* dx=30, dy=90 => 90/30 = 3. Tan=3 => 71.56 degrees. */}
-        <line x1="30" y1="0" x2="0" y2="90" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
-        <line x1="15" y1="0" x2="-15" y2="90" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
-        <line x1="45" y1="0" x2="15" y2="90" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#slashWeave)" />
-  </svg>
-);
-
 const StatusBadge = ({ status }: { status: string }) => {
   const styles: Record<string, string> = {
     Active: 'bg-gradient-to-r from-[#0291B2] to-[#06b6d4] text-white border-white/20',
@@ -42,7 +18,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 const MemeCard = ({ title, category, img, slug, onClick }: { title: string; category: string; img: string; slug: string; onClick: () => void }) => (
-  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full text-center">
+  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
     <Link
       href={`/slashdot-website-2026/fun-zone/${slug}`}
       onClick={onClick}
@@ -61,8 +37,14 @@ const MemeCard = ({ title, category, img, slug, onClick }: { title: string; cate
         />
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
       </div>
-      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden">
-        <div className="flex flex-col flex-1 min-h-0 text-center items-center justify-start">
+      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden font-sans">
+        <div className="relative flex items-center justify-between w-full mb-1 text-[14px] sm:text-[15px] font-bold tracking-tight">
+          <div className="z-[20] relative">
+            <span className="text-[var(--color-primary)]">#{category.toUpperCase()}</span>
+          </div>
+          <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">Apr 11, 2026</div>
+        </div>
+        <div className="flex flex-col flex-1 min-h-0 text-left">
           <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 shrink-0 mb-1">
             {title}
           </h3>
@@ -73,13 +55,12 @@ const MemeCard = ({ title, category, img, slug, onClick }: { title: string; cate
       </div>
     </div>
     <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center">
+      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12">
         <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
-          #{category.toUpperCase()}
+          {category}
         </span>
       </div>
     </div>
-    <SlashPattern className="opacity-[0.02] text-[var(--foreground)]" />
   </div>
 );
 
@@ -91,7 +72,7 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
   }, []);
 
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full text-center">
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
       <Link
         href={`/slashdot-website-2026/fun-zone/${slug}`}
         onClick={onClick}
@@ -110,8 +91,14 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
           />
           <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
         </div>
-        <div className="px-5 pt-4 pb-3 flex flex-col flex-1 overflow-hidden text-center items-center pointer-events-none">
-          <div className="flex flex-col flex-1 min-h-0 w-full text-center items-center justify-start">
+        <div className="px-5 pt-4 pb-3 flex flex-col flex-1 overflow-hidden pointer-events-none font-sans">
+          <div className="relative flex items-center justify-between w-full mb-1 text-[14px] sm:text-[15px] font-bold tracking-tight">
+            <div className="z-[20] relative">
+              <span className="text-[var(--color-primary)]">GAMES</span>
+            </div>
+            <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">Apr 11, 2026</div>
+          </div>
+          <div className="flex flex-col flex-1 min-h-0 w-full text-left items-start justify-start">
             <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-1 shrink-0 mb-1 pointer-events-auto">
               {title}
             </h3>
@@ -119,11 +106,11 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
               {description}
             </p>
             <div className="w-full mt-1 border-t border-black/5 dark:border-white/5 pt-1.5 flex-1 pointer-events-auto">
-              <table className="w-full text-center text-[12px] opacity-70 mt-1 mx-auto">
+              <table className="w-full text-left text-[12px] opacity-70 mt-1">
                 <tbody>
-                   <tr><td className="py-0.5 text-left pl-4">👑 Neo</td><td className="text-right pr-4 font-bold">24,400</td></tr>
-                   <tr><td className="py-0.5 text-left pl-4">Trinity</td><td className="text-right pr-4 font-bold">18,200</td></tr>
-                   <tr><td className="py-0.5 text-left pl-4">Morpheus</td><td className="text-right pr-4 font-bold">12,100</td></tr>
+                   <tr><td className="py-0.5 pl-2">👑 Neo</td><td className="text-right pr-4 font-bold">24,400</td></tr>
+                   <tr><td className="py-0.5 pl-2">Trinity</td><td className="text-right pr-4 font-bold">18,200</td></tr>
+                   <tr><td className="py-0.5 pl-2">Morpheus</td><td className="text-right pr-4 font-bold">12,100</td></tr>
                 </tbody>
               </table>
             </div>
@@ -140,7 +127,7 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
         </div>
       </div>
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
+        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12 w-full">
           {tags.map(tag => (
              <span key={tag} className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
                #{tag.toUpperCase()}
@@ -154,7 +141,7 @@ const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { ti
 
 const ArtCard = ({ title, blurColor, slug, onClick }: { title: string; blurColor: string; slug: string; onClick: () => void }) => {
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full text-center">
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
       <Link
         href={`/slashdot-website-2026/fun-zone/${slug}`}
         onClick={onClick}
@@ -170,8 +157,14 @@ const ArtCard = ({ title, blurColor, slug, onClick }: { title: string; blurColor
             <div className="absolute top-[10px] left-[10px] w-[calc(100%-20px)] h-[calc(100%-20px)] border-[1px] border-[#0291B2]/40 transition-all duration-1000 group-hover:-rotate-45" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%' }}></div>
           </div>
         </div>
-        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden">
-          <div className="flex flex-col flex-1 min-h-0 text-center items-center justify-start">
+        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden font-sans">
+          <div className="relative flex items-center justify-between w-full mb-1 text-[14px] sm:text-[15px] font-bold tracking-tight">
+            <div className="z-[20] relative">
+              <span className="text-[var(--color-primary)]">#GENERATIVE</span>
+            </div>
+            <div className="text-black/50 dark:text-white/50 uppercase tracking-widest text-[11px] sm:text-[12px]">Apr 11, 2026</div>
+          </div>
+          <div className="flex flex-col flex-1 min-h-0 text-left">
             <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-2 shrink-0 mb-1">
               {title}
             </h3>
@@ -182,13 +175,12 @@ const ArtCard = ({ title, blurColor, slug, onClick }: { title: string; blurColor
         </div>
       </div>
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
+        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12 w-full">
           <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
             #GENERATIVE
           </span>
         </div>
       </div>
-      <SlashPattern className="opacity-0 group-hover:opacity-[0.03] text-primary transition-opacity duration-500 pointer-events-none" />
     </div>
   );
 };
@@ -230,7 +222,7 @@ export default function FunZonePage() {
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-16 lg:py-24 min-h-screen transform-gpu transition-all">
+    <main className="max-w-6xl mx-auto px-6 py-16 lg:py-24 min-h-screen transform-gpu transition-all">
       
       {/* HEADER */}
       <header className="mb-20 relative text-center">
@@ -284,7 +276,7 @@ export default function FunZonePage() {
               title="2048" 
               description="Join the numbers and get to the 2048 tile!" 
               url="https://play2048.co/"
-              imgUrl="https://play-2048.github.io/meta/apple-touch-icon.png"
+              imgUrl="https://images.unsplash.com/photo-1526367790938-ca305e55e3a0?w=800&auto=format&fit=crop&q=80"
               tags={["Puzzles"]}
               slug="game-2048"
               onClick={() => handleCardClick('game-2048')}
@@ -293,7 +285,7 @@ export default function FunZonePage() {
               title="Hextris" 
               description="Fast-paced hexagonal puzzle inspired by Tetris." 
               url="https://hextris.io/"
-              imgUrl="https://hextris.io/images/facebook-hextris.png"
+              imgUrl="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&auto=format&fit=crop&q=80"
               tags={["Arcade"]}
               slug="game-hextris"
               onClick={() => handleCardClick('game-hextris')}
@@ -302,7 +294,7 @@ export default function FunZonePage() {
               title="Clumsy Bird" 
               description="A retro-style arcade challenge. Don't hit the pipes!" 
               url="https://ellisonleao.github.io/clumsy-bird/"
-              imgUrl="https://raw.githubusercontent.com/ellisonleao/clumsy-bird/master/data/img/bg.png"
+              imgUrl="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=800&auto=format&fit=crop&q=80"
               tags={["Retro"]}
               slug="game-clumsy-bird"
               onClick={() => handleCardClick('game-clumsy-bird')}
