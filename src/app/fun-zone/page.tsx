@@ -41,17 +41,17 @@ const MemeCard = ({ title, category, img }: { title: string; category: string; i
         />
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
       </div>
-      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto">
+      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto text-center">
         <div className="flex flex-col flex-1 min-h-0">
           <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
-          <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
+          <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis mx-auto">
             Curated dev humor collected from the corners of the network. High visual fidelity, low productivity.
           </p>
         </div>
       </div>
     </div>
     <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12">
+      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
         <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
           {category}
         </span>
@@ -66,10 +66,10 @@ const GameCard = ({ title, description }: { title: string; description: string }
   
   return (
     <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
-      <SlashPattern className="opacity-5 text-[#0291B2]" />
-      <div className="p-8 flex-1 flex flex-col z-10 relative h-full">
+      <SlashPattern className="opacity-5 text-[var(--color-primary)]" />
+      <div className="p-8 flex-1 flex flex-col z-10 relative h-full text-center">
         <h3 className="text-2xl font-extrabold leading-tight text-[var(--foreground)] mb-2 truncate">{title}</h3>
-        <p className="text-foreground/70 mb-6 text-sm">{description}</p>
+        <p className="text-foreground/70 mb-6 text-sm mx-auto max-w-sm">{description}</p>
         
         <div className="flex-1 flex flex-col items-center justify-center bg-foreground/5 rounded-xl border border-foreground/10 shadow-inner group-hover:bg-foreground/[0.03] transition-colors">
           <div className="text-primary font-heading text-6xl mb-6 font-bold tabular-nums tracking-tighter drop-shadow-md">
@@ -103,7 +103,7 @@ const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => 
         </div>
       </div>
       {/* 44px + text block => 140px reserved area roughly to match grid */}
-      <div className="p-6 bg-background relative z-10 h-[120px] flex flex-col justify-end shrink-0">
+      <div className="p-6 bg-background relative z-10 h-[120px] flex flex-col justify-end shrink-0 text-center">
         <h3 className="text-2xl font-extrabold leading-tight text-[var(--foreground)] mb-1">{title}</h3>
         <p className="text-primary font-bold text-sm tracking-widest uppercase">Pure CSS Geometry</p>
       </div>
@@ -137,30 +137,24 @@ export default function FunZonePage() {
   return (
     <main className="max-w-7xl mx-auto px-6 py-16 lg:py-24 min-h-screen transform-gpu transition-all">
       
-      {/* HEADER WITH TAN=3 SLANG DECORATION */}
-      <header className="mb-20 relative">
+      {/* HEADER */}
+      <header className="mb-20 relative text-center">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)] relative z-10">
-          Fun <span className="text-[#0291B2]">Zone</span>
+          Fun <span className="text-[var(--color-primary)]">Zone</span>
         </h1>
         <p className="text-xl text-[var(--foreground)] opacity-80 max-w-2xl mx-auto relative z-10">
           The interactive playground. A curated collection of tech culture, playable client-side experiments, and mathematically generated art exploring the Slashdot grid constraints.
         </p>
-        
-        {/* Themed Tan=3 Section Divider */}
-        <div className="mt-12 h-16 w-full relative overflow-hidden bg-foreground/[0.02] border-y border-foreground/10 transform-gpu">
-          <SlashPattern className="opacity-10 text-primary" />
-        </div>
       </header>
 
       <div className="flex flex-col gap-24">
         
         {/* MEMES SECTION */}
         <section>
-          <div className="flex items-center gap-6 mb-10">
+          <div className="mb-10 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Memes</h2>
-            <div className="flex-1 h-px bg-gradient-to-r from-foreground/20 to-transparent"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <MemeCard 
               title="When the code compiles cleanly on the first try and you don't know why." 
               category="compilation-panic"
@@ -181,11 +175,10 @@ export default function FunZonePage() {
 
         {/* GAMES SECTION */}
         <section>
-          <div className="flex items-center gap-6 mb-10">
+          <div className="mb-10 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Games</h2>
-            <div className="flex-1 h-px bg-gradient-to-r from-foreground/20 to-transparent"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <GameCard 
               title="Incremental Stack" 
               description="A client-side only clicker using React state. Maximize your operations per second before the eventual browser tab crash." 
@@ -219,11 +212,10 @@ export default function FunZonePage() {
 
         {/* ART GALLERY SECTION */}
         <section>
-          <div className="flex items-center gap-6 mb-10">
+          <div className="mb-10 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Art Gallery</h2>
-            <div className="flex-1 h-px bg-gradient-to-r from-foreground/20 to-transparent"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2">
             <ArtCard title="Morphing Anomalies" blurColor="var(--color-primary)" />
             <ArtCard title="Fluid Chaos Engine" blurColor="#ff4500" />
             <ArtCard title="Geometric Recursion" blurColor="#8a2be2" />
