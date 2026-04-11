@@ -83,8 +83,12 @@ const MemeCard = ({ title, category, img, slug, onClick }: { title: string; cate
   </div>
 );
 
-const GameCard = ({ title, description, url, tags, slug, onClick }: { title: string; description: string; url: string; tags: string[]; slug: string; onClick: () => void }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+const GameCard = ({ title, description, url, imgUrl, tags, slug, onClick }: { title: string; description: string; url: string; imgUrl: string; tags: string[]; slug: string; onClick: () => void }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full text-center">
@@ -95,43 +99,43 @@ const GameCard = ({ title, description, url, tags, slug, onClick }: { title: str
         aria-label={`View ${title}`}
       />
       <div className="flex flex-col h-[406px] overflow-hidden">
-        <div className={`relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-[var(--background)] z-[20] ${isPlaying ? 'pointer-events-auto' : 'pointer-events-none'}`}>
-          <iframe 
-            src={url} 
-            className="w-full h-full border-0 transition-opacity duration-700" 
-            title={title} 
-            sandbox="allow-scripts allow-same-origin"
-          ></iframe>
-          {!isPlaying && (
-            <button 
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsPlaying(true);
-              }}
-              className="absolute px-6 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white rounded-full font-bold text-sm active:scale-95 transition-transform transform-gpu z-[30]"
-            >
-              Play Game
-            </button>
-          )}
+        <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-[var(--background)]">
+          <Image
+            src={imgUrl.startsWith('http') ? imgUrl : `/slashdot-website-2026${imgUrl}`}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            unoptimized
+          />
+          <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
         </div>
-        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden text-center items-center">
+        <div className="px-5 pt-4 pb-3 flex flex-col flex-1 overflow-hidden text-center items-center pointer-events-none">
           <div className="flex flex-col flex-1 min-h-0 w-full text-center items-center justify-start">
-            <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-1 shrink-0 mb-1">
+            <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[var(--color-primary)] transition-colors line-clamp-1 shrink-0 mb-1 pointer-events-auto">
               {title}
             </h3>
-            <p className="text-[14px] leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-2 overflow-hidden text-ellipsis mb-1">
+            <p className="text-[14px] leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-2 overflow-hidden text-ellipsis mb-1 pointer-events-auto">
               {description}
             </p>
-            <div className="w-full mt-2 border-t border-black/5 dark:border-white/5 pt-2 flex-1">
+            <div className="w-full mt-1 border-t border-black/5 dark:border-white/5 pt-1.5 flex-1 pointer-events-auto">
               <table className="w-full text-center text-[12px] opacity-70 mt-1 mx-auto">
                 <tbody>
-                  <tr><td className="py-0.5 text-left pl-4">👑 Neo</td><td className="text-right pr-4 font-bold">24,400</td></tr>
-                  <tr><td className="py-0.5 text-left pl-4">Trinity</td><td className="text-right pr-4 font-bold">18,200</td></tr>
-                  <tr><td className="py-0.5 text-left pl-4">Morpheus</td><td className="text-right pr-4 font-bold">12,100</td></tr>
+                   <tr><td className="py-0.5 text-left pl-4">👑 Neo</td><td className="text-right pr-4 font-bold">24,400</td></tr>
+                   <tr><td className="py-0.5 text-left pl-4">Trinity</td><td className="text-right pr-4 font-bold">18,200</td></tr>
+                   <tr><td className="py-0.5 text-left pl-4">Morpheus</td><td className="text-right pr-4 font-bold">12,100</td></tr>
                 </tbody>
               </table>
             </div>
+
+            <a 
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 w-[85%] max-w-[200px] py-1.5 bg-[var(--color-primary)] hover:bg-[#06b6d4] text-white rounded-full font-black text-[12px] uppercase tracking-widest shadow-md hover:shadow-[0_0_15px_rgba(2,145,178,0.5)] transition-all pointer-events-auto shrink-0 z-[20] flex items-center justify-center gap-1.5"
+            >
+              Play Game
+            </a>
           </div>
         </div>
       </div>
@@ -279,7 +283,8 @@ export default function FunZonePage() {
             <GameCard 
               title="2048" 
               description="Join the numbers and get to the 2048 tile!" 
-              url="https://gabrielecirulli.github.io/2048/"
+              url="https://play2048.co/"
+              imgUrl="https://play-2048.github.io/meta/apple-touch-icon.png"
               tags={["Puzzles"]}
               slug="game-2048"
               onClick={() => handleCardClick('game-2048')}
@@ -287,7 +292,8 @@ export default function FunZonePage() {
             <GameCard 
               title="Hextris" 
               description="Fast-paced hexagonal puzzle inspired by Tetris." 
-              url="https://hextris.github.io/hextris/"
+              url="https://hextris.io/"
+              imgUrl="https://hextris.io/images/facebook-hextris.png"
               tags={["Arcade"]}
               slug="game-hextris"
               onClick={() => handleCardClick('game-hextris')}
@@ -296,6 +302,7 @@ export default function FunZonePage() {
               title="Clumsy Bird" 
               description="A retro-style arcade challenge. Don't hit the pipes!" 
               url="https://ellisonleao.github.io/clumsy-bird/"
+              imgUrl="https://raw.githubusercontent.com/ellisonleao/clumsy-bird/master/data/img/bg.png"
               tags={["Retro"]}
               slug="game-clumsy-bird"
               onClick={() => handleCardClick('game-clumsy-bird')}
