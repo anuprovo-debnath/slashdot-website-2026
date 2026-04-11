@@ -18,10 +18,10 @@ The Fun Zone is divided into three distinct, highly engaging sub-sections design
 The underlying grid architecture is built for strict visual uniformity across all resolutions.
 
 ### Layout Logic
-- **Geometry Inheritance (Blog Parity):** All Fun Zone card components operate strictly as identical visual derivatives of the primary `BlogGrid` elements.
-- **Component Standard:** This inherits the unified wrapper geometry (e.g., `flex flex-col h-[406px]` inner mapping alongside base padding logic) directly from the Blog components, effectively overriding previous independent 450px hard-coded mandates isolated to this section. Any variations extending beyond standard blog layout specs map dynamically to these defaults.
-- **Grid Structure Compliance:** The Fun Zone framework rigidly implements the blog standard structural footprint (`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-2`) enabling perfect visual continuity mapping.
-- **Centered Typography (Visual Sync):** All grid sub-components, standalone headers, and general descriptions prioritize clean, distraction-free geometry enforced through explicit `text-center` alignment rules, eliminating supplementary boundary lines.
+- **Geometry Inheritance (Blog Parity):** All Fun Zone card components operate strictly as identical visual derivatives of the primary `BlogGrid` elements, effectively overriding previous independent 450px hard-coded mandates isolated to this section. Any variations extending beyond standard blog layout specs map dynamically to these defaults.
+- **Top/Bottom Internal Column Split:** Content structure leverages Flexbox mapping exactly identically to Blog pages. The visual asset (Image/Game/Art) claims the fixed upper frame (`180px` height shrink-blocked), leaving the bottom stretch dynamically mapped to centered titles, descriptive tags, and UI interactions embedded above the strict `48px` footer boundary.
+- **Subtle Background Animation:** The outer Card wrapper integrates an ambient hover glow (ex: `hover:bg-foreground/[0.02] transform-gpu scale`) synchronized entirely alongside precise ring-box transitions duplicating standard site-wide interactions.
+- **Interactive Leaderboards:** Real-time mini leaderboards swap out descriptions in interactive widgets (GameCard). Elements strictly require `mounted` hydration logic returning placeholder arrays to dodge statically exported mismatches.
 
 ---
 

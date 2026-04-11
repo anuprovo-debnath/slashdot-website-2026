@@ -28,21 +28,21 @@ const SlashPattern = ({ className = "" }: { className?: string }) => (
 );
 
 const MemeCard = ({ title, category, img }: { title: string; category: string; img: string }) => (
-  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all duration-500 hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 hover:bg-foreground/[0.02] overflow-hidden h-[450px] w-full text-center">
     <div className="flex flex-col h-[406px] overflow-hidden relative z-10 w-full pointer-events-none">
-      <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
+      <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center">
         <Image
           src={img}
           alt={title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover group-hover:scale-[1.03] transition-transform duration-700 transform-gpu"
+          className="object-cover group-hover:scale-[1.05] transition-transform duration-700 transform-gpu"
           unoptimized
         />
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
       </div>
-      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto">
-        <div className="flex flex-col flex-1 min-h-0">
+      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto items-center justify-center">
+        <div className="flex flex-col flex-1 min-h-0 items-center">
           <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
           <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
             Curated dev humor collected from the corners of the network. High visual fidelity, low productivity.
@@ -63,13 +63,24 @@ const MemeCard = ({ title, category, img }: { title: string; category: string; i
 
 const GameCard = ({ title, description }: { title: string; description: string }) => {
   const [score, setScore] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const leaderboardEntries = [
+    { rank: 1, player: "Terminal God", score: 15400 },
+    { rank: 2, player: "KernelPanic", score: 12200 },
+    { rank: 3, player: "StackOvrflv", score: 9000 },
+  ];
   
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all duration-500 hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 hover:bg-foreground/[0.02] overflow-hidden h-[450px] w-full text-center">
       <div className="flex flex-col h-[406px] overflow-hidden relative z-10 w-full pointer-events-none">
         
         {/* Game Area mapped to Image area length of 180px */}
-        <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center pointer-events-auto group-hover:scale-105 transition-transform duration-700 bg-[var(--background)]">
+        <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center pointer-events-auto bg-[var(--background)] transition-transform duration-700 group-hover:scale-[1.03]">
           <SlashPattern className="opacity-5 text-[#0291B2] pointer-events-none" />
           <div className="text-primary font-heading text-6xl font-bold tabular-nums tracking-tighter drop-shadow-md z-10">
             {score}
@@ -77,21 +88,40 @@ const GameCard = ({ title, description }: { title: string; description: string }
         </div>
 
         {/* Info Area mapped to Blog text block */}
-        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto">
-          <div className="flex flex-col flex-1 min-h-0">
-            <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
-            <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis mb-4 pr-1">
-              {description}
-            </p>
+        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto items-center">
+          <div className="flex flex-col flex-1 min-h-0 w-full items-center">
+            <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-1 shrink-0 mb-1">{title}</h3>
+            
+            {/* Embedded Mini Leaderboard replaces strict description block */}
+            <div className="flex-1 w-full bg-black/5 dark:bg-white/5 rounded-lg mb-2 p-3 overflow-hidden border border-black/10 dark:border-white/10">
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-primary mb-2">Live Leaderboard</h4>
+              {!mounted ? (
+                <div className="animate-pulse space-y-2">
+                  <div className="h-3 bg-foreground/10 rounded w-full"></div>
+                  <div className="h-3 bg-foreground/10 rounded w-[80%] mx-auto"></div>
+                </div>
+              ) : (
+                <ul className="text-xs space-y-1.5 w-full text-center text-foreground/80 font-medium">
+                  {leaderboardEntries.map((l) => (
+                     <li key={l.rank} className="flex justify-between items-center px-2">
+                       <span className="opacity-50 w-4 text-left">{l.rank}.</span>
+                       <span className="flex-1 text-left ml-2 truncate">{l.player}</span>
+                       <span className="text-primary font-bold">{l.score}</span>
+                     </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             <button 
               onClick={(e) => {
                 e.stopPropagation();
                 setScore(s => s + 10);
               }}
-              className="px-6 py-2 bg-primary hover:bg-primary/90 text-white rounded-full font-bold active:scale-95 transition-transform transform-gpu shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mt-auto self-start mb-2"
+              className="px-6 py-1.5 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white rounded-full font-bold text-sm active:scale-95 transition-transform transform-gpu flex items-center justify-center gap-1 mx-auto mt-auto shrink-0 z-20"
             >
               <span>Play Now</span>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M13 10V3L4 14h7v8l9-11h-7z" />
               </svg>
             </button>
@@ -99,20 +129,20 @@ const GameCard = ({ title, description }: { title: string; description: string }
         </div>
       </div>
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12">
+        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
           <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
             Interactive
           </span>
         </div>
       </div>
-      <SlashPattern className="opacity-0 group-hover:opacity-[0.03] text-[var(--color-primary)] transition-opacity duration-500" />
+      <SlashPattern className="opacity-0 group-hover:opacity-[0.03] text-[var(--color-primary)] transition-opacity duration-500 pointer-events-none" />
     </div>
   );
 };
 
 const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => {
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all duration-500 hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 hover:bg-foreground/[0.02] overflow-hidden h-[450px] w-full text-center">
       <div className="flex flex-col h-[406px] overflow-hidden relative z-10 w-full pointer-events-none">
         
         {/* CSS Mathematical Generator Art */}
@@ -125,8 +155,8 @@ const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => 
           </div>
         </div>
 
-        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto">
-          <div className="flex flex-col flex-1 min-h-0">
+        <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto items-center justify-center">
+          <div className="flex flex-col flex-1 min-h-0 items-center">
             <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
             <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
               Procedurally generated geometric patterns running raw via CSS variables without external dependencies.
@@ -135,7 +165,7 @@ const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => 
         </div>
       </div>
       <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
-        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12">
+        <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-center w-full">
           <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
             Generative
           </span>
