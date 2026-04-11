@@ -121,7 +121,7 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       <main className="w-full md:w-[70%] flex flex-col gap-6">
 
         {/* Search Bar (Initial Right-Panel Position) */}
-        <div className={`relative z-10 transition-all duration-300 origin-top ${!isScrolled ? 'opacity-100 max-h-24 scale-y-100 mb-0' : 'opacity-0 max-h-0 scale-y-0 mb-[-24px] pointer-events-none'}`}>
+        <div className={`relative z-10 transition-opacity duration-300 ${!isScrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <input 
             type="text" 
             placeholder="Search events or filter by #tag..." 
