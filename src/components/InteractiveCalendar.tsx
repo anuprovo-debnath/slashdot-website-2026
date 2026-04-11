@@ -116,7 +116,7 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
   return (
     <div className="bg-background border border-foreground/10 rounded-xl p-6 shadow-sm">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="font-heading font-bold text-lg">{monthNames[month]} {year}</h3>
+        <h3 className="font-extrabold text-lg">{monthNames[month]} {year}</h3>
         <div className="flex gap-2">
           <button onClick={prevMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/10 transition-colors cursor-pointer">&lt;</button>
           <button onClick={nextMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/10 transition-colors cursor-pointer">&gt;</button>

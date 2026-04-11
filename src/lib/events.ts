@@ -63,3 +63,26 @@ export function getEvents(): EventData[] {
     return dateB.localeCompare(dateA);
   });
 }
+
+export function getEventBySlug(slug: string): EventData | null {
+  const targetDirectory = path.join(process.cwd(), 'content/events');
+  const fullPathTs = path.join(targetDirectory, `${slug}.md`);
+  const fullPathMdx = path.join(targetDirectory, `${slug}.mdx`);
+
+  let fileContents = '';
+  if (fs.existsSync(fullPathTs)) {
+    fileContents = fs.readFileSync(fullPathTs, 'utf8');
+  } else if (fs.existsSync(fullPathMdx)) {
+    fileContents = fs.readFileSync(fullPathMdx, 'utf8');
+  } else {
+    return null;
+  }
+
+  const matterResult = matter(fileContents);
+
+  return {
+    slug,
+    frontmatter: matterResult.data as EventData['frontmatter'],
+    content: matterResult.content,
+  };
+}
