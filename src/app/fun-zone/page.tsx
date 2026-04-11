@@ -28,29 +28,36 @@ const SlashPattern = ({ className = "" }: { className?: string }) => (
 );
 
 const MemeCard = ({ title, category, img }: { title: string; category: string; img: string }) => (
-  <div className="h-[450px] bg-background border border-foreground/10 rounded-xl overflow-hidden relative flex flex-col group hover:border-primary transition-colors transform-gpu focus-within:ring-2 focus-within:ring-primary">
-    <div className="h-[210px] w-full bg-foreground/5 relative overflow-hidden flex items-center justify-center transform-gpu">
-      <Image
-        src={img}
-        alt={title}
-        fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        className="object-cover group-hover:scale-[1.03] transition-transform duration-700 transform-gpu"
-        unoptimized
-      />
-      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
-    </div>
-    <div className="p-6 flex-1 flex flex-col">
-      <h3 className="font-heading text-xl font-bold mb-3 text-foreground line-clamp-2">{title}</h3>
-      <p className="text-foreground/70 flex-1 line-clamp-3 text-sm">
-        Curated dev humor collected from the corners of the network. High visual fidelity, low productivity.
-      </p>
-      {/* 44px Tag zone as defined in the global design rules */}
-      <div className="h-[44px] flex items-center border-t border-foreground/10 mt-auto shrink-0">
-        <span className="text-sm font-bold text-primary tracking-wide uppercase">#{category}</span>
+  <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+    <div className="flex flex-col h-[402px] overflow-hidden relative z-10 w-full pointer-events-none">
+      <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
+        <Image
+          src={img}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover group-hover:scale-[1.03] transition-transform duration-700 transform-gpu"
+          unoptimized
+        />
+        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
+      </div>
+      <div className="px-5 pt-4 pb-1 flex flex-col flex-1 overflow-hidden pointer-events-auto">
+        <div className="flex flex-col flex-1 min-h-0">
+          <h3 className="text-2xl sm:text-l font-extrabold leading-tight text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-2 shrink-0 mb-1">{title}</h3>
+          <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
+            Curated dev humor collected from the corners of the network. High visual fidelity, low productivity.
+          </p>
+        </div>
       </div>
     </div>
-    <SlashPattern className="opacity-[0.02] text-foreground" />
+    <div className="h-[48px] flex items-center shrink-0 border-t border-black/5 dark:border-white/5 px-4 relative z-[20]">
+      <div className="flex flex-wrap gap-2 max-h-[26px] overflow-hidden flex-1 justify-start pr-12">
+        <span className="px-3 py-1 bg-[#0291B2]/5 text-[#0291B2] border border-[#0291B2]/20 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+          {category}
+        </span>
+      </div>
+    </div>
+    <SlashPattern className="opacity-[0.02] text-[var(--foreground)]" />
   </div>
 );
 
@@ -58,10 +65,10 @@ const GameCard = ({ title, description }: { title: string; description: string }
   const [score, setScore] = useState(0);
   
   return (
-    <div className="h-[450px] bg-background border border-foreground/10 rounded-xl overflow-hidden relative flex flex-col group hover:border-primary transition-all duration-300 transform-gpu shadow-sm hover:shadow-xl shadow-primary/5">
-      <SlashPattern className="opacity-5 text-primary" />
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
+      <SlashPattern className="opacity-5 text-[#0291B2]" />
       <div className="p-8 flex-1 flex flex-col z-10 relative h-full">
-        <h3 className="font-heading text-3xl font-bold mb-2 text-foreground tracking-tight">{title}</h3>
+        <h3 className="text-2xl font-extrabold leading-tight text-[var(--foreground)] mb-2 truncate">{title}</h3>
         <p className="text-foreground/70 mb-6 text-sm">{description}</p>
         
         <div className="flex-1 flex flex-col items-center justify-center bg-foreground/5 rounded-xl border border-foreground/10 shadow-inner group-hover:bg-foreground/[0.03] transition-colors">
@@ -85,7 +92,7 @@ const GameCard = ({ title, description }: { title: string; description: string }
 
 const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => {
   return (
-    <div className="h-[450px] bg-background border border-foreground/10 rounded-xl overflow-hidden relative flex flex-col group hover:border-primary transition-colors transform-gpu">
+    <div className="group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full">
       <div className="flex-1 relative overflow-hidden bg-black/5 dark:bg-white/5 flex items-center justify-center border-b border-foreground/10">
         {/* CSS Mathematical Generator Art */}
         <div className="relative w-40 h-40 group-hover:scale-110 transition-transform duration-1000 transform-gpu" style={{ animation: 'spin 20s linear infinite' }}>
@@ -97,7 +104,7 @@ const ArtCard = ({ title, blurColor }: { title: string; blurColor: string }) => 
       </div>
       {/* 44px + text block => 140px reserved area roughly to match grid */}
       <div className="p-6 bg-background relative z-10 h-[120px] flex flex-col justify-end shrink-0">
-        <h3 className="font-heading text-xl font-bold mb-1 text-foreground">{title}</h3>
+        <h3 className="text-2xl font-extrabold leading-tight text-[var(--foreground)] mb-1">{title}</h3>
         <p className="text-primary font-bold text-sm tracking-widest uppercase">Pure CSS Geometry</p>
       </div>
       <SlashPattern className="opacity-0 group-hover:opacity-[0.03] text-primary transition-opacity duration-500" />
@@ -132,10 +139,10 @@ export default function FunZonePage() {
       
       {/* HEADER WITH TAN=3 SLANG DECORATION */}
       <header className="mb-20 relative">
-        <h1 className="font-heading text-5xl md:text-6xl lg:text-8xl font-bold mb-6 text-foreground relative z-10 tracking-tighter">
-          Fun <span className="text-primary">Zone</span>
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)] relative z-10">
+          Fun <span className="text-[#0291B2]">Zone</span>
         </h1>
-        <p className="text-lg md:text-xl text-foreground/70 max-w-3xl relative z-10 leading-relaxed font-medium">
+        <p className="text-xl text-[var(--foreground)] opacity-80 max-w-2xl mx-auto relative z-10">
           The interactive playground. A curated collection of tech culture, playable client-side experiments, and mathematically generated art exploring the Slashdot grid constraints.
         </p>
         
@@ -150,7 +157,7 @@ export default function FunZonePage() {
         {/* MEMES SECTION */}
         <section>
           <div className="flex items-center gap-6 mb-10">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Memes</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Memes</h2>
             <div className="flex-1 h-px bg-gradient-to-r from-foreground/20 to-transparent"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -175,7 +182,7 @@ export default function FunZonePage() {
         {/* GAMES SECTION */}
         <section>
           <div className="flex items-center gap-6 mb-10">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Games</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Games</h2>
             <div className="flex-1 h-px bg-gradient-to-r from-foreground/20 to-transparent"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -213,7 +220,7 @@ export default function FunZonePage() {
         {/* ART GALLERY SECTION */}
         <section>
           <div className="flex items-center gap-6 mb-10">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Art Gallery</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--foreground)]">Art Gallery</h2>
             <div className="flex-1 h-px bg-gradient-to-r from-foreground/20 to-transparent"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
