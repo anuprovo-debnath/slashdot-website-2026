@@ -37,24 +37,24 @@ export function MemberFlipCard({ member }: { member: TeamMember }) {
 
   return (
     <div 
-      className={`relative w-full h-[450px] group cursor-pointer perspective-1000 ${isAlumni ? 'grayscale focus:grayscale-0 hover:grayscale-0 transition-all duration-500' : ''}`}
+      className={`relative w-full h-[450px] group cursor-pointer perspective-[1000px] ${isAlumni ? 'grayscale focus:grayscale-0 hover:grayscale-0 transition-all duration-500' : ''}`}
       onClick={() => setIsFlipped(!isFlipped)}
       id={name}
       ref={cardRef}
     >
       <div 
-        className={`w-full h-full relative transition-transform duration-700`}
+        className={`w-full h-full relative transition-transform duration-700 group-hover:-translate-y-2`}
         style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
       >
         {/* Front Face */}
         <div 
-          className="absolute inset-0 w-full h-full bg-[var(--background)] border border-black/5 dark:border-white/5 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group-hover:border-[#0291B2]/30"
+          className="absolute inset-0 w-full h-full flex flex-col bg-[var(--background)] rounded-2xl ring-[3px] ring-[#0291B2]/30 shadow-xl group-hover:ring-[#0291B2]/80 group-hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:group-hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] transition-all overflow-hidden"
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className="w-full h-[320px] relative bg-[#0291B2]/5 overflow-hidden">
+          <div className="w-full h-[340px] relative bg-[#0291B2]/5 overflow-hidden border-b border-black/10 dark:border-white/10 shrink-0">
             {image ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={image} alt={name} className="object-cover w-full h-full mix-blend-multiply dark:mix-blend-normal" />
+              <img src={image} alt={name} className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-110" />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                 <span className="font-heading text-6xl text-gray-400 opacity-20">/.</span>
@@ -64,15 +64,15 @@ export function MemberFlipCard({ member }: { member: TeamMember }) {
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent opacity-80" />
           </div>
           
-          <div className="absolute bottom-0 w-full p-6 flex flex-col justify-end text-center bg-[var(--background)] border-t border-black/5 dark:border-white/5 z-10 pt-4">
-            <h2 className="font-heading text-2xl font-bold text-[var(--color-primary)] truncate">{name}</h2>
-            <p className="text-[11px] font-bold opacity-60 tracking-[0.2em] uppercase mt-2 truncate">{position}</p>
+          <div className="flex-1 p-5 flex flex-col justify-center text-center bg-[var(--background)] z-10">
+            <h3 className="font-heading text-2xl font-extrabold text-[var(--foreground)] group-hover:text-[#0291B2] transition-colors line-clamp-1 shrink-0">{name}</h3>
+            <p className="text-[12px] font-bold opacity-60 tracking-[0.2em] uppercase mt-1 truncate text-[var(--color-primary)]">{position}</p>
           </div>
         </div>
 
         {/* Back Face */}
         <div 
-          className="absolute inset-0 w-full h-full bg-[var(--background)] border border-[#0291B2]/30 rounded-xl overflow-hidden shadow-lg flex flex-col"
+          className="absolute inset-0 w-full h-full flex flex-col bg-[var(--background)] rounded-2xl ring-[3px] ring-[#0291B2]/30 shadow-xl group-hover:ring-[#0291B2]/80 group-hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:group-hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] transition-all overflow-hidden"
           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
         >
           <div className="p-6 flex-1 flex flex-col bg-[#0291B2]/[0.02]">
