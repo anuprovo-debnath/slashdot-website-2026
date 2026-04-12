@@ -3,13 +3,13 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { flushSync } from 'react-dom';
-import { X, Clock, ChevronRight, BookOpen, Calendar, Rocket, Search } from 'lucide-react';
+import { X, Clock, ChevronRight, BookOpen, Calendar, Rocket, Search, Users } from 'lucide-react';
 import type Fuse from 'fuse.js';
 
 interface SearchIndexItem {
   id: string;
   title: string;
-  type: 'blog' | 'event' | 'project' | 'funzone';
+  type: 'blog' | 'event' | 'project' | 'funzone' | 'team';
   slug: string;
   tags: string[];
   description: string;
@@ -128,7 +128,7 @@ export function SearchOverlay() {
     const parts = query.split('/');
     if (parts.length > 1) {
       const scope = parts[0].toLowerCase();
-      const valid = ['blog', 'events', 'projects', 'funzone', 'all'];
+      const valid = ['blog', 'events', 'projects', 'funzone', 'team', 'all'];
       if (valid.includes(scope)) {
         const terms = parts.slice(1).join('/').trim();
         return {
@@ -156,7 +156,7 @@ export function SearchOverlay() {
     const newParts = newVal.split('/');
     const oldScope = oldParts.length > 1 ? oldParts[0].toLowerCase() : 'all';
     const newScope = newParts.length > 1 ? newParts[0].toLowerCase() : 'all';
-    const valid = ['blog', 'events', 'projects'];
+    const valid = ['blog', 'events', 'projects', 'team'];
     
     const isScopeTrigger = (valid.includes(oldScope) || valid.includes(newScope)) && oldScope !== newScope;
 
@@ -183,6 +183,7 @@ export function SearchOverlay() {
               if (activeScope === 'events') return item.type === 'event';
               if (activeScope === 'projects') return item.type === 'project';
               if (activeScope === 'funzone') return item.type === 'funzone';
+              if (activeScope === 'team') return item.type === 'team';
               return item.type === 'blog';
             });
 
@@ -288,6 +289,10 @@ export function SearchOverlay() {
       } else {
         router.push(`/fun-zone/${item.slug}`);
       }
+      return;
+    }
+    if (item.type === 'team') {
+      router.push(item.url || '/team');
       return;
     }
     const basePath = item.type === 'blog' ? '/blog/' : item.type === 'event' ? '/events/' : '/projects/';
@@ -414,12 +419,12 @@ export function SearchOverlay() {
                   </div>
                 </div>
               )}
-              {['event', 'blog', 'project', 'funzone'].map(type => {
+              {['event', 'blog', 'project', 'team', 'funzone'].map(type => {
                 const group = results.filter(r => r.type === type);
                 if (group.length === 0) return null;
 
-                const sectionLabel = type === 'funzone' ? '🎮 Fun Zone' : `${type}s`;
-                const sectionIcon = type === 'event' ? <Calendar className="w-3.5 h-3.5" /> : type === 'blog' ? <BookOpen className="w-3.5 h-3.5" /> : type === 'funzone' ? <Search className="w-3.5 h-3.5 text-orange-500" /> : <Rocket className="w-3.5 h-3.5" />;
+                const sectionLabel = type === 'funzone' ? '🎮 Fun Zone' : type === 'team' ? 'Team Members' : `${type}s`;
+                const sectionIcon = type === 'event' ? <Calendar className="w-3.5 h-3.5" /> : type === 'blog' ? <BookOpen className="w-3.5 h-3.5" /> : type === 'funzone' ? <Search className="w-3.5 h-3.5 text-orange-500" /> : type === 'team' ? <Users className="w-3.5 h-3.5 text-purple-500" /> : <Rocket className="w-3.5 h-3.5" />;
 
                 return (
                   <div key={type}>
