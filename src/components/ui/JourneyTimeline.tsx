@@ -11,7 +11,7 @@ export function JourneyTimeline() {
   return (
     <div className="relative w-full max-w-3xl mx-auto py-20 px-4">
       <div className="text-center mb-16 relative">
-        <h2 className="font-heading text-4xl text-[var(--color-primary)] mb-2">Our Journey</h2>
+        <h2 className="text-4xl font-extrabold tracking-tight text-[var(--color-primary)] mb-2">Our Journey</h2>
         <p className="font-mono text-xs opacity-50 uppercase tracking-widest">&gt; git log --oneline</p>
       </div>
 

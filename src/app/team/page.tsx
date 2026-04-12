@@ -42,8 +42,8 @@ export default function TeamPage() {
           <span className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-primary)]">Core Contributors</span>
           <div className="h-px w-8 bg-[var(--color-primary)] opacity-50"></div>
         </div>
-        <h1 className="font-heading text-6xl md:text-8xl font-black mb-6 tracking-tight">The <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-sky-400">Team</span></h1>
-        <p className="font-sans text-lg md:text-xl opacity-70 max-w-2xl font-medium">
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-[var(--foreground)]">The <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-sky-400">Team</span></h1>
+        <p className="text-xl text-[var(--foreground)] opacity-80 max-w-2xl mx-auto">
           Architects of the digital frontier. We build the systems, design the experiences, and lead the community.
         </p>
       </div>

@@ -62,7 +62,7 @@ export function TeamDashboard({ initialMembers }: { initialMembers: TeamMember[]
       </div>
 
       {/* Grid View */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto px-6 overflow-hidden min-h-[50vh] content-start">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto px-6 py-6 min-h-[50vh] content-start">
         {currentView.length > 0 ? (
           currentView.map(member => (
             <MemberFlipCard key={member.slug} member={member} />
