@@ -1,4 +1,5 @@
 import React from 'react';
+import SlashdotBackground from './SlashdotBackground';
 
 const milestones = [
   { commit: '0x1A2B', date: '2023.01', message: 'Club Foundation. INIT() invoked.' },
@@ -17,47 +18,67 @@ export function JourneyTimeline() {
 
       <div className="relative">
         {/* The Central Spine (Vertical Line) */}
-        <div className="absolute left-[40px] md:left-1/2 top-0 bottom-0 w-px bg-[var(--color-primary)] opacity-20 transform md:-translate-x-1/2"></div>
-        
-        {/* Connectors with Tan=3 Slant (71 deg) using SVG */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20" aria-hidden="true">
-          <defs>
-            <pattern id="tan3-pattern" width="20" height="60" patternUnits="userSpaceOnUse">
-              <path d="M-10,60 l30,-90" stroke="var(--color-primary)" strokeWidth="1" fill="none" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#tan3-pattern)" />
-        </svg>
+        <div className="absolute left-[40px] md:left-1/2 top-0 bottom-0 w-px bg-[var(--color-primary)] opacity-20 transform md:-translate-x-1/2 z-[5]"></div>
 
-        <div className="space-y-12">
-          {milestones.map((item, index) => (
-            <div key={item.commit} className="relative flex flex-col md:flex-row items-start md:items-center group">
-              {/* Node Indicator */}
-              <div className="absolute left-[40px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center">
-                <div className="w-3 h-3 bg-[var(--background)] border-2 border-[var(--color-primary)] rotate-[-19deg] z-10 group-hover:scale-150 transition-transform duration-300"></div>
-                <div className="absolute w-8 h-[2px] bg-[var(--color-primary)] opacity-30 group-hover:w-16 transition-all duration-300 rotate-[-19deg]"></div>
-              </div>
+        {/* Official Slashdot Brand Background */}
+        <div className="absolute top-5 bottom-5 inset-x-0 opacity-40 pointer-events-none z-0 scale-125 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent),linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] [mask-composite:intersect] [-webkit-mask-composite:source-in]">
+          <SlashdotBackground className="!h-full !bg-transparent !border-0" />
+        </div>
 
-              {/* Content Panel */}
-              <div className={`ml-20 md:ml-0 md:w-1/2 flex ${index % 2 === 0 ? 'md:justify-end md:pr-16' : 'md:justify-start md:pl-16 md:ml-auto'}`}>
-                <div className="bg-[#0291B2]/5 border border-black/5 dark:border-white/5 p-4 rounded-lg relative overflow-hidden group-hover:border-[var(--color-primary)]/50 transition-colors duration-300 backdrop-blur-sm">
-                  {/* Subtle Slant Background */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-transparent via-[var(--color-primary)]/5 to-transparent skew-x-[-19deg] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                  
-                  <div className="flex items-center gap-3 mb-2 opacity-70">
-                    <span className="font-mono text-[10px] bg-[var(--color-primary)]/10 text-[var(--color-primary)] px-2 py-0.5 rounded">
-                      {item.commit}
-                    </span>
-                    <span className="font-mono text-[10px] tracking-widest">{item.date}</span>
+        <div className="relative z-10 space-y-12">
+          {milestones.map((item, index) => {
+            const isLeftNode = index % 2 === 0;
+
+            return (
+              <div key={item.commit} className="relative flex flex-col md:flex-row items-start md:items-center group">
+
+                {/* DYNAMIC NODE INDICATOR (Merged Logic) */}
+                <div className="absolute left-[40px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-16 h-16">
+
+                  {/* The Pivot Dot */}
+                  <div className="absolute w-2 h-2 bg-[var(--color-primary)] rounded-full z-10 transition-transform duration-500 translate-x-2 group-hover:scale-125 group-hover:translate-x-0"></div>
+
+                  {/* The Slash (Tan=3 Initial Slant) */}
+                  <div
+                    className={`absolute h-1 bg-[var(--color-primary)] rounded-full transition-all duration-700 ease-in-out
+                      
+                      /* POSITIONING & INITIAL STATE */
+                      right-1/2 w-10 origin-right
+                      rotate-[108.43deg] opacity-80
+                      -translate-x-2 translate-y-1
+
+                      /* DYNAMIC ANIMATION SWEEP */
+                      ${isLeftNode
+                        ? 'group-hover:-translate-x-14 group-hover:-translate-y-0 group-hover:rotate-[180deg] group-hover:w-11 group-hover:opacity-100'
+                        : 'group-hover:translate-x-3 group-hover:-translate-y-0 group-hover:rotate-[180deg] group-hover:w-11 group-hover:opacity-100'
+                      }
+                    `}
+                  ></div>
+                </div>
+
+                {/* Content Panel (Original Styling) */}
+                <div className={`ml-20 md:ml-0 md:w-1/2 flex ${isLeftNode ? 'md:justify-end md:pr-16' : 'md:justify-start md:pl-16 md:ml-auto'}`}>
+                  <div className="bg-[#0291B2]/5 border border-black/5 dark:border-white/5 p-5 rounded-lg relative overflow-hidden group-hover:border-[var(--color-primary)]/50 transition-all duration-300 backdrop-blur-sm group-hover:shadow-[0_0_30px_-10px_rgba(0,163,204,0.3)]">
+
+                    {/* Subtle Slant Background */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-transparent via-[var(--color-primary)]/5 to-transparent skew-x-[-19deg] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+
+                    <div className="flex items-center gap-3 mb-2 opacity-70">
+                      <span className="font-mono text-[10px] bg-[var(--color-primary)]/10 text-[var(--color-primary)] px-2 py-0.5 rounded border border-[var(--color-primary)]/20">
+                        {item.commit}
+                      </span>
+                      <span className="font-mono text-[10px] tracking-widest">{item.date}</span>
+                    </div>
+
+                    <div className="flex items-start gap-2 font-mono text-sm leading-relaxed">
+                      <span className="text-[var(--color-primary)] opacity-50 shrink-0">&gt;</span>
+                      <p>{item.message}</p>
+                    </div>
                   </div>
-                  <p className="font-mono text-sm leading-relaxed">
-                    <span className="text-[var(--color-primary)] opacity-50 mr-2">&gt;</span>
-                    {item.message}
-                  </p>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
