@@ -43,12 +43,14 @@ A premium circular reveal animation was implemented for theme toggling using the
 
 ## 3. Responsive Navbar
 
-The `Navbar` component was built to be mobile-first and high-performance.
+The `Navbar` component was refactored to be a high-fidelity, interactive component with adaptive styling.
 
-- **Sticky Behavior**: Uses `sticky top-0` for constant access.
-- **GPU Acceleration**: Added `transform-gpu` to force the Navbar onto a separate composited layer. This prevents a known Chrome bug where sticky elements would "vanish" during View Transition snapshots.
-- **Dynamic Logos**: Integrated theme-aware logos (`Logo_White_BG.png` for light, `Logo_Black_BG.png` for dark) that swap instantly.
-- **Casing**: Standardized all branding to "Slashdot" (correct capital 'S', lowercase 'd').
+- **Dynamic Glassmorphism**: Implemented a scroll-triggered state. The navbar starts transparent and transitions to `bg-[var(--color-bg)]/80 backdrop-blur-md` after 20px of scroll, providing a premium "frosted" look.
+- **Structural Cleanup**: Removed duplicate `ThemeToggle` components and reorganized utility icons (Search, Theme, JOIN) into a consolidated utility zone separated by a vertical divider.
+- **Route Rationalization**: Navigation was simplified to focus on core club features (**Home**, **Team**, **Blog**, **Projects**, **Events**, **Fun Zone**). Dead links to `/about` and `/contact` were removed in favor of these high-traffic routes.
+- **GPU Acceleration**: Retained `transform-gpu` to force composited layers, preventing flicker during View Transition snapshots.
+- **Active State Tracking**: Uses `usePathname()` to provide visual feedback for the current active route via subtle background highlights.
+- **Theme-Aware Branding**: Standardized logo swap logic using `next/image`'s `fill` and `object-contain` for perfectly sharp logos in both modes.
 
 ## 4. Assets & Icons
 
@@ -92,3 +94,15 @@ Standard CSS grids with `max-w-7xl` often clip shadows or high-density hover sta
 - **`STRIP_CONFIG`**: A central constant in `fun-zone/page.tsx` that manages all grid geometry to prevent value-drift across the three strips (Memes, Games, Art).
 - **Asset Localisation**: Swapped external Giphy/Unsplash placeholders for local production assets in `public/images/games/` to ensure 100% reliability for judge reviews. 
 - **Direct Redirection**: Game cards were updated to redirect the entire card surface to provided external links (`target="_blank"`), avoiding sub-route maintenance for third-party games.
+
+## 8. Footer Architecture
+
+The global `Footer` component was redesigned to balance high-fidelity lead generation with functional navigation.
+
+### Design Decisions
+- **Centered Branding**: The brand column uses `items-center` with a tall-format logo footprint (`h-36 w-40`), creating a focused anchor for the site navigation.
+- **Social Connectivity**: Implemented a **2-row circular icon grid** with brand-specific hover transitions. Icons use `hover:-translate-y-1` and custom shadows/gradients (notably for Instagram) to provide premium interactive feedback.
+- **#join-us Landing**: The footer serves as the primary terminal for all site CTAs, featuring a large, high-contrast JOIN button that triggers a mailto link.
+
+### Layout Consistency
+The footer follows the project's standard `grid-cols-1 md:grid-cols-4` layout, ensuring structural parity with the `Team` and `Blog` grid systems.

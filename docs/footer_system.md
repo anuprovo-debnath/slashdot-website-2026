@@ -5,64 +5,65 @@ This document outlines the architecture, design decisions, and implementation de
 ## 1. Core Architecture
 
 The footer is implemented as a single, highly-optimized React component (`src/components/Footer.tsx`) integrated into the `RootLayout` (`src/app/layout.tsx`). It serves three primary functions:
-1.  **Lead Generation**: Dedicated #join-us landing section.
-2.  **Brand Presence**: High-resolution, theme-aware logo system.
-3.  **Social Connectivity**: Centralized grid for all official reach-out channels.
+1.  **Lead Generation**: Dedicated #join-us landing section with a high-visibility CTA.
+2.  **Brand Presence**: High-resolution, theme-aware logo system with responsive scaling.
+3.  **Global Navigation**: Consolidated "Quick Links" and "Resources" for deep-site discovery.
+4.  **Social Connectivity**: Centralized 4-column grid for official reach-out channels.
 
 ## 2. Anchor-Based Scrolling System
 
 ### The #join-us Target
-- **Purpose**: Acts as the primary landing spot for all "JOIN" calls-to-action (CTA) across the site.
+- **Purpose**: Primary landing spot for all "JOIN" calls-to-action (CTA) across the site.
 - **Anchor Location**: The root level of the footer component.
 - **Behavior**: Enabled with global `scroll-behavior: smooth` in `src/app/globals.css`.
-- **Offset Management**: No scroll-margin-top is applied to ensure the viewport reaches the absolute end of the page, showing the copyright line.
+- **Offset Management**: No scroll-margin-top is applied to ensure the viewport reaches the absolute end of the page, showing the entire site navigation.
 
 ### Linked Components
 - `Navbar.tsx`: Desktop and Mobile "JOIN" buttons.
 - `page.tsx`: Hero "Join Competition" CTA.
 
-## 3. Brand & Contact Column
+## 3. Brand Section
 
-### Responsive Logo System
-- **Scale**: Large footprint (`h-32` on desktop) for premium visibility.
-- **Positioning**: Offset by `translate-x-10` to balance the desktop grid.
-- **Theme Awareness**: Dual-image implementation:
+### Visual Identity
+- **Logo Scale**: Tall-format footprint (`h-36 w-40`) for an iconic, focused brand presence.
+- **Alignment**: Centered branding (`items-center`) within the column for a balanced visual hierarchy.
+- **Typography**: Primary club name "Slashdot" rendered in **Arista Pro Bold** (`font-heading`).
+- **Theme Awareness**: Dual-image implementation using `next/image`'s `fill` property:
     - `Logo_White_BG.png`: Rendered in Light Mode.
-    - `Logo_Black_BG.png`: Rendered in Dark Mode via `hidden dark:block` and `dark:hidden` Tailwind classes.
+    - `Logo_Black_BG.png`: Rendered in Dark Mode.
 
-## 4. Reach-Out Grid (REACH US)
+## 4. Organizational Hierarchy (The 4-Column Grid)
 
-### Organizational Hierarchy
-The social section is organized into a prioritized 2-row grid to optimize accessibility and visibility.
+The footer uses a `grid-cols-1 md:grid-cols-4` layout.
 
-**Row 1 (Primary):**
-- **GitHub**: Official Green (`#0FBF3E`) hover effect.
-- **LinkedIn**: Brand Blue hover.
-- **Email**: Integrated `mailto:slashdot@iiserkol.ac.in` using Lucide Mail icon.
+### Column 1: Brand & Identity
+Features the centered, tall-format logo and brand typography. The tagline was removed in this iteration to prioritize a cleaner, logo-first aesthetic.
 
-**Row 2 (Community):**
-- **Discord**: Brand "Blurple" hover.
-- **YouTube**: Signature Red hover.
-- **Instagram**: Professional Gradient hover.
-- **Facebook**: Brand Blue hover.
+### Column 2: Sitemap (Quick Links)
+Direct links to major club sections:
+- **Home**, **The Team**, **Blog**, **Projects**, **Events**.
 
-### Icon Implementation
-- **Tech**: Custom SVG paths (Font Awesome source).
-- **Optimization**: Zero external library overhead for brand icons.
-- **Interactive State**: Grayscale (0.8 opacity) to full-color brand transition on hover with a `300ms` transition.
+### Column 3: Resources
+Secondary links and support:
+- **Design System**, **Fun Zone**, **Open Source**, **Help Center**.
+
+### Column 4: Connect (Socials)
+An expanded **2-row grid** featuring **circular social icons** (`rounded-full`) with official community platforms:
+- **Row 1**: GitHub (`#0FBF3E`), LinkedIn (`#0077b5`), Discord (`#5865f2`).
+- **Row 2**: YouTube (`#FF0000`), Instagram (`#E4405F`), Facebook (`#1877F2`).
+- **Interaction**: Icons transition from a subtle neutral background to their respective vibrant **brand-official colors** on hover, accompanied by a soft colored shadow glow.
 
 ## 5. Technical Specification
 
 | Property | Value |
 | :--- | :--- |
 | **Component Path** | `src/components/Footer.tsx` |
-| **Technology** | React (Client Component), Next.js Link/Image, Tailwind CSS |
-| **Grid Layout** | `grid-cols-1 md:grid-cols-3` |
-| **Background** | `bg-white/50` (Light) / `bg-black/20` (Dark) with Backdrop Blur |
-| **Typography** | Global Geist Sans system |
-| **Performance** | Inline SVGs, Optimized Next.js Images |
+| **Typography** | Arista Pro Bold (Heading), System Sans (Body) |
+| **Grid Layout** | `grid-cols-1 md:grid-cols-4` |
+| **Social Icons** | Inline SVGs (FontAwesome sourced) |
+| **Interactive** | Brand-specific hover states with `transition-all` |
 
 ## 6. Future Recommendations
-- **Dynamic Links**: Consider moving social URLs to a centralized constants file.
-- **Tooltips**: Add accessible hover tooltips for specific social platforms.
-- **Sign-up Integration**: Replace the mailto with a dedicated signup modal or form once available.
+- **Dynamic Sitemap**: Map links from a shared configuration file to ensure parity with the Navbar.
+- **Form Integration**: Replace the mailto `JOIN` button with a dedicated registration modal/form.
+- **Newsletter**: Consider adding a simplified email capture in the footer's bottom-right zone.
