@@ -340,5 +340,120 @@
     "url": "https://play2048.co/",
     "author": "",
     "projectType": "game"
+  },
+  {
+    "id": "team-alumni-alex",
+    "title": "Alex",
+    "type": "team",
+    "slug": "alumni-alex",
+    "tags": [
+      "React",
+      "Express",
+      "MongoDB",
+      "Dev"
+    ],
+    "description": "Built the foundation of the old site and mentored the current batch of devs to reach success....",
+    "category": "Dev",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#alumni-alex",
+    "author": "Alex",
+    "projectType": ""
+  },
+  {
+    "id": "team-alumni-sam",
+    "title": "Sam",
+    "type": "team",
+    "slug": "alumni-sam",
+    "tags": [
+      "Figma",
+      "Illustrator",
+      "After Effects",
+      "Design"
+    ],
+    "description": "Created the iconic Tan=3 brand pattern that the club still uses across all assets today....",
+    "category": "Design",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#alumni-sam",
+    "author": "Sam",
+    "projectType": ""
+  },
+  {
+    "id": "team-design-sarah",
+    "title": "Sarah",
+    "type": "team",
+    "slug": "design-sarah",
+    "tags": [
+      "Figma",
+      "TailwindCSS",
+      "Framer",
+      "Design"
+    ],
+    "description": "I make everything look pretty and ensure our users get a \"wow\" experience when jumping across platforms....",
+    "category": "Design",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#design-sarah",
+    "author": "Sarah",
+    "projectType": ""
+  },
+  {
+    "id": "team-dev-josh",
+    "title": "Josh",
+    "type": "team",
+    "slug": "dev-josh",
+    "tags": [
+      "Python",
+      "Django",
+      "PostgreSQL",
+      "Docker",
+      "Dev"
+    ],
+    "description": "I optimize our database schemas and write robust system tests. I love optimizing algorithms for speed!...",
+    "category": "Dev",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#dev-josh",
+    "author": "Josh",
+    "projectType": ""
+  },
+  {
+    "id": "team-lead-anu",
+    "title": "Anuprovo",
+    "type": "team",
+    "slug": "lead-anu",
+    "tags": [
+      "Python",
+      "Next.js",
+      "AI Architecture",
+      "Lead"
+    ],
+    "description": "I focus on organizing the team and building the core AI pipelines that drive the club's development features....",
+    "category": "Lead",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#lead-anu",
+    "author": "Anuprovo",
+    "projectType": ""
+  },
+  {
+    "id": "team-pr-mike",
+    "title": "Mike",
+    "type": "team",
+    "slug": "pr-mike",
+    "tags": [
+      "Notion",
+      "Copywriting",
+      "Discord",
+      "PR"
+    ],
+    "description": "Managing the outreach and organizing our club events so the community stays vibrant and active....",
+    "category": "PR",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#pr-mike",
+    "author": "Mike",
+    "projectType": ""
   }
 ]

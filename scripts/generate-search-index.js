@@ -7,6 +7,7 @@ const contentDirs = [
   { dir: 'content/events',  type: 'event' },
   { dir: 'content/projects', type: 'project' },
   { dir: 'content/funzone', type: 'funzone' },
+  { dir: 'content/team',    type: 'team' },
 ];
 
 const publicDir = path.join(__dirname, '../public');
@@ -60,24 +61,28 @@ contentDirs.forEach(({ dir, type }) => {
       
       // Always include category as a searchable tag so clicking 'Workshop',
       // 'Hackathon', 'meme', 'game' etc. on cards produces results
-      const category = frontmatter.category || '';
+      // For team members, we include 'committee' as a searchable tag category
+      const category = frontmatter.category || frontmatter.committee || '';
       const tags = category
         ? [...new Set([...rawTags, category])]
         : rawTags;
 
+      let url = frontmatter.url || '';
+      if (type === 'team') url = `/team#${slug}`;
+
       searchIndex.push({
         id: `${type}-${slug}`,
-        title: frontmatter.title || slug,
+        title: frontmatter.title || frontmatter.name || slug,
         type: type,
         slug: slug,
         tags,
-        description: frontmatter.description || frontmatter.excerpt || getSnippet(content),
+        description: frontmatter.description || frontmatter.bio || frontmatter.excerpt || getSnippet(content),
         category,
         date: frontmatter.date || '',
         image: frontmatter.image || frontmatter.coverImage || '',
-        url: frontmatter.url || '',
+        url: url,
         // Relational entity fields for @author and type: searches
-        author: frontmatter.author || '',
+        author: frontmatter.author || frontmatter.name || '',
         projectType: frontmatter.category || '',
       });
     } catch (err) {
