@@ -157,7 +157,16 @@ export function Navbar() {
           <div className="pt-4 mt-4 border-t border-black/10 dark:border-white/10">
             <Link
               href="#join-us"
-              onClick={() => setIsOpen(false)}
+              onClick={(e) => {
+                if (isOpen) {
+                  e.preventDefault();
+                  setIsOpen(false);
+                  setTimeout(() => {
+                    const el = document.getElementById("join-us");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }, 300);
+                }
+              }}
               className="block w-full text-center px-4 py-4 rounded-xl font-bold bg-[var(--color-primary)] text-white hover:brightness-110 transition-all shadow-lg shadow-[var(--color-primary)]/20"
             >
               JOIN THE CLUB
