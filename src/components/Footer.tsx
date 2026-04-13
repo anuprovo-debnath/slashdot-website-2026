@@ -47,7 +47,7 @@ const SOCIAL_PLATFORMS = [
 
 export function Footer() {
   return (
-    <footer id="join-us" className="bg-black/5 dark:bg-white/5 border-t border-black/10 dark:border-white/10 mt-auto scroll-mt-20">
+    <footer id="join-us" className="bg-black/5 dark:bg-white/5 border-t border-black/10 dark:border-white/10 mt-auto scroll-mt-4 md:scroll-mt-20">
       {/* Join Us Section */}
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <div className="space-y-6">
@@ -140,8 +140,8 @@ export function Footer() {
                   </a>
                 </div>
 
-                <div className="flex flex-col gap-5 w-full max-w-[200px]">
-                  <div className="grid grid-cols-3 gap-5">
+                <div className="flex flex-col gap-6 w-full max-w-[200px]">
+                  <div className="grid grid-cols-3 gap-6">
                     {SOCIAL_PLATFORMS.map((platform) => (
                       <a
                         key={platform.name}
