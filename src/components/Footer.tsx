@@ -47,7 +47,7 @@ const SOCIAL_PLATFORMS = [
 
 export function Footer() {
   return (
-    <footer id="join-us" className="bg-black/5 dark:bg-white/5 border-t border-black/10 dark:border-white/10 mt-auto scroll-mt-24">
+    <footer id="join-us" className="bg-black/5 dark:bg-white/5 border-t border-black/10 dark:border-white/10 mt-auto scroll-mt-8 md:scroll-mt-24">
       {/* Join Us Section */}
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <div className="space-y-6">
