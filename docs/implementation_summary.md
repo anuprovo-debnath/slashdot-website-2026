@@ -97,12 +97,13 @@ Standard CSS grids with `max-w-7xl` often clip shadows or high-density hover sta
 
 ## 8. Footer Architecture
 
-The global `Footer` component was redesigned to balance high-fidelity lead generation with functional navigation.
+The global `Footer` component was refactored into a **3-column zone system** to improve visual balance and information density.
 
 ### Design Decisions
-- **Centered Branding**: The brand column uses `items-center` with a tall-format logo footprint (`h-36 w-40`), creating a focused anchor for the site navigation.
-- **Social Connectivity**: Implemented a **2-row circular icon grid** with brand-specific hover transitions. Icons use `hover:-translate-y-1` and custom shadows/gradients (notably for Instagram) to provide premium interactive feedback.
-- **#join-us Landing**: The footer serves as the primary terminal for all site CTAs, featuring a large, high-contrast JOIN button that triggers a mailto link.
-
-### Layout Consistency
-The footer follows the project's standard `grid-cols-1 md:grid-cols-4` layout, ensuring structural parity with the `Team` and `Blog` grid systems.
+- **Grid Layout**: Transitioned to an equitable **12-column responsive system** (`md:grid-cols-12`) using a **4:4:4 ratio**, providing each functional zone (Brand, Navigation, Social) equal visual weight.
+- **Enhanced Spacing**: Increased the main grid gutter to `gap-20` (and `gap-16` within the links hub). The social icon grid was also expanded to `gap-6` to improve scannability and interaction clarity.
+- **Links Hub (Centralization)**: Sitemap and Resources are grouped into a single middle column.
+- **Split-Alignment Strategy**: 
+    - **Brand & Connect**: Centered within their respective 33% columns to create symmetrical anchors. Features a text-based email link (with a Font Awesome icon) positioned above the social icon grid for high-visibility contact.
+    - **Links Hub**: Utilizes internal opposites—Sitemap is left-aligned while Resources is right-aligned—to maximize white space and clarity.
+- **Visual Impact**: The tall-format logo (`h-36 w-40`) remains the primary branding anchor, now perfectly centered in the first column.
