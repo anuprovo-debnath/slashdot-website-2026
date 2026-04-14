@@ -1,0 +1,459 @@
+[
+  {
+    "id": "blog-first-post",
+    "title": "The Future of Slashdot: 2026 and Beyond",
+    "type": "blog",
+    "slug": "first-post",
+    "tags": [
+      "Vision",
+      "NextJS",
+      "Web3"
+    ],
+    "description": "A deep dive into how we are rebuilding our digital presence at IISER Kolkata.",
+    "category": "",
+    "date": "2026-04-09",
+    "image": "",
+    "url": "",
+    "author": "Slashdot Core",
+    "projectType": ""
+  },
+  {
+    "id": "blog-second-post",
+    "title": "Embracing the Dark Mode: Slashdot's UI Philosophy",
+    "type": "blog",
+    "slug": "second-post",
+    "tags": [
+      "UI/UX",
+      "Design",
+      "Tailwind"
+    ],
+    "description": "Why we chose an unapologetically stark aesthetic for our new platform. It reduces eye strain and looks incredible.",
+    "category": "",
+    "date": "2026-04-06",
+    "image": "/slashdot-website-2026/logos/Logo_Black_BG.png",
+    "url": "",
+    "author": "Design Team",
+    "projectType": ""
+  },
+  {
+    "id": "blog-third-post",
+    "title": "The Genesis of Slashdot",
+    "type": "blog",
+    "slug": "third-post",
+    "tags": [
+      "History",
+      "Community",
+      "Origins"
+    ],
+    "description": "A retrospective look back at how IISER Kolkata's coding club started, and what the future holds for developers.",
+    "category": "",
+    "date": "2026-03-15",
+    "image": "/slashdot-website-2026/logos/Logo_White_BG.png",
+    "url": "",
+    "author": "Founders",
+    "projectType": ""
+  },
+  {
+    "id": "event-intro-to-web3",
+    "title": "Introduction to Web3 Technologies",
+    "type": "event",
+    "slug": "intro-to-web3",
+    "tags": [
+      "Workshop"
+    ],
+    "description": "This workshop covers the basics of Web3, blockchain fundamentals, and how to build your first dApp....",
+    "category": "Workshop",
+    "date": "2026-04-15",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Workshop"
+  },
+  {
+    "id": "event-live-hackathon",
+    "title": "Spring Hackathon 2026",
+    "type": "event",
+    "slug": "live-hackathon",
+    "tags": [
+      "Hackathon"
+    ],
+    "description": "The annual spring hackathon is live! Join us for 12 hours of coding....",
+    "category": "Hackathon",
+    "date": "2026-04-11",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Hackathon"
+  },
+  {
+    "id": "event-option-a-test",
+    "title": "Option A Event: Weekend Hackathon",
+    "type": "event",
+    "slug": "option-a-test",
+    "tags": [
+      "Hackathon"
+    ],
+    "description": "This event spans multiple days as a single block....",
+    "category": "Hackathon",
+    "date": "2026-04-13 - 2026-04-15",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Hackathon"
+  },
+  {
+    "id": "event-option-b-test",
+    "title": "Option B Event: Workshop Series",
+    "type": "event",
+    "slug": "option-b-test",
+    "tags": [
+      "Workshop"
+    ],
+    "description": "This event has a custom daily schedule, meaning it will return to upcoming in the gap....",
+    "category": "Workshop",
+    "date": "2026-04-12 - 2026-04-14",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Workshop"
+  },
+  {
+    "id": "event-past-seminar",
+    "title": "Design Systems in React",
+    "type": "event",
+    "slug": "past-seminar",
+    "tags": [
+      "Seminar"
+    ],
+    "description": "An overview of building robust and accessible design systems using React....",
+    "category": "Seminar",
+    "date": "2026-04-05",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Seminar"
+  },
+  {
+    "id": "project-example-project",
+    "title": "Slashdot Website 2026",
+    "type": "project",
+    "slug": "example-project",
+    "tags": [
+      "Next.js",
+      "Tailwind CSS",
+      "TypeScript",
+      "View Transitions",
+      "Internal_Tools"
+    ],
+    "description": "The flagship digital presence for Slashdot, the coding club of IISER Kolkata. This project features a high-fidelity design system, responsive card grids, and a state-of-the-art theme engine utilizing...",
+    "category": "Internal_Tools",
+    "date": "2026-04-10",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Internal_Tools"
+  },
+  {
+    "id": "project-iiserk-app",
+    "title": "IISER K App",
+    "type": "project",
+    "slug": "iiserk-app",
+    "tags": [
+      "Mobile Development",
+      "Flutter",
+      "Dart",
+      "Internal_Tools"
+    ],
+    "description": "The official mobile application project for the IISER Kolkata campus community, currently archived....",
+    "category": "Internal_Tools",
+    "date": "2026-04-10",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Internal_Tools"
+  },
+  {
+    "id": "project-legacy-webpage",
+    "title": "Legacy Webpage",
+    "type": "project",
+    "slug": "legacy-webpage",
+    "tags": [
+      "HTML",
+      "CSS",
+      "Jekyll",
+      "Internal_Tools"
+    ],
+    "description": "The previous iteration of the Slashdot IISER Kolkata official website, now archived for historical reference....",
+    "category": "Internal_Tools",
+    "date": "2026-04-10",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Internal_Tools"
+  },
+  {
+    "id": "project-qiskit-fall-fest",
+    "title": "Qiskit Fall Fest",
+    "type": "project",
+    "slug": "qiskit-fall-fest",
+    "tags": [
+      "Quantum Computing",
+      "Qiskit",
+      "Other"
+    ],
+    "description": "A collaborative event focused on quantum computing, bringing together students to learn and build using the Qiskit framework....",
+    "category": "Other",
+    "date": "2026-04-10",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Other"
+  },
+  {
+    "id": "project-satvik-saha",
+    "title": "Satvik Saha",
+    "type": "project",
+    "slug": "satvik-saha",
+    "tags": [
+      "Mathematics",
+      "Physics",
+      "Open Source",
+      "Member_Spotlight"
+    ],
+    "description": "Spotlight on IISER Kolkata alumni Satvik Saha, highlighting his contributions to the community and his various open-source academic and technical projects....",
+    "category": "Member_Spotlight",
+    "date": "2026-04-10",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Member_Spotlight"
+  },
+  {
+    "id": "project-sbs",
+    "title": "Shuvam Banerji Seal",
+    "type": "project",
+    "slug": "sbs",
+    "tags": [
+      "Development",
+      "Leadership",
+      "Member_Spotlight"
+    ],
+    "description": "Spotlight on current Office Bearer (OB) Shuvam Banerji Seal, featuring his work and leadership within the Slashdot coding club....",
+    "category": "Member_Spotlight",
+    "date": "2026-04-10",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Member_Spotlight"
+  },
+  {
+    "id": "project-welearn-bot",
+    "title": "Welearn Bot",
+    "type": "project",
+    "slug": "welearn-bot",
+    "tags": [
+      "Python",
+      "Automation",
+      "API",
+      "Internal_Tools"
+    ],
+    "description": "An internal tool designed to automate and streamline interactions with the WeLearn platform for students....",
+    "category": "Internal_Tools",
+    "date": "2026-04-10",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Internal_Tools"
+  },
+  {
+    "id": "funzone-art-morphing-anomalies",
+    "title": "Morphing Anomalies",
+    "type": "funzone",
+    "slug": "art-morphing-anomalies",
+    "tags": [
+      "Art",
+      "Generative",
+      "CSS",
+      "art"
+    ],
+    "description": "Procedurally generated geometric patterns running raw via CSS variables without external dependencies.",
+    "category": "art",
+    "date": "",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "art"
+  },
+  {
+    "id": "funzone-compilation-panic-meme",
+    "title": "When the code compiles cleanly on the first try",
+    "type": "funzone",
+    "slug": "compilation-panic-meme",
+    "tags": [
+      "Memes",
+      "Compilation",
+      "Dev Humor",
+      "meme"
+    ],
+    "description": "That terrifying moment when everything works and you don't know why.",
+    "category": "meme",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&auto=format&fit=crop&q=80",
+    "url": "",
+    "author": "",
+    "projectType": "meme"
+  },
+  {
+    "id": "funzone-css-centering-meme",
+    "title": "Centering a div with CSS in 2026",
+    "type": "funzone",
+    "slug": "css-centering-meme",
+    "tags": [
+      "Memes",
+      "CSS",
+      "Frontend",
+      "meme"
+    ],
+    "description": "Still googling how to center a div. Some things never change.",
+    "category": "meme",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=800&auto=format&fit=crop&q=80",
+    "url": "",
+    "author": "",
+    "projectType": "meme"
+  },
+  {
+    "id": "funzone-game-2048",
+    "title": "2048",
+    "type": "funzone",
+    "slug": "game-2048",
+    "tags": [
+      "Games",
+      "Puzzles",
+      "Strategy",
+      "game"
+    ],
+    "description": "Join the numbers and get to the 2048 tile! A deceptively simple puzzle game.",
+    "category": "game",
+    "date": "",
+    "image": "/images/games/2048.jpg",
+    "url": "https://play2048.co/",
+    "author": "",
+    "projectType": "game"
+  },
+  {
+    "id": "team-alumni-alex",
+    "title": "Alex",
+    "type": "team",
+    "slug": "alumni-alex",
+    "tags": [
+      "React",
+      "Express",
+      "MongoDB",
+      "Dev"
+    ],
+    "description": "Built the foundation of the old site and mentored the current batch of devs to reach success....",
+    "category": "Dev",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#alumni-alex",
+    "author": "Alex",
+    "projectType": ""
+  },
+  {
+    "id": "team-alumni-sam",
+    "title": "Sam",
+    "type": "team",
+    "slug": "alumni-sam",
+    "tags": [
+      "Figma",
+      "Illustrator",
+      "After Effects",
+      "Design"
+    ],
+    "description": "Created the iconic Tan=3 brand pattern that the club still uses across all assets today....",
+    "category": "Design",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#alumni-sam",
+    "author": "Sam",
+    "projectType": ""
+  },
+  {
+    "id": "team-design-sarah",
+    "title": "Sarah",
+    "type": "team",
+    "slug": "design-sarah",
+    "tags": [
+      "Figma",
+      "TailwindCSS",
+      "Framer",
+      "Design"
+    ],
+    "description": "I make everything look pretty and ensure our users get a \"wow\" experience when jumping across platforms....",
+    "category": "Design",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#design-sarah",
+    "author": "Sarah",
+    "projectType": ""
+  },
+  {
+    "id": "team-dev-josh",
+    "title": "Josh",
+    "type": "team",
+    "slug": "dev-josh",
+    "tags": [
+      "Python",
+      "Django",
+      "PostgreSQL",
+      "Docker",
+      "Dev"
+    ],
+    "description": "I optimize our database schemas and write robust system tests. I love optimizing algorithms for speed!...",
+    "category": "Dev",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#dev-josh",
+    "author": "Josh",
+    "projectType": ""
+  },
+  {
+    "id": "team-lead-anu",
+    "title": "Anuprovo",
+    "type": "team",
+    "slug": "lead-anu",
+    "tags": [
+      "Python",
+      "Next.js",
+      "AI Architecture",
+      "Lead"
+    ],
+    "description": "I focus on organizing the team and building the core AI pipelines that drive the club's development features....",
+    "category": "Lead",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#lead-anu",
+    "author": "Anuprovo",
+    "projectType": ""
+  },
+  {
+    "id": "team-pr-mike",
+    "title": "Mike",
+    "type": "team",
+    "slug": "pr-mike",
+    "tags": [
+      "Notion",
+      "Copywriting",
+      "Discord",
+      "PR"
+    ],
+    "description": "Managing the outreach and organizing our club events so the community stays vibrant and active....",
+    "category": "PR",
+    "date": "",
+    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256",
+    "url": "/team#pr-mike",
+    "author": "Mike",
+    "projectType": ""
+  }
+]
