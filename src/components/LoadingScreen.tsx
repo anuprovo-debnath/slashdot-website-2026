@@ -19,7 +19,8 @@ export function LoadingScreen() {
   const dotRef = useRef<HTMLSpanElement>(null);
   const welcomeOutRef = useRef<HTMLSpanElement>(null);
   const welcomeRowRef = useRef<HTMLDivElement>(null);
-  const taglineOutRef = useRef<HTMLDivElement>(null);
+  const tagLine1Ref = useRef<HTMLSpanElement>(null);
+  const tagLine2Ref = useRef<HTMLSpanElement>(null);
   const loaderStageRef = useRef<HTMLDivElement>(null);
 
   const [isVisible, setIsVisible] = useState(true);
@@ -53,16 +54,12 @@ export function LoadingScreen() {
       let currentText = "";
       let i = 0;
       while (i < text.length) {
-        if (text[i] === "\n") {
-          currentText += "<br>";
-        } else {
-          currentText += text[i];
-        }
+        currentText += text[i];
         el.innerHTML = currentText + (i < text.length - 1 ? '<span class="loading-cursor"></span>' : '');
         i++;
         await new Promise(r => setTimeout(r, speed));
       }
-      el.innerHTML = currentText.replace(/\n/g, '<br>');
+      el.innerHTML = currentText;
     };
 
     const init = async () => {
@@ -71,10 +68,12 @@ export function LoadingScreen() {
       const tagScaler = tagScalerRef.current;
       const termPos = termPosRef.current;
       const container = containerRef.current;
+      const brandOut = brandOutRef.current;
+      const finalLogoText = document.getElementById('final-logo-text');
 
-      if (!brandGhost || !tagGhost || !tagScaler || !termPos || !container) return;
+      if (!brandGhost || !tagGhost || !tagScaler || !termPos || !container || !finalLogoText || !brandOut) return;
 
-      const customScale = 0.5; // From --custom-scale in user's file
+      const customScale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--custom-scale')) || 0.5;
       const brandW = brandGhost.offsetWidth;
       const tagW = tagGhost.offsetWidth;
       tagScaler.style.transform = `scaleX(${(customScale * brandW) / tagW})`;
@@ -89,16 +88,25 @@ export function LoadingScreen() {
 
       container.style.visibility = "visible";
 
-      // Run Intro
+      // 1. Type '/'
       await type(cmdOutRef, '/', getMs('--t-type-cmd') || 150);
-      if (dotRef.current) dotRef.current.style.display = 'inline';
+      if (dotRef.current) {
+          dotRef.current.style.display = 'inline';
+          dotRef.current.classList.add('loading-blink');
+      }
       await new Promise(r => setTimeout(r, getMs('--t-pause-loading') || 1200));
       if (dotRef.current) dotRef.current.classList.remove('loading-blink');
 
+      // 2. Type "Welcome to" and "Slashdot"
       if (welcomeRowRef.current) welcomeRowRef.current.style.visibility = "visible";
       await type(welcomeOutRef, textData.welcome, getMs('--t-type-welcome') || 60);
       await type(brandOutRef, textData.brand, getMs('--t-type-brand') || 150);
-      await type(taglineOutRef, textData.tagline, getMs('--t-type-tagline') || 30);
+
+      // 3. Type Tagline Line 1
+      await type(tagLine1Ref, "The Coding & Designing", getMs('--t-type-tagline') || 30);
+
+      // 4. Type Tagline Line 2
+      await type(tagLine2Ref, "Club of IISER Kolkata", getMs('--t-type-tagline') || 30);
 
       setTimeout(startMorph, getMs('--t-pause-morph') || 1000);
     };
@@ -106,21 +114,22 @@ export function LoadingScreen() {
     const startMorph = () => {
       const loader = containerRef.current;
       const brandOut = brandOutRef.current;
-      const finalLogo = document.getElementById('final-logo-pos');
+      const finalLogoPos = document.getElementById('final-logo-pos');
+      const finalLogoText = document.getElementById('final-logo-text');
 
-      if (!loader || !brandOut || !finalLogo) {
-        // Fallback if logo not found
+      if (!loader || !brandOut || !finalLogoPos || !finalLogoText) {
         document.body.classList.add('stage-active-site');
+        const logo = document.getElementById('final-logo-pos');
+        if (logo) logo.style.opacity = "1";
         setTimeout(() => setIsVisible(false), 1000);
         return;
       }
 
       const startRect = brandOut.getBoundingClientRect();
-      const finalRect = finalLogo.getBoundingClientRect();
-
+      const finalRect = finalLogoText.getBoundingClientRect();
       const scale = finalRect.width / startRect.width;
       const xMove = finalRect.left - startRect.left;
-      const yMove = finalRect.top - startRect.top;
+      const yMove = finalRect.top - startRect.top + (finalRect.height - startRect.height * scale) / 2;
 
       const flightTime = getMs('--t-flight') || 1200;
       const handoffTime = getMs('--t-handoff') || 800;
@@ -131,23 +140,30 @@ export function LoadingScreen() {
 
       setTimeout(() => {
         document.body.classList.add('stage-active-site');
-        // Custom event to tell layout we are ready
         window.dispatchEvent(new CustomEvent('slashdot:loading-ready'));
+        if (loaderStageRef.current) {
+          loaderStageRef.current.style.backgroundColor = 'transparent';
+          loaderStageRef.current.style.transition = `background-color ${flightTime}ms ease`;
+        }
       }, 200);
 
       setTimeout(() => {
-        finalLogo.style.opacity = "1";
+        finalLogoPos.style.opacity = "1";
         loader.style.opacity = "0";
+
+        if (loaderStageRef.current) {
+          loaderStageRef.current.style.opacity = "0";
+          loaderStageRef.current.style.transition = `opacity ${handoffTime}ms ease`;
+        }
 
         setTimeout(() => {
           setIsVisible(false);
-          document.body.style.overflow = 'auto';
+          document.body.classList.remove('overflow-hidden');
+          document.body.style.overflow = '';
         }, handoffTime);
-
       }, flightTime);
     };
 
-    // Small delay to ensure measurements are correct after layout
     const timeoutId = setTimeout(init, 100);
     return () => clearTimeout(timeoutId);
   }, [isVisible]);
@@ -155,25 +171,16 @@ export function LoadingScreen() {
   if (!isVisible) return null;
 
   return (
-    <div id="loader-stage" ref={loaderStageRef} className="fixed inset-0 flex justify-center items-center z-[100] bg-[#0f0f0f]">
+    <div id="loader-stage" ref={loaderStageRef} className="fixed inset-0 flex justify-center items-center z-[100]" style={{ backgroundColor: '#0f0f0f' }}>
       <style jsx global>{`
         :root {
-          --c-brand: #0099bc;
           --c-prompt: #ffffff;
           --c-welcome: #ffffff;
           --c-tagline: #888888;
           --c-bg: #0f0f0f;
-          
-          --f-prompt: var(--font-geist-mono), ui-monospace, monospace;
-          --f-cmd: var(--font-geist-mono), ui-monospace, monospace;
-          --f-welcome: var(--font-geist-sans), ui-sans-serif, system-ui;
-          --f-brand: 'Arista Pro', var(--font-geist-sans), ui-sans-serif, system-ui;
-          --f-tagline: var(--font-geist-sans), ui-sans-serif, system-ui;
-
           --sz-terminal: 1.4rem;
           --sz-brand-base: 6rem;
           --sz-nav-logo: 1.8rem;
-
           --t-type-cmd: 150ms;
           --t-type-welcome: 60ms;
           --t-type-brand: 150ms;
@@ -212,13 +219,13 @@ export function LoadingScreen() {
           margin-bottom: 5px;
           font-size: var(--sz-terminal);
           white-space: nowrap;
-          font-family: var(--f-prompt);
+          font-family: var(--font-geist-mono);
         }
 
         .tagline-block-loading {
           position: absolute;
           top: 100%;
-          margin-top: 5px;
+          margin-top: -5px;
           width: 100%;
           display: flex;
           flex-direction: column;
@@ -228,46 +235,57 @@ export function LoadingScreen() {
           transition: opacity var(--t-clutter-exit) ease;
         }
 
+        .console-line {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            white-space: nowrap;
+        }
+
+        .tag-text {
+            color: var(--c-tagline);
+            font-family: var(--font-geist-sans);
+            font-size: 1.2rem;
+            line-height: 1.3;
+        }
+
         .brand-text-loading {
           font-size: var(--sz-brand-base);
           font-weight: 900;
           line-height: 0.85;
-          letter-spacing: -1px;
+          letter-spacing: 4px;
           white-space: nowrap;
-          font-family: var(--f-brand);
-        }
-
-        #site-wrapper-loading {
-          opacity: 0;
-          transition: opacity var(--t-flight) ease;
-        }
-
-        .stage-active-site #site-wrapper-loading {
-          opacity: 1;
+          font-family: var(--font-brand);
         }
       `}</style>
 
-      <div className="relative inline-block invisible transition-all duration-[var(--t-flight)] ease-[cubic-bezier(0.7,0,0.3,1)]" ref={containerRef}>
+      <div className="relative inline-block invisible" style={{ transition: 'transform var(--t-flight) cubic-bezier(0.7,0,0.3,1), opacity var(--t-handoff) ease' }} ref={containerRef}>
         <div className="terminal-block-loading" ref={termPosRef}>
           <div className="flex whitespace-pre">
-            <span className="text-white font-[family-name:var(--f-prompt)]"> </span>
-            <span className="text-[#0099bc] font-[family-name:var(--f-prompt)]" ref={cmdOutRef}></span>
-            <span className="text-[#0099bc] font-[family-name:var(--f-prompt)] loading-blink hidden" ref={dotRef}>.</span>
+            <span className="text-white font-[family-name:var(--font-geist-mono)]">{"> "}</span>
+            <span className="text-[var(--color-primary)] font-[family-name:var(--font-geist-mono)]" ref={cmdOutRef}></span>
+            <span className="text-[var(--color-primary)] font-[family-name:var(--font-geist-mono)] hidden" ref={dotRef}>.</span>
           </div>
           <div className="flex invisible whitespace-pre" ref={welcomeRowRef}>
-            <span className="text-white font-[family-name:var(--f-prompt)]"> </span>
-            <span className="text-white font-[family-name:var(--f-welcome)]" ref={welcomeOutRef}></span>
+            <span className="text-white font-[family-name:var(--font-geist-mono)]">{"> "}</span>
+            <span className="text-white font-[family-name:var(--font-geist-sans)]" ref={welcomeOutRef}></span>
           </div>
         </div>
 
         <div className="brand-text-loading opacity-0 pointer-events-none whitespace-nowrap" ref={brandGhostRef}>Slashdot</div>
-        <div className="absolute top-0 left-0 w-full brand-text-loading text-[#0099bc] whitespace-nowrap" ref={brandOutRef}></div>
+        <div className="absolute top-0 left-0 w-full brand-text-loading text-[var(--color-primary)] whitespace-nowrap" ref={brandOutRef}></div>
 
         <div className="tagline-block-loading" ref={tagScalerRef}>
-          <div className="opacity-0 pointer-events-none text-[1.2rem] leading-[1.3] font-[family-name:var(--f-tagline)]" ref={tagGhostRef}>
+          <div className="console-line">
+            <span ref={tagLine1Ref} className="tag-text"></span>
+          </div>
+          <div className="console-line">
+            <span ref={tagLine2Ref} className="tag-text"></span>
+          </div>
+
+          <div id="tagline-ghost" className="opacity-0 pointer-events-none text-[1.2rem] leading-[1.3] font-[family-name:var(--font-geist-sans)]" ref={tagGhostRef}>
             The Coding & Designing<br />Club of IISER Kolkata
           </div>
-          <div className="absolute top-0 left-0 w-full text-[1.2rem] leading-[1.3] text-[#888888] font-[family-name:var(--f-tagline)]" ref={taglineOutRef}></div>
         </div>
       </div>
     </div>
