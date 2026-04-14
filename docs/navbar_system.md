@@ -31,6 +31,11 @@ Uses the `usePathname` hook from `next/navigation` to compare current location w
 - **Active Styles**: Colored text (`var(--color-primary)`) and a subtle background pill (`bg-primary/5`).
 - **Inactive Styles**: Neutral text with primary-color hover shifts.
 
+### Synchronized Anchor Navigation
+To ensure a smooth transition to the footer's `#join-us` anchor:
+- **Desktop**: Direct anchor linking with `scroll-mt-24` offset.
+- **Mobile (Menu Sync)**: Handled via a 300ms delayed scroll. When "JOIN THE CLUB" is clicked in the mobile drawer, the menu starts its closing animation first. The scroll event is delayed to allow the layout to stabilize (preventing "jumpy" destinations caused by the collapsing menu height).
+
 ### Utility Zone
 Consolidated on the far right of the nav:
 - **Search Hub**: Triggers the global custom event `slashdot:open-search`.
@@ -52,7 +57,7 @@ Consolidated on the far right of the nav:
 | **Component Path** | `src/components/Navbar.tsx` |
 | **Client/Server** | Client Component (`"use client"`) |
 | **Animation Engine** | CSS Transitions + Tailwind Utilities |
-| **Icon Set** | Lucide React (Search, Menu, X) |
+| **Icon Set** | Lucide React (Search, Menu, X) + Font Awesome (Envelope/Socials) |
 | **Accessibility** | ARIA attributes for menu state, semantic `<nav>` wrapper |
 
 ## 6. Maintenance Guidelines

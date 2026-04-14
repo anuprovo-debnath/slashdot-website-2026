@@ -187,7 +187,7 @@ const SidelongStrip = ({ title, scrollRef, onScroll, children }: SidelongStripPr
   <section>
     <div className={`text-left mb-0 group flex items-center justify-between ${STRIP_CONFIG.headerPx}`}>
       <div className="flex-1">
-        <h2 className="text-3xl md:text-3xl font-extrabold tracking-tight text-[var(--foreground)]">{title}</h2>
+        <h2 className="text-3xl md:text-3xl font-extrabold tracking-tight text-[var(--foreground)] font-heading">{title}</h2>
         <div className="h-[2px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-1 mb-4" />
       </div>
       <div className="flex gap-3 mb-4 pl-8">
@@ -277,8 +277,8 @@ export default function FunZonePage() {
 
         {/* HEADER */}
         <header className="mb-20 relative text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)] relative z-10">
-            Fun <span className="text-[var(--color-primary)]">Zone</span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)] relative z-10 font-heading">
+            Fun <span className="text-[var(--color-primary)] font-heading">Zone</span>
           </h1>
           <p className="text-xl text-[var(--foreground)] opacity-80 max-w-2xl mx-auto relative z-10">
             The interactive playground. A curated collection of tech culture, playable client-side experiments, and mathematically generated art exploring the Slashdot grid constraints.

@@ -5,8 +5,8 @@ export default function TechPage() {
         
         {/* Header Section */}
         <div className="space-y-4">
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-            Design <span className="text-[var(--color-primary)]">System</span>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight font-heading">
+            Design <span className="text-[var(--color-primary)] font-heading">System</span>
           </h1>
           <p className="text-xl opacity-80 max-w-2xl">
             A look into the foundational elements comprising the Slashdot brand language.
@@ -15,7 +15,7 @@ export default function TechPage() {
 
         {/* Color Palette */}
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold border-b border-black/10 dark:border-white/10 pb-4">Color Palette</h2>
+          <h2 className="text-3xl font-bold border-b border-black/10 dark:border-white/10 pb-4 font-heading">Color Palette</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             
             {/* Primary Teal */}
@@ -43,7 +43,7 @@ export default function TechPage() {
 
         {/* Typography */}
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold border-b border-black/10 dark:border-white/10 pb-4">Typography</h2>
+          <h2 className="text-3xl font-bold border-b border-black/10 dark:border-white/10 pb-4 font-heading">Typography</h2>
           
           <div className="p-8 rounded-lg border border-black/10 dark:border-white/10 dark:bg-white/5 space-y-8">
             <div style={{ fontFamily: "'Arista Pro', sans-serif" }}>

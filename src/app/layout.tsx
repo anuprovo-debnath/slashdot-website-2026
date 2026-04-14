@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 };
 
 import { Footer } from "@/components/Footer";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 export default function RootLayout({
   children,
@@ -36,14 +37,17 @@ export default function RootLayout({
       <head>
         <base href="/slashdot-website-2026/" />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col overflow-hidden">
+        <LoadingScreen />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navbar />
-          <main className="flex-1 flex flex-col">
-            {children}
-          </main>
-          <Footer />
-          <SearchOverlay />
+          <div id="site-wrapper-loading" className="flex-1 flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1 flex flex-col">
+              {children}
+            </main>
+            <Footer />
+            <SearchOverlay />
+          </div>
         </ThemeProvider>
       </body>
     </html>

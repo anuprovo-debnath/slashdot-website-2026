@@ -94,7 +94,7 @@ export function Footer() {
                 />
               </div>
               <div className="pt-2 text-center">
-                <h2 className="text-4xl font-bold font-[var(--font-heading)] text-[var(--color-primary)] leading-none">Slashdot</h2>
+                <h2 className="text-5xl font-bold font-heading text-[var(--color-primary)] leading-none">Slashdot</h2>
               </div>
             </div>
 
