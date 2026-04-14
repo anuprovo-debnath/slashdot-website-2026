@@ -45,13 +45,13 @@ A premium circular reveal animation was implemented for theme toggling using the
 
 The `Navbar` component was refactored to be a high-fidelity, interactive component with adaptive styling.
 
-- **Dynamic Glassmorphism**: Implemented a scroll-triggered state. The navbar starts transparent and transitions to `bg-[var(--color-bg)]/80 backdrop-blur-md` after 20px of scroll.
+- **Dynamic Glassmorphism**: Implemented a scroll-triggered state. The navbar remains stable at `py-3` to prevent "hiding" illusions, with the border-color transitioning to avoid layout flashes.
+- **Text-Based Branding**: Migrated from images to Arista Pro text components with teal suffixes for better accessibility and theme synchronization.
+- **Scroll Indicator**: Added a persistent 2px progress bar using the Visual Viewport API for cross-device accuracy.
 - **Synchronized Anchor Navigation (Critical Fix)**: Addressed a common Next.js/Tailwind issue where scrolling to a footer anchor while the mobile menu is open would "jump" or over-scroll because the menu was collapsing simultaneously. 
     - **Solution**: Implemented a 300ms delay in `Navbar.tsx` for mobile drawer links, allowing the `isOpen` transition to complete before initiating `scrollIntoView`.
-- **Structural Cleanup**: Removed duplicate `ThemeToggle` components and reorganized utility icons (Search, Theme, JOIN) into a consolidated utility zone.
-- **Route Rationalization**: Navigation focused on core club features (**Home**, **Team**, **Blog**, **Projects**, **Events**, **Fun Zone**).
-- **GPU Acceleration**: Retained `transform-gpu` to force composited layers, preventing flicker during View Transition snapshots.
-- **Theme-Aware Branding**: Standardized logo swap logic using `next/image`'s `fill` and `object-contain`.
+- **Mobile Sticky Refinement**: Replaced `transition-all` with hardware-accelerated transforms and targeted transitions to solve the "disappearing navbar" bug on mobile address bar resizes.
+- **Route Rationalization**: Navigation focused on core club features (**Team**, **Blog**, **Projects**, **Events**, **Fun Zone**). The brand logo now serves as the **Home** navigational anchor.
 
 ## 4. Assets & Icons
 
@@ -104,3 +104,20 @@ The `Footer` was evolved from a simple list into a high-precision architectural 
     2. **Social Section** (`order-2`)
     3. **Brand Zone** (`order-3`)
 - **Unified Branding**: Standardized the logo scale to `h-36 w-40` for maximum visual impact across all devices.
+107: 
+108: ## 9. Splash & Loading Morphology (The "Boot Sequence")
+109: 
+110: We implemented a high-fidelity terminal boot sequence that morphs into the site's branding.
+111: 
+112: - **Conceptual Architecture**: A two-stage sequence. **Stage 1** simulates a terminal typing process (`/`, `Welcome to`, `Slashdot`). **Stage 2** initiates a spatial transformation, where the brand text "flies" into the navbar.
+113: - **Mathematical Base-Alignment**: To solve "font jitter" during the handoff, we use a center-weighted `yMove` calculation. This aligns content boxes by their vertical centers rather than their top edges, neutralizing differences in line-height between the loader and the navbar.
+114: - **Redundant Activation Strategy (Safety Sync)**:
+115:     - The Navbar logo is hidden at mount.
+116:     - It reveals only after receiving the `slashdot:loading-ready` custom event.
+117:     - **Fail-Safe**: An 8-second safety timer in `Navbar.tsx` forces the logo to appear even if the loading script stalls or fails to execute stage two.
+118: - **Viewport Lockdown**: The `LoadingScreen` component manages `document.body` classes (`overflow-hidden`) to prevent scrolling while the animation is active. 
+119: - **Dynamic Color Mapping**: The terminal and brand elements are mapped directly to `--color-primary` and specific dark-mode surface variables to ensure theme parity.
+120: - **Mobile Tagline Optimization**: Implemented a right-aligned multi-line tagline with precise margin compensation to prevent box-model expansion around the scaled brand text.
+121: 
+122: ---
+123: *Last Updated: April 2026*

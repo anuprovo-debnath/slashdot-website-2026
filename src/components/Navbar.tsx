@@ -26,10 +26,15 @@ export function Navbar() {
   React.useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      
+      // Calculate progress using visualViewport to account for mobile address bar shifts
+      const winScroll = window.scrollY;
+      const viewH = window.visualViewport?.height || window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      
+      const height = docHeight - viewH;
       const progress = height > 0 ? (winScroll / height) * 100 : 0;
-      setScrollProgress(progress);
+      setScrollProgress(Math.min(100, Math.max(0, progress)));
     };
     
     // Safety check: reveal logo if loading screen is gone
@@ -61,7 +66,7 @@ export function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 transition-all duration-300 border-b ${scrolled
+      className={`sticky top-0 z-50 transition duration-300 transform-gpu border-b ${scrolled
         ? "border-black/10 dark:border-white/10 bg-[var(--color-bg)]/80 backdrop-blur-md py-3"
         : "border-transparent bg-transparent py-3"
         }`}

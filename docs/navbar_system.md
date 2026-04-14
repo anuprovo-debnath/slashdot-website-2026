@@ -9,27 +9,31 @@ The Slashdot Navbar is designed to be **unobtrusive yet powerful**. It prioritiz
 ## 2. Visual Architecture
 
 ### Adaptive Styling (Glassmorphism)
-- **Initial State**: Transparent background with taller padding (`py-4`) to blend into the landing hero.
+- **Initial State**: Transparent background with consistent padding (`py-3`) to blend into the landing hero.
 - **Scrolled State**: Triggered at `window.scrollY > 20`. 
     - **Effect**: `bg-[var(--color-bg)]/80` with `backdrop-blur-md`.
-    - **Physicality**: Bottom border `border-black/10` (light) / `border-white/10` (dark) appears for structural definition.
-    - **Scale**: Padding reduces to `py-2` for a more compact desktop footprint.
+    - **Physicality**: Bottom border `border-b` is always present; color transitions from `transparent` to `border-black/10` (light) / `border-white/10` (dark) to prevent layout-shift flashes.
+    - **Scroll Progress**: A dynamic 2px bar at the bottom edges tracks reading progress using the theme color.
 
 ### Navigation Priority
-The links are defined in a centralized `NAV_LINKS` constant:
-1.  **Home** (`/`)
-2.  **Team** (`/team`)
-3.  **Blog** (`/blog`)
-4.  **Projects** (`/projects`)
-5.  **Events** (`/events`)
-6.  **Fun Zone** (`/fun-zone`)
+The links are defined in a centralized `NAV_LINKS` constant. The **Home** link has been removed as the primary branding now serves as the home navigational anchor:
+1.  **Team** (`/team`)
+2.  **Blog** (`/blog`)
+3.  **Projects** (`/projects`)
+4.  **Events** (`/events`)
+5.  **Fun Zone** (`/fun-zone`)
 
 ## 3. Interaction Design
 
 ### Active Route Strategy
-Uses the `usePathname` hook from `next/navigation` to compare current location with link `href`. 
-- **Active Styles**: Colored text (`var(--color-primary)`) and a subtle background pill (`bg-primary/5`).
-- **Inactive Styles**: Neutral text with primary-color hover shifts.
+Uses the `usePathname` hook from `next/navigation` to compare current location with link `href` via `startsWith`.
+- **Active Styles**: Colored text (`var(--color-primary)`).
+- **Inactive Styles**: Neutral text with primary-color hover shifts and subtle `bg-primary/5` pill patterns on hover.
+
+### Branding & Logo
+- **Logo Zone**: Transitioned to the text-based **Arista Pro Bold** branding with the iconic **" /."** suffix for identity parity with the Navbar.
+- **Typography**: Uses theme-aware coloring (Neutral-800 for light, White for dark) for the brand text, with the suffix in the primary accent color.
+- **Alignment**: Centered branding to serve as a visual anchor.
 
 ### Synchronized Anchor Navigation
 To ensure a smooth transition to the footer's `#join-us` anchor:
@@ -65,3 +69,5 @@ Consolidated on the far right of the nav:
 - **Adding a Route**: Simply update the `NAV_LINKS` array at the top of the file. No component re-wiring required.
 - **Base Pathing**: Logo sources include the GitHub Pages subpath (`/slashdot-website-2026/`). If the `basePath` changes in `next.config.ts`, these string paths must be updated manually.
 - **Hardware Acceleration**: The Navbar uses `transform-gpu` to ensure it remains stable during theme-toggle view transitions.
+- **Mobile Sticky Fix**: Swapped `transition-all` for specifically targeted transitions to prevent the mobile address bar's auto-hide resize from detaching the "sticky" navbar.
+- **Viewport-Aware Indicators**: The scroll progress indicator uses `window.visualViewport` to accurately calculate document height on mobile devices with dynamic system UI bars.

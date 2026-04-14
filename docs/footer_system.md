@@ -26,8 +26,8 @@ The footer is designed to be a high-fidelity, responsive "anchor" for the site. 
     3. **Brand Zone** (`order-3`)
 
 ## 3. Brand Zone (Column 1)
-- **Logo Scale**: Iconic footprint (`h-36 w-40`) using theme-aware image switching.
-- **Typography**: Club naming in **Arista Pro Bold** (sourced from `public/fonts/AristaProBold.ttf`).
+- **Logo Zone**: Transitioned to the text-based **Arista Pro Bold** branding with the iconic **" /."** suffix for identity parity with the Navbar.
+- **Typography**: Uses theme-aware coloring (Neutral-800 for light, White for dark) for the brand text, with the suffix in the primary accent color.
 - **Alignment**: Centered branding to serve as a visual anchor.
 
 ## 4. Column Details
