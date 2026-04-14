@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // Dev origin for specific local network access
+  allowedDevOrigins: ['10.20.94.57'],
 };
 
 export default nextConfig;
