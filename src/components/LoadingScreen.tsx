@@ -28,17 +28,7 @@ export function LoadingScreen() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Only run the loading animation on the home page.
-    // On all other pages, immediately reveal the site.
-    if (pathname !== '/') {
-      document.body.classList.add('stage-active-site');
-      document.body.classList.remove('overflow-hidden');
-      document.body.style.overflow = '';
-      window.dispatchEvent(new CustomEvent('slashdot:loading-ready', { detail: { skipped: true } }));
-      window.dispatchEvent(new CustomEvent('slashdot:loader-fade-complete'));
-      setIsVisible(false);
-      return;
-    }
+    // ── Returning Visitor Guard ──────────────────────────────────────────
 
     // Check for "Returning Visitor" to skip animation
     const SKIP_STORAGE_KEY = 'slashdot_last_visit';

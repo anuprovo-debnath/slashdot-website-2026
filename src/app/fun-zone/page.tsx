@@ -10,9 +10,9 @@ import { HeroCanvas } from "@/components/home/HeroCanvas";
 const REPO_NAME = "/slashdot-website-2026";
 
 const STRIP_CONFIG = {
-  headerPx: "px-10",
-  gridPx: "px-10",
-  snapPl: "scroll-pl-10",
+  headerPx: "px-8",
+  gridPx: "px-8",
+  snapPl: "scroll-pl-8",
   gapSection: "gap-12",
   gridLayout: "grid grid-flow-col auto-cols-[100%] sm:auto-cols-[calc(50%-16px)] lg:auto-cols-[calc(33.333%-21.333px)] gap-8 overflow-x-auto snap-x snap-mandatory hide-scrollbar pt-4 pb-4",
 };
@@ -184,40 +184,78 @@ interface SidelongStripProps {
   children: React.ReactNode;
 }
 
-const SidelongStrip = ({ title, scrollRef, onScroll, children }: SidelongStripProps) => (
-  <section>
-    <div className={`text-left mb-0 group flex items-center justify-between ${STRIP_CONFIG.headerPx}`}>
-      <div className="flex-1">
-        <h2 className="text-3xl md:text-3xl font-extrabold tracking-tight text-[var(--foreground)] font-heading">{title}</h2>
-        <div className="h-[2px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-1 mb-4" />
+const SidelongStrip = ({ title, scrollRef, onScroll, children }: SidelongStripProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    if (!isHovered && scrollRef.current) {
+      intervalId = setInterval(() => {
+        if (scrollRef.current && scrollRef.current.firstElementChild) {
+          const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+          // Calculate card width + gap (gap-8 = 32px)
+          const cardWidth = scrollRef.current.firstElementChild.clientWidth + 32;
+          
+          // If reached the end, reset to start. Otherwise scroll right by one card.
+          if (Math.ceil(scrollLeft + clientWidth) >= scrollWidth) {
+            scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            scrollRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
+          }
+        }
+      }, 4000);
+    }
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isHovered, scrollRef]);
+
+  return (
+    <section 
+      onMouseEnter={() => setIsHovered(true)} 
+      onMouseLeave={() => setIsHovered(false)}
+      onPointerDown={() => setIsHovered(true)}
+      onPointerUp={() => setIsHovered(false)}
+    >
+      <div className={`text-left mb-0 group flex items-center justify-between ${STRIP_CONFIG.headerPx}`}>
+        <div className="flex-1">
+          <h2 className="text-3xl md:text-3xl font-extrabold tracking-tight text-[var(--foreground)] font-heading">{title}</h2>
+          <div className="h-[2px] w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/50 to-transparent mt-1 mb-4" />
+        </div>
+        <div className="flex gap-3 mb-4 pl-8">
+          <button
+            onClick={() => onScroll('left')}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] transition-all active:scale-95"
+            aria-label={`Scroll ${title} Left`}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <button
+            onClick={() => onScroll('right')}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] transition-all active:scale-95"
+            aria-label={`Scroll ${title} Right`}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
+        </div>
       </div>
-      <div className="flex gap-3 mb-4 pl-8">
-        <button
-          onClick={() => onScroll('left')}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] transition-all active:scale-95"
-          aria-label={`Scroll ${title} Left`}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
-        </button>
-        <button
-          onClick={() => onScroll('right')}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] transition-all active:scale-95"
-          aria-label={`Scroll ${title} Right`}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
-        </button>
-      </div>
-    </div>
-    <div className="py-0">
       <div
-        ref={scrollRef}
-        className={`${STRIP_CONFIG.gridLayout} ${STRIP_CONFIG.gridPx} ${STRIP_CONFIG.snapPl}`}
+        className="py-0 relative"
+        style={{
+          maskImage: 'linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)'
+        }}
       >
-        {children}
+        <div
+          ref={scrollRef}
+          className={`${STRIP_CONFIG.gridLayout} ${STRIP_CONFIG.gridPx} ${STRIP_CONFIG.snapPl}`}
+        >
+          {children}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // --- MAIN PAGE COMPONENT ---
 

@@ -89,6 +89,7 @@ export function Navbar() {
   }, []);
 
   return (
+    <>
     <nav
       // className={`fixed top-0 left-0 right-0 z-50 transition duration-300 transform-gpu border-b ${scrolled
       //   ? "border-black/10 dark:border-white/10 bg-[var(--color-bg)]/80 backdrop-blur-md py-3"
@@ -200,50 +201,7 @@ export function Navbar() {
           </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-screen opacity-100 border-t border-black/10 dark:border-white/10" : "max-h-0 opacity-0"
-          }`}
-      >
-        <div className="px-4 pt-4 pb-8 space-y-2 bg-[var(--color-bg)] shadow-2xl">
-          {NAV_LINKS.map((link) => {
-            const isActive = pathname.startsWith(link.href);
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`block px-4 py-3 rounded-xl font-medium transition-colors ${isActive
-                  ? "text-[var(--color-primary)]"
-                  : "hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5"
-                  }`}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
-          <div className="pt-4 mt-4 border-t border-black/10 dark:border-white/10">
-            <Link
-              href="#join-us"
-              onClick={(e) => {
-                if (isOpen) {
-                  e.preventDefault();
-                  setIsOpen(false);
-                  setTimeout(() => {
-                    const el = document.getElementById("join-us");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                  }, 300);
-                }
-              }}
-              className="block w-full text-center px-4 py-4 rounded-xl font-bold bg-[var(--color-primary)] text-white hover:brightness-110 transition-all shadow-lg shadow-[var(--color-primary)]/20"
-            >
-              JOIN THE CLUB
-            </Link>
-          </div>
-        </div>
-      </div>
-
+      
       {/* Scroll Progress Indicator */}
       <div
         className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-primary)] transition-all duration-150 ease-out shadow-[0_0_8px_var(--color-primary)]"
@@ -283,6 +241,50 @@ export function Navbar() {
           animation-delay: var(--rev-base-delay);
         }
       `}</style>
-    </nav>
+      </nav>
+
+      {/* Mobile Menu - Extracted as sibling to float above hero text */}
+      <div
+        className={`md:hidden fixed top-[89px] left-0 right-0 z-[70] bg-[var(--color-bg)] overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-[calc(100vh-89px)] opacity-100 border-b border-black/10 dark:border-white/10 shadow-2xl" : "max-h-0 opacity-0"
+          }`}
+      >
+        <div className="px-4 pt-4 pb-8 space-y-2">
+          {NAV_LINKS.map((link) => {
+            const isActive = pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`block px-4 py-3 rounded-xl font-medium transition-colors ${isActive
+                  ? "text-[var(--color-primary)]"
+                  : "hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5"
+                  }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
+          <div className="pt-4 mt-4 border-t border-black/10 dark:border-white/10">
+            <Link
+              href="#join-us"
+              onClick={(e) => {
+                if (isOpen) {
+                  e.preventDefault();
+                  setIsOpen(false);
+                  setTimeout(() => {
+                    const el = document.getElementById("join-us");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }, 300);
+                }
+              }}
+              className="block w-full text-center px-4 py-4 rounded-xl font-bold bg-[var(--color-primary)] text-white hover:brightness-110 transition-all shadow-lg shadow-[var(--color-primary)]/20"
+            >
+              JOIN THE CLUB
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

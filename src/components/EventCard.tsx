@@ -1,3 +1,5 @@
+"use client";
+
 import { EventData } from '@/lib/events';
 import { getEventStatus } from '@/lib/eventUtils';
 import Link from 'next/link';

@@ -113,8 +113,8 @@ The `Footer` was evolved from a simple list into a high-precision architectural 
 
 We implemented a high-fidelity terminal boot sequence with a perfectly synchronized brand handoff.
 
-- **Conceptual Architecture**: A two-stage sequence. **Stage 1** simulates a terminal typing process. **Stage 2** initiates a "flight" transformation where the brand name moves to the navbar.
-- **Route-Aware Isolation**: The loading sequence is restricted to only execute on the Home route (`/`). Internal navigations or deep-links skip the animation entirely for a faster interactive experience.
+- **Conceptual Architecture**: A two-stage sequence. **Stage 1** simulates a terminal typing process. **Stage 2** initiates a "flight" transformation. On the homepage, it fades into the Hero; on subpages, it flies to the Navbar logo.
+- **Route-Universal Execution**: The loading sequence executes on all routes (Home, Blog, Team, etc.) when a user first lands on the site or starts a new session. Subsequent internal navigations skip the animation for speed.
 - **Session-Based Persistence**:
     - Uses `localStorage` to check for recent visits (24-hour window).
     - Returning visitors bypass the main terminal sequence, seeing only the lighter "Mini-Reveal" in the navbar.

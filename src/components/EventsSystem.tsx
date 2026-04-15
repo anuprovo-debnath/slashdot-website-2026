@@ -34,7 +34,7 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
   // Layout refs
   const parentRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
-  
+
   // Direct DOM refs for high-performance scroll sync
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -105,7 +105,7 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       }
 
       const sy = window.scrollY;
-      
+
       const parentWidth = parentRef.current.offsetWidth;
       const leftWidth = sidebarRef.current.offsetWidth;
       const rightWidth = rightRef.current.offsetWidth;
@@ -124,7 +124,7 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
         const p = (sy - INTERPOLATION_START) / (PHASE2_START - INTERPOLATION_START);
         targetWidth = rightWidth + (parentWidth - rightWidth) * p;
         targetX = rightX * (1 - p);
-      } 
+      }
       // 3. FULL WIDTH PLATEAU! (The requested lock)
       else if (sy > PHASE2_START && sy <= PHASE3_START) {
         targetWidth = parentWidth;
@@ -134,7 +134,7 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       else if (sy > PHASE3_START && sy <= (PHASE3_START + 50)) {
         const p = (sy - PHASE3_START) / 50;
         targetWidth = parentWidth - (parentWidth - leftWidth) * p;
-        targetX = leftX * p; 
+        targetX = leftX * p;
       }
       // 5. Final State (Locked Left)
       else if (sy > (PHASE3_START + 50)) {
@@ -143,10 +143,8 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       }
 
       // Dynamic Placeholder Toggle
-      let nextPlaceholder = 'Search events...'; // Phase 1
-      if (sy > PHASE2_START && sy <= PHASE3_START) {
-        nextPlaceholder = 'Search events, workshops, or use #tags...'; // Phase 2 (Full)
-      } else if (sy > PHASE3_START) {
+      let nextPlaceholder = 'Search events, workshops, or use #tags...'; // Phase 1&2
+      if (sy > PHASE3_START) {
         nextPlaceholder = 'Search...'; // Phase 3 (Docked)
       }
 
