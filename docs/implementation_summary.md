@@ -50,8 +50,11 @@ The `Navbar` component was refactored to be a high-fidelity, interactive compone
 - **Scroll Indicator**: Added a persistent 2px progress bar using the Visual Viewport API for cross-device accuracy.
 - **Synchronized Anchor Navigation (Critical Fix)**: Addressed a common Next.js/Tailwind issue where scrolling to a footer anchor while the mobile menu is open would "jump" or over-scroll because the menu was collapsing simultaneously. 
     - **Solution**: Implemented a 300ms delay in `Navbar.tsx` for mobile drawer links, allowing the `isOpen` transition to complete before initiating `scrollIntoView`.
-- **Mobile Sticky Refinement**: Replaced `transition-all` with hardware-accelerated transforms and targeted transitions to solve the "disappearing navbar" bug on mobile address bar resizes.
-- **Route Rationalization**: Navigation focused on core club features (**Team**, **Blog**, **Projects**, **Events**, **Fun Zone**). The brand logo now serves as the **Home** navigational anchor.
+- **Staggered Handoff**: Implemented a pixel-perfect "typing" handoff between the `LoadingScreen` and `Navbar`. As characters in the loader's terminal exit via a staggered opacity animation, the Navbar triggers a matching `logo-char-reveal` and `logo-dot-slide` to create a seamless visual transition.
+- **Intro Skip Cache**: Integrated a `localStorage` check (`slashdot_last_visit`) that caches the user's visit. Returning visitors within a 24-hour window bypass the 5-second loading sequence for an immediate site reveal.
+- **Global Scrollbar Removal**: Achieved a clean, app-like aesthetic by hiding the default OS scrollbars via CSS (`scrollbar-width: none` and `::-webkit-scrollbar { display: none }`). Navigation progress is instead tracked by the custom Navbar indicator.
+- **Mobile Geometric Stability**: Resolved the "disappearing navbar" bug by switching from `sticky` to `fixed` positioning and using the `Visual Viewport API` to account for the dynamic height of mobile address bars.
+- **Responsive Branding**: Implemented CSS media queries in the loading sequence to scale terminal fonts and brand sizes specifically for mobile viewports, preventing layout overflows.
 
 ## 4. Assets & Icons
 
@@ -104,20 +107,24 @@ The `Footer` was evolved from a simple list into a high-precision architectural 
     2. **Social Section** (`order-2`)
     3. **Brand Zone** (`order-3`)
 - **Unified Branding**: Standardized the logo scale to `h-36 w-40` for maximum visual impact across all devices.
-107: 
-108: ## 9. Splash & Loading Morphology (The "Boot Sequence")
-109: 
-110: We implemented a high-fidelity terminal boot sequence that morphs into the site's branding.
-111: 
-112: - **Conceptual Architecture**: A two-stage sequence. **Stage 1** simulates a terminal typing process (`/`, `Welcome to`, `Slashdot`). **Stage 2** initiates a spatial transformation, where the brand text "flies" into the navbar.
-113: - **Mathematical Base-Alignment**: To solve "font jitter" during the handoff, we use a center-weighted `yMove` calculation. This aligns content boxes by their vertical centers rather than their top edges, neutralizing differences in line-height between the loader and the navbar.
-114: - **Redundant Activation Strategy (Safety Sync)**:
-115:     - The Navbar logo is hidden at mount.
-116:     - It reveals only after receiving the `slashdot:loading-ready` custom event.
-117:     - **Fail-Safe**: An 8-second safety timer in `Navbar.tsx` forces the logo to appear even if the loading script stalls or fails to execute stage two.
-118: - **Viewport Lockdown**: The `LoadingScreen` component manages `document.body` classes (`overflow-hidden`) to prevent scrolling while the animation is active. 
-119: - **Dynamic Color Mapping**: The terminal and brand elements are mapped directly to `--color-primary` and specific dark-mode surface variables to ensure theme parity.
-120: - **Mobile Tagline Optimization**: Implemented a right-aligned multi-line tagline with precise margin compensation to prevent box-model expansion around the scaled brand text.
-121: 
-122: ---
-123: *Last Updated: April 2026*
+
+## 9. Splash & Loading Morphology (The "Boot Sequence")
+
+We implemented a high-fidelity terminal boot sequence with a perfectly synchronized brand handoff.
+
+- **Conceptual Architecture**: A two-stage sequence. **Stage 1** simulates a terminal typing process. **Stage 2** initiates a "flight" transformation where the brand name moves to the navbar.
+- **Session-Based Persistence**:
+    - Uses `localStorage` to check for recent visits (24-hour window).
+    - Returning visitors bypass the main terminal sequence, seeing only the lighter "Mini-Reveal" in the navbar.
+- **The "Pixel Handoff" Synchronization**:
+    - **Shared Timing Engine**: Both `LoadingScreen` and `Navbar` utilize a shared stagger (`0.16s`) and linear travel speed.
+    - **Synchronized Exit/Entry**: Loader characters utilize a `step-end` exit animation that triggers exactly as the Navbar's characters execute their `step-end` entry.
+    - **Visual Continuity**: The Navbar's `/.` dot acts as a digital wiper/cursor. As it slides across the brand area, it simultaneously "erases" the incoming loader text and "writes" the navbar text.
+- **Mathematical Centering**: Use vertical centering math (`yMove`) to align the loader's large font baseline with the navbar's smaller logo baseline, preventing any vertical "jump" during the transition.
+- **Redundant Activation Strategy**:
+    - The Navbar logo is initially hidden at 0% opacity.
+    - **Handshake**: Loader signals `slashdot:loading-ready` with a `skipped` flag.
+    - **Fail-Safe**: If no event is detected, an 8s safety timer forces visibility to prevent a broken UI state.
+
+---
+*Last Updated: April 2026*

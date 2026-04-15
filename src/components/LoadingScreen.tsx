@@ -29,10 +29,10 @@ export function LoadingScreen() {
     // Check for "Returning Visitor" to skip animation
     const SKIP_STORAGE_KEY = 'slashdot_last_visit';
     const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
-    
+
     const now = Date.now();
     const lastVisit = localStorage.getItem(SKIP_STORAGE_KEY);
-    
+
     if (lastVisit && (now - parseInt(lastVisit)) < TWENTY_FOUR_HOURS) {
       // Immediate reveal for returning users
       document.body.classList.add('stage-active-site');
@@ -111,8 +111,8 @@ export function LoadingScreen() {
       // 1. Type '/'
       await type(cmdOutRef, '/', getMs('--t-type-cmd') || 150);
       if (dotRef.current) {
-          dotRef.current.style.display = 'inline';
-          dotRef.current.classList.add('loading-blink');
+        dotRef.current.style.display = 'inline';
+        dotRef.current.classList.add('loading-blink');
       }
       await new Promise(r => setTimeout(r, getMs('--t-pause-loading') || 1200));
       if (dotRef.current) dotRef.current.classList.remove('loading-blink');
@@ -150,8 +150,14 @@ export function LoadingScreen() {
       const scale = finalRect.width / startRect.width;
       const xMove = finalRect.left - startRect.left;
       const yMove = finalRect.top - startRect.top + (finalRect.height - startRect.height * scale) / 2;
-
       const flightTime = getMs('--t-flight') || 1200;
+
+      // Split characters for staggered exit synced with Navbar reveal
+      const text = brandOut.innerText;
+      brandOut.innerHTML = text.split('').map((char, i) =>
+        `<span class="loader-char-exit" style="--i: ${i}">${char}</span>`
+      ).join('');
+
       const handoffTime = getMs('--t-handoff') || 800;
 
       document.body.classList.add('stage-exit');
@@ -168,19 +174,23 @@ export function LoadingScreen() {
       }, 200);
 
       setTimeout(() => {
+        // We let the staggered character animations handle the disappearance 
+        // by keeping the main container visible until the sequence finishes (~flight + 1.5s)
         finalLogoPos.style.opacity = "1";
-        loader.style.opacity = "0";
 
-        if (loaderStageRef.current) {
-          loaderStageRef.current.style.opacity = "0";
-          loaderStageRef.current.style.transition = `opacity ${handoffTime}ms ease`;
-        }
+        setTimeout(() => {
+          loader.style.opacity = "0";
+          if (loaderStageRef.current) {
+            loaderStageRef.current.style.opacity = "0";
+            loaderStageRef.current.style.transition = `opacity ${handoffTime}ms ease`;
+          }
+        }, 1500);
 
         setTimeout(() => {
           setIsVisible(false);
           document.body.classList.remove('overflow-hidden');
           document.body.style.overflow = '';
-        }, handoffTime);
+        }, 1500 + handoffTime);
       }, flightTime);
     };
 
@@ -211,6 +221,13 @@ export function LoadingScreen() {
           --t-handoff: 0.8s;
           --t-bg-reveal: 2s;
           --t-clutter-exit: 0.5s;
+        }
+
+        @media (max-width: 768px) {
+          :root {
+            --sz-brand-base: 3.5rem;
+            --sz-terminal: 1.1rem;
+          }
         }
 
         .loading-cursor {
@@ -269,6 +286,12 @@ export function LoadingScreen() {
             line-height: 1.3;
         }
 
+        @media (max-width: 768px) {
+          .tag-text {
+            font-size: 0.85rem;
+          }
+        }
+
         .brand-text-loading {
           font-size: var(--sz-brand-base);
           font-weight: 900;
@@ -277,9 +300,22 @@ export function LoadingScreen() {
           white-space: nowrap;
           font-family: var(--font-brand);
         }
+
+        .loader-char-exit {
+          display: inline-block;
+          --rev-char-stagger: 0.16s;
+          --rev-char-duration: 0.1s;
+          animation: char-exit var(--rev-char-duration) step-end forwards;
+          animation-delay: calc(var(--i) * var(--rev-char-stagger) + var(--t-flight) + 0.2s);
+        }
+
+        @keyframes char-exit {
+          0% { opacity: 1; }
+          100% { opacity: 0; visibility: hidden; }
+        }
       `}</style>
 
-      <div className="relative inline-block invisible" style={{ transition: 'transform var(--t-flight) cubic-bezier(0.7,0,0.3,1), opacity var(--t-handoff) ease' }} ref={containerRef}>
+      <div className="relative inline-block invisible" style={{ transition: 'transform var(--t-flight) linear, opacity var(--t-handoff) ease' }} ref={containerRef}>
         <div className="terminal-block-loading" ref={termPosRef}>
           <div className="flex whitespace-pre">
             <span className="text-white font-[family-name:var(--font-geist-mono)]">{"> "}</span>

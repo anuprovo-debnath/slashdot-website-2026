@@ -46,12 +46,27 @@
 
 html {
   scroll-behavior: smooth;
+  /* Hide standard scrollbar across all browsers */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  
+  /* Redundant safety for hiding scrollbar on body */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* View Transition setup for Circular Theme Toggle */

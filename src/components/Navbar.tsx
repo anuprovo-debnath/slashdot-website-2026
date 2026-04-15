@@ -23,6 +23,7 @@ export function Navbar() {
   const logoRef = React.useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isSkipped, setIsSkipped] = React.useState(false);
+  const [shouldAnimate, setShouldAnimate] = React.useState(false);
   // Guard: skip scroll updates while a View Transition is in progress,
   // because the API temporarily resets scrollY to 0 during snapshot capture.
   const isTransitioningRef = React.useRef(false);
@@ -56,8 +57,15 @@ export function Navbar() {
       setIsLoaded(true);
       if (e?.detail?.skipped) {
         setIsSkipped(true);
+        setShouldAnimate(true);
+        if (logoRef.current) logoRef.current.style.opacity = "1";
+      } else {
+        // Wait for flight to end (~1.2s) before triggering typing
+        setTimeout(() => {
+          setShouldAnimate(true);
+          // Loader handles the container's opacity reveal in the non-skipped branch
+        }, 1200);
       }
-      if (logoRef.current) logoRef.current.style.opacity = "1";
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -104,22 +112,21 @@ export function Navbar() {
               <div
                 id="final-logo-pos"
                 ref={logoRef}
-                className={`flex items-center text-3xl font-heading tracking-[0.08em] select-none mini-reveal-logo ${!isSkipped ? "transition-opacity duration-[var(--t-handoff)] ease-in-out" : ""
-                  }`}
-                style={{ opacity: isLoaded ? 1 : 0 }}
+                className={`flex items-center text-3xl font-heading tracking-[0.08em] select-none ${shouldAnimate ? "mini-reveal-logo" : ""}`}
+                style={{ opacity: 0 }} // Initially hidden, revealed by JS
               >
                 <span id="final-logo-text" className="text-neutral-800 dark:text-white flex items-center">
                   {"Slashdot".split('').map((char, i) => (
                     <span
                       key={i}
-                      className={isSkipped ? "logo-char-reveal" : ""}
+                      className={shouldAnimate ? "logo-char-reveal" : "opacity-0"}
                       style={{ "--i": i } as any}
                     >
                       {char}
                     </span>
                   ))}
                 </span>
-                <span className={`text-[var(--color-primary)] ml-1 ${isSkipped ? "logo-dot-slide" : ""}`}>/.</span>
+                <span className={`text-[var(--color-primary)] ml-1 ${shouldAnimate ? "logo-dot-slide" : "opacity-0"}`}>/.</span>
               </div>
             </Link>
           </div>
@@ -241,7 +248,7 @@ export function Navbar() {
 
       <style jsx>{`
         .mini-reveal-logo {
-          --rev-base-delay: 0.2s;
+          --rev-base-delay: 0.1s;
           --rev-dot-duration: 1.28s;
           --rev-char-duration: 0.1s;
           --rev-char-stagger: 0.16s;

@@ -69,5 +69,7 @@ Consolidated on the far right of the nav:
 - **Adding a Route**: Simply update the `NAV_LINKS` array at the top of the file. No component re-wiring required.
 - **Base Pathing**: Logo sources include the GitHub Pages subpath (`/slashdot-website-2026/`). If the `basePath` changes in `next.config.ts`, these string paths must be updated manually.
 - **Hardware Acceleration**: The Navbar uses `transform-gpu` to ensure it remains stable during theme-toggle view transitions.
-- **Mobile Sticky Fix**: Swapped `transition-all` for specifically targeted transitions to prevent the mobile address bar's auto-hide resize from detaching the "sticky" navbar.
+- **Fixed Positioning**: Migrated from `sticky` to `fixed top-0` positioning to eliminate detachment flickers caused by mobile address bar auto-hiding.
 - **Viewport-Aware Indicators**: The scroll progress indicator uses `window.visualViewport` to accurately calculate document height on mobile devices with dynamic system UI bars.
+- **Staggered Reveal Logic**: The logo (`final-logo-pos`) uses a CSS `@keyframes` system (`logo-char-reveal`) triggered by the `shouldAnimate` state. This state is synchronized with the `LoadingScreen` exit sequence to provide a sub-second "typing" effect when the site becomes interactive.
+- **Transition Guard**: Implemented a ref-based guard (`isTransitioningRef`) that suspends scroll updates during the **View Transitions API** snapshot phase. This prevents the custom scroll indicator from incorrectly jumping to 0% when the theme is toggled.
