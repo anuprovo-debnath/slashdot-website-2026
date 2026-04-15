@@ -26,6 +26,26 @@ export function LoadingScreen() {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    // Check for "Returning Visitor" to skip animation
+    const SKIP_STORAGE_KEY = 'slashdot_last_visit';
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    
+    const now = Date.now();
+    const lastVisit = localStorage.getItem(SKIP_STORAGE_KEY);
+    
+    if (lastVisit && (now - parseInt(lastVisit)) < TWENTY_FOUR_HOURS) {
+      // Immediate reveal for returning users
+      document.body.classList.add('stage-active-site');
+      document.body.classList.remove('overflow-hidden');
+      document.body.style.overflow = '';
+      window.dispatchEvent(new CustomEvent('slashdot:loading-ready'));
+      setIsVisible(false);
+      return;
+    }
+
+    // Set visit timestamp for next time
+    localStorage.setItem(SKIP_STORAGE_KEY, now.toString());
+
     if (!isVisible) return;
 
     const getMs = (varName: string) => {
