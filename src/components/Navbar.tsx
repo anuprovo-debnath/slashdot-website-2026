@@ -22,21 +22,34 @@ export function Navbar() {
   const pathname = usePathname();
   const logoRef = React.useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
+  // Guard: skip scroll updates while a View Transition is in progress,
+  // because the API temporarily resets scrollY to 0 during snapshot capture.
+  const isTransitioningRef = React.useRef(false);
 
   React.useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-      
-      // Calculate progress using visualViewport to account for mobile address bar shifts
+    const calcProgress = () => {
       const winScroll = window.scrollY;
       const viewH = window.visualViewport?.height || window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
-      
-      const height = docHeight - viewH;
-      const progress = height > 0 ? (winScroll / height) * 100 : 0;
-      setScrollProgress(Math.min(100, Math.max(0, progress)));
+      const height = document.documentElement.scrollHeight - viewH;
+      return height > 0 ? Math.min(100, Math.max(0, (winScroll / height) * 100)) : 0;
     };
-    
+
+    const handleScroll = () => {
+      // Ignore scroll events fired during a View Transition snapshot
+      if (isTransitioningRef.current) return;
+      setScrolled(window.scrollY > 20);
+      setScrollProgress(calcProgress());
+    };
+
+    // Listen for view transition start/end to gate the scroll handler
+    const handleTransitionStart = () => { isTransitioningRef.current = true; };
+    const handleTransitionEnd = () => {
+      isTransitioningRef.current = false;
+      // Resync after transition ends with the real scroll position
+      setScrolled(window.scrollY > 20);
+      setScrollProgress(calcProgress());
+    };
+
     // Safety check: reveal logo if loading screen is gone
     const handleReady = () => {
       setIsLoaded(true);
@@ -45,6 +58,8 @@ export function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener('slashdot:loading-ready', handleReady);
+    window.addEventListener('slashdot:transition-start', handleTransitionStart);
+    window.addEventListener('slashdot:transition-end', handleTransitionEnd);
 
     // Initial check in case we mounted after the event fired (e.g., fast refresh)
     if (document.body.classList.contains('stage-active-site')) {
@@ -60,13 +75,15 @@ export function Navbar() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener('slashdot:loading-ready', handleReady);
+      window.removeEventListener('slashdot:transition-start', handleTransitionStart);
+      window.removeEventListener('slashdot:transition-end', handleTransitionEnd);
       clearTimeout(timer);
     };
   }, []);
 
   return (
     <nav
-      className={`sticky top-0 z-50 transition duration-300 transform-gpu border-b ${scrolled
+      className={`fixed top-0 z-50 transition duration-300 transform-gpu border-b ${scrolled
         ? "border-black/10 dark:border-white/10 bg-[var(--color-bg)]/80 backdrop-blur-md py-3"
         : "border-transparent bg-transparent py-3"
         }`}
@@ -200,7 +217,7 @@ export function Navbar() {
       </div>
 
       {/* Scroll Progress Indicator */}
-      <div 
+      <div
         className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-primary)] transition-all duration-150 ease-out shadow-[0_0_8px_var(--color-primary)]"
         style={{ width: `${scrollProgress}%` }}
       />
