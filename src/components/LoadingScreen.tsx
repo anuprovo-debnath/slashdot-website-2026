@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const textData = {
   welcome: "Welcome to",
@@ -24,11 +25,12 @@ export function LoadingScreen() {
   const loaderStageRef = useRef<HTMLDivElement>(null);
 
   const [isVisible, setIsVisible] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Check for "Returning Visitor" to skip animation
     const SKIP_STORAGE_KEY = 'slashdot_last_visit';
-    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    const TWENTY_FOUR_HOURS = 60 * 1000;//24 * 60 * 60 * 1000;
 
     const now = Date.now();
     const lastVisit = localStorage.getItem(SKIP_STORAGE_KEY);
@@ -47,6 +49,8 @@ export function LoadingScreen() {
     localStorage.setItem(SKIP_STORAGE_KEY, now.toString());
 
     if (!isVisible) return;
+
+
 
     const getMs = (varName: string) => {
       if (typeof window === 'undefined') return 0;
@@ -145,20 +149,60 @@ export function LoadingScreen() {
         return;
       }
 
+      const flightTime = getMs('--t-flight') || 1200;
+      const handoffTime = getMs('--t-handoff') || 800;
+
+      // ======================================================================
+      // HOME PAGE BRANCH
+      // ======================================================================
+      if (pathname === '/') {
+        document.body.classList.add('stage-exit');
+
+        setTimeout(() => {
+          document.body.classList.add('stage-active-site');
+          window.dispatchEvent(new CustomEvent('slashdot:loading-ready'));
+          if (loaderStageRef.current) {
+            loaderStageRef.current.style.backgroundColor = 'transparent';
+            loaderStageRef.current.style.transition = `background-color ${flightTime}ms ease`;
+          }
+        }, 200);
+
+        setTimeout(() => {
+          finalLogoPos.style.opacity = "1"; // Let Nav logo reveal as normal up top
+
+          setTimeout(() => {
+            loader.style.opacity = "0"; // Fade the entire ghost text wrapper identically into the Hero
+            loader.style.transition = `opacity ${handoffTime}ms ease`;
+            if (loaderStageRef.current) {
+              loaderStageRef.current.style.opacity = "0";
+              loaderStageRef.current.style.transition = `opacity ${handoffTime}ms ease`;
+            }
+          }, 1500);
+
+          setTimeout(() => {
+            setIsVisible(false);
+            window.dispatchEvent(new CustomEvent('slashdot:loader-fade-complete'));
+          }, 1500 + handoffTime);
+        }, flightTime);
+
+        return; // Halt here. Do not execute flight translations below.
+      }
+
+      // ======================================================================
+      // ORIGINAL FLIGHT BRANCH (For /blog, /team, etc)
+      // ======================================================================
+
       const startRect = brandOut.getBoundingClientRect();
       const finalRect = finalLogoText.getBoundingClientRect();
       const scale = finalRect.width / startRect.width;
       const xMove = finalRect.left - startRect.left;
       const yMove = finalRect.top - startRect.top + (finalRect.height - startRect.height * scale) / 2;
-      const flightTime = getMs('--t-flight') || 1200;
 
       // Split characters for staggered exit synced with Navbar reveal
       const text = brandOut.innerText;
       brandOut.innerHTML = text.split('').map((char, i) =>
         `<span class="loader-char-exit" style="--i: ${i}">${char}</span>`
       ).join('');
-
-      const handoffTime = getMs('--t-handoff') || 800;
 
       document.body.classList.add('stage-exit');
       loader.style.transformOrigin = "top left";
@@ -190,6 +234,7 @@ export function LoadingScreen() {
           setIsVisible(false);
           document.body.classList.remove('overflow-hidden');
           document.body.style.overflow = '';
+          window.dispatchEvent(new CustomEvent('slashdot:loader-fade-complete'));
         }, 1500 + handoffTime);
       }, flightTime);
     };
