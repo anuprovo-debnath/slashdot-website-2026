@@ -58,12 +58,16 @@ export function Navbar() {
       if (e?.detail?.skipped) {
         setIsSkipped(true);
         setShouldAnimate(true);
-        if (logoRef.current) logoRef.current.style.opacity = "1";
+        // On home page, scroll drives the logo reveal — keep it hidden.
+        if (logoRef.current && pathname !== '/') {
+          logoRef.current.style.opacity = '1';
+        }
       } else {
         // Wait for flight to end (~1.2s) before triggering typing
         setTimeout(() => {
           setShouldAnimate(true);
-          // Loader handles the container's opacity reveal in the non-skipped branch
+          // On home page, scroll drives it — do NOT reveal here.
+          // On other pages, loader already handled opacity reveal.
         }, 1200);
       }
     };
@@ -78,10 +82,12 @@ export function Navbar() {
       handleReady();
     }
 
-    // If logo is still hidden after 8 seconds (timeout), reveal it
+    // If logo is still hidden after 8 seconds (timeout), reveal it — but NOT on home page (scroll drives it)
     const timer = setTimeout(() => {
       setIsLoaded(true);
-      if (logoRef.current) logoRef.current.style.opacity = "1";
+      if (logoRef.current && pathname !== '/') {
+        logoRef.current.style.opacity = '1';
+      }
     }, 8000);
 
     return () => {

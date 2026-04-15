@@ -28,10 +28,18 @@ The Slashdot Home Page is the central entry point of the platform, designed to d
 - **Drift Loop**: When a symbol travels vertically off the `top` bound of the screen, its internal engine dynamically restarts its position at the absolute `bottom`, while instantly swapping out its underlying symbolic character against the active pools for continuous mutation.
 - **Scroll-Corrected Mouse Tracking**: The `mousemove` handler uses `canvas.getBoundingClientRect()` to translate the raw viewport-relative `clientX/Y` into true canvas-space coordinates. It additionally applies `scaleX/scaleY` ratios to account for any CSS stretching of the canvas element. This mirrors the fix applied in `ThemeToggle.tsx` and ensures the Gaussian ring effect tracks the cursor correctly at any scroll depth.
 
-### Loading Screen Optical Illusion
-- **Bypass Mechanism**: When users load natively into `/` (Home), the standard `LoadingScreen` flight sequence (where the logo scales and moves into the Navbar) is intentionally bypassed.
-- **Seamless Fade**: The `LoadingScreen` ghost text scales perfectly to match the static `hero-logo-pos` on the Home Page. When typing completes, the background strictly fades to transparent while the logo opacity is zeroed out, creating an imperceptible crossfade illusion into the Hero section's static typography.
-- **Native Scroll Lock Management**: Scrolling is natively hijacked explicitly by `page.tsx`. To guarantee no background scrolling occurs *during* the transparency fade, `page.tsx` captures the `slashdot:loader-fade-complete` event dispatched by the loader and extends the `overflow: hidden` lock for exactly 100ms *after* visual completion before returning control to the user.
+### Scroll-Linked Physical Fly (Hero → Navbar)
+The centrepiece interaction of the Home Page. As the user scrolls, the large hero "Slashdot" text physically translates and scales into the Navbar logo position, creating a cinematic brand flyaway.
+
+**Architecture:**
+- **Dead Zone**: The first 40px of scroll have no effect. The fly only begins after this threshold.
+- **`position: fixed` Switch**: The instant `smoothRatio` exceeds 0, the hero text element is detached from the document flow via `position: fixed`, locked to its current exact viewport coordinates (`getBoundingClientRect()`). This is the key to jitter-free animation — the element is now fully **decoupled from the scroll offset**.
+- **Stable Delta Vectors**: `fixedDx`, `fixedDy`, and `fixedScale` are computed once (hero viewport center → navbar logo viewport center). Since both the hero (now fixed) and the navbar (`position: fixed`) live in viewport space, these deltas never change.
+- **Lerp Loop**: A continuous `requestAnimationFrame` loop lerps `smoothRatio` toward `targetRatio` (set by the scroll event) using a factor of `0.12`. All transform math uses `smoothRatio` exclusively — multiply by the cached fixed deltas, zero scroll math in the hot path.
+- **Snap at Completion**: When `smoothRatio >= 0.98`, the real Navbar logo snaps to `opacity: 1` and the flying hero text to `opacity: 0` — an invisible swap since they visually overlap perfectly.
+- **Restore on Scroll-Up**: When `smoothRatio <= 0.001`, the element is restored to normal flow (`position` cleared) and the Navbar logo returns to `opacity: 0`.
+
+**Tagline Fade**: The tagline block (`The Coding & Designing / Club of IISER Kolkata`) fades out over the first 30% of the scroll transition range, independently of the logo fly speed.
 
 ## 4. Technical Specifications
 
@@ -40,9 +48,10 @@ The Slashdot Home Page is the central entry point of the platform, designed to d
 | **Component Layout**  | `src/app/page.tsx`                           |
 | **Canvas Sub-Engine** | `src/components/home/HeroCanvas.tsx`         |
 | **Rendering Strategy**| Client Component (`"use client"`) for Scroll Lock |
-| **Animation Loop**    | `requestAnimationFrame`                       |
+| **Animation Loop**    | `requestAnimationFrame` (lerp-smoothed)       |
 | **Class Abstraction** | `BackgroundSymbol` Class (`x, y, char, vec`)  |
 | **Viewport Control**  | Native DOM (`document.documentElement.style`) |
+| **Fly Technique**     | `position: fixed` + viewport-space delta lerp |
 
 ## 5. Maintenance Guidelines
 
