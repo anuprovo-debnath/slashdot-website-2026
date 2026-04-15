@@ -5,7 +5,8 @@ import { HeroCanvas } from "@/components/home/HeroCanvas";
 
 export default function Home() {
   // Refs for the elements we will animate
-  const heroTextRef = useRef<HTMLDivElement>(null); // The transforming element
+  const heroTextRef = useRef<HTMLDivElement>(null); // The transforming flying element
+  const midWrapRef = useRef<HTMLDivElement>(null);  // The centering wrapper — offset-corrected for mobile
 
   useEffect(() => {
     // ── Force manual scroll top on reload to protect animation context ─────
@@ -14,7 +15,7 @@ export default function Home() {
     }
     window.scrollTo(0, 0);
 
-    // ── Scroll Lock during loader ──────────────────────────────────────────
+    // ── Scroll Lock during loader ──────────────────────────────────────
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
 
@@ -163,10 +164,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative flex flex-col flex-1 items-center justify-center py-20 px-4 sm:px-6 lg:px-8 min-h-screen overflow-hidden">
+    <div className="relative flex flex-col flex-1 items-center justify-center py-20 px-4 sm:px-6 lg:px-8 min-h-[100svh] overflow-hidden">
       <HeroCanvas />
 
-      <div className="max-w-4xl w-full flex justify-center items-center relative z-[60] select-none">
+      <div ref={midWrapRef} className="max-w-4xl w-full flex justify-center items-center relative z-[60] select-none">
 
         {/*
           This div is the flying element. It starts centered in the hero and

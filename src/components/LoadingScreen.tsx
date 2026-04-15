@@ -258,7 +258,7 @@ export function LoadingScreen() {
   if (!isVisible) return null;
 
   return (
-    <div id="loader-stage" ref={loaderStageRef} className="fixed inset-0 flex justify-center items-center z-[100]" style={{ backgroundColor: '#0f0f0f' }}>
+    <div id="loader-stage" ref={loaderStageRef} className="fixed top-0 left-0 right-0 flex justify-center items-center z-[100]" style={{ backgroundColor: '#0f0f0f', height: '100svh' }}>
       <style jsx global>{`
         :root {
           --c-prompt: #ffffff;
