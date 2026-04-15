@@ -9,12 +9,13 @@ The Slashdot Home Page is the central entry point of the platform, designed to d
 ## 2. Visual Architecture
 
 ### Hero Canvas Background Layer (`HeroCanvas.tsx`)
-- **Symbol Density**: Precisely calibrated to 400 floating symbols ensuring a rich textual texture without overwhelming system resources.
+- **Symbol Density**: Precisely calibrated to 600 floating symbols ensuring a rich textual texture without overwhelming system resources.
 - **Symbol Pools**: Characters are dynamically pooled from three distinct categories symbolizing the diverse multidisciplinary nature of the club:
   - **Mathematics**: `∫, ∂, ψ, λ, ∑, ∏, ∆, ∇, ∞, ≈, ⊕, ⊗`
   - **Code/Syntax**: `</>, =>, ptr*, {}, [], (), &&, ||, ==, !=, ;`
   - **Chemistry/Nodes**: `⏣, ⌬, ⎔`
 - **Theme Awareness**: The floating symbols perfectly integrate into the site's dark/light modes by dynamically mapping to the CSS variable `--color-primary`.
+- **Depth-Linked Opacity (Inverse Proportion)**: Each symbol's `baseOpacity` is calculated as `(MAX_OPACITY × MIN_SIZE) / size`, a true `y = k/x` inverse proportion. Smaller symbols appear sharper and more prominent as if farther away, while larger symbols are subtly diffused, amplifying the faux-parallax depth effect naturally.
 
 ### Depth & Topology
 - **Layering System**: The canvas rests immutably in a specialized absolute layer (`z-[-1]`) ensuring that all interactive elements, typographic headers, and CTA buttons sit structurally floating on top (`z-10`).
@@ -25,6 +26,7 @@ The Slashdot Home Page is the central entry point of the platform, designed to d
 - **Viewport Dynamics**: The canvas explicitly tracks the DOM `resize` event. To prevent clusters or gaps from forming dynamically during browser rescaling:
   - Outer bound checks dynamically constrain objects that fall outside horizontal or vertical limits.
 - **Drift Loop**: When a symbol travels vertically off the `top` bound of the screen, its internal engine dynamically restarts its position at the absolute `bottom`, while instantly swapping out its underlying symbolic character against the active pools for continuous mutation.
+- **Scroll-Corrected Mouse Tracking**: The `mousemove` handler uses `canvas.getBoundingClientRect()` to translate the raw viewport-relative `clientX/Y` into true canvas-space coordinates. It additionally applies `scaleX/scaleY` ratios to account for any CSS stretching of the canvas element. This mirrors the fix applied in `ThemeToggle.tsx` and ensures the Gaussian ring effect tracks the cursor correctly at any scroll depth.
 
 ### Loading Screen Optical Illusion
 - **Bypass Mechanism**: When users load natively into `/` (Home), the standard `LoadingScreen` flight sequence (where the logo scales and moves into the Navbar) is intentionally bypassed.

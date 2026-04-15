@@ -128,5 +128,29 @@ We implemented a high-fidelity terminal boot sequence with a perfectly synchroni
     - **Handshake**: Loader signals `slashdot:loading-ready` with a `skipped` flag.
     - **Fail-Safe**: If no event is detected, an 8s safety timer forces visibility to prevent a broken UI state.
 
+## 10. HeroCanvas Improvements
+
+### Depth-Linked Opacity (Inverse Proportion)
+Previously, `baseOpacity` was assigned randomly per symbol. It now uses a deterministic **inverse proportion formula**:
+
+```js
+baseOpacity = (BASE_OPACITY_MAX × FONT_SIZE_MIN) / size
+```
+
+This is mathematically equivalent to `y = k/x`. Smaller symbols (10px) receive full opacity (1.0), while larger symbols (24px) receive ~0.42 opacity. This creates a convincing pseudo-3D parallax effect — distant/small symbols are sharp, close/large symbols are faded.
+
+> **Note for maintainers**: Because particles are spawned once in `useEffect`, changes to `baseOpacity` logic only take effect on a full page reload (not hot-reload). This is expected behaviour.
+
+### Scroll-Corrected Mouse Tracking
+The raw `e.clientX / e.clientY` values from `mousemove` are viewport-relative and drift out of sync when the page is scrolled. The fix (mirroring the approach in `ThemeToggle.tsx`) translates coordinates into true canvas-space via:
+
+```js
+const rect = canvas.getBoundingClientRect();
+mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+```
+
+This also applies `scaleX/scaleY` ratios to handle any CSS layout stretching of the canvas element, ensuring the Gaussian ring perfectly envelops the cursor at any scroll depth.
+
 ---
 *Last Updated: April 2026*

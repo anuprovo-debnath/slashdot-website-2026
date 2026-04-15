@@ -69,7 +69,10 @@ class BackgroundSymbol {
     this.angle = Math.random() * Math.PI * 2;
     this.radius = Math.random() * (CONFIG.OSCILLATION_RADIUS_MAX - CONFIG.OSCILLATION_RADIUS_MIN) + CONFIG.OSCILLATION_RADIUS_MIN;
     this.speed = Math.random() * (CONFIG.OSCILLATION_SPEED_MAX - CONFIG.OSCILLATION_SPEED_MIN) + CONFIG.OSCILLATION_SPEED_MIN;
-    this.baseOpacity = Math.random() * (CONFIG.BASE_OPACITY_MAX - CONFIG.BASE_OPACITY_MIN) + CONFIG.BASE_OPACITY_MIN;
+
+    // True Inverse Proportionality: Opacity = k / size
+    // Where k = MAX_OPACITY * MIN_SIZE. This yields 1.0 at min font, and naturally scales down as size increases.
+    this.baseOpacity = (CONFIG.BASE_OPACITY_MAX * CONFIG.FONT_SIZE_MIN) / (this.size || 1);
   }
 
   update() {
@@ -157,8 +160,12 @@ export function HeroCanvas() {
     };
 
     const mouseMoveHandler = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      mouseX = (e.clientX - rect.left) * scaleX;
+      mouseY = (e.clientY - rect.top) * scaleY;
     };
 
     window.addEventListener("resize", resizeHandler);

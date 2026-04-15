@@ -34,15 +34,15 @@ export default function Home() {
     <div className="relative flex flex-col flex-1 items-center justify-center py-20 px-4 sm:px-6 lg:px-8 min-h-screen overflow-hidden">
       <HeroCanvas />
       <div className="max-w-4xl w-full flex justify-center items-center relative z-10 select-none">
-        
+
         {/* Exact DOM replication of LoadingScreen brand text to enable seamless crossfade illusion */}
         <div className="relative inline-block border border-transparent">
-          
+
           <div className="opacity-0 pointer-events-none whitespace-nowrap font-heading font-black tracking-[4px] leading-[0.85] text-[3.5rem] md:text-[6rem]">
             Slashdot
           </div>
-          
-          <div className="absolute top-0 left-0 w-full whitespace-nowrap font-heading font-black tracking-[4px] leading-[0.85] text-[3.5rem] md:text-[6rem] text-[var(--color-primary)]">
+
+          <div className="absolute top-0 left-0 w-full whitespace-nowrap font-heading font-black tracking-[4px] leading-[0.85] text-[3.5rem] md:text-[6rem] text-neutral-800 dark:text-white">
             Slashdot
           </div>
 
@@ -54,7 +54,7 @@ export default function Home() {
               <span className="text-[#888888] font-sans text-[0.85rem] md:text-[1.2rem] leading-[1.3]">Club of IISER Kolkata</span>
             </div>
           </div>
-          
+
         </div>
 
       </div>
