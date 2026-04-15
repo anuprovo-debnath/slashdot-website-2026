@@ -104,16 +104,15 @@ export function Navbar() {
               <div
                 id="final-logo-pos"
                 ref={logoRef}
-                className={`flex items-center text-3xl font-heading tracking-[0.08em] select-none ${
-                  !isSkipped ? "transition-opacity duration-[var(--t-handoff)] ease-in-out" : ""
-                }`}
+                className={`flex items-center text-3xl font-heading tracking-[0.08em] select-none mini-reveal-logo ${!isSkipped ? "transition-opacity duration-[var(--t-handoff)] ease-in-out" : ""
+                  }`}
                 style={{ opacity: isLoaded ? 1 : 0 }}
               >
                 <span id="final-logo-text" className="text-neutral-800 dark:text-white flex items-center">
                   {"Slashdot".split('').map((char, i) => (
-                    <span 
-                      key={i} 
-                      className={isSkipped ? "logo-char-reveal" : ""} 
+                    <span
+                      key={i}
+                      className={isSkipped ? "logo-char-reveal" : ""}
                       style={{ "--i": i } as any}
                     >
                       {char}
@@ -241,29 +240,36 @@ export function Navbar() {
       />
 
       <style jsx>{`
+        .mini-reveal-logo {
+          --rev-base-delay: 0.2s;
+          --rev-dot-duration: 1.28s;
+          --rev-char-duration: 0.1s;
+          --rev-char-stagger: 0.16s;
+        }
+
         @keyframes mini-reveal-dot {
-          0% { transform: translateX(-150px); opacity: 0; }
-          20% { opacity: 1; }
+          0% { transform: translateX(-160px); opacity: 0; }
+          10% { opacity: 1; }
           100% { transform: translateX(0); opacity: 1; }
         }
 
         @keyframes mini-reveal-char {
-          0% { opacity: 0; transform: translateY(4px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0% { opacity: 0; }
+          100% { opacity: 1; }
         }
 
         .logo-char-reveal {
           display: inline-block;
           opacity: 0;
-          animation: mini-reveal-char 0.5s cubic-bezier(0.2, 0, 0, 1) forwards;
-          animation-delay: calc(var(--i) * 0.08s + 0.5s);
+          animation: mini-reveal-char var(--rev-char-duration) step-end forwards;
+          animation-delay: calc(var(--i) * var(--rev-char-stagger) + var(--rev-base-delay) + 0.1s);
         }
 
         .logo-dot-slide {
           display: inline-block;
           opacity: 0;
-          animation: mini-reveal-dot 1.2s cubic-bezier(0.2, 0, 0, 1) forwards;
-          animation-delay: 0.3s;
+          animation: mini-reveal-dot var(--rev-dot-duration) linear forwards;
+          animation-delay: var(--rev-base-delay);
         }
       `}</style>
     </nav>
