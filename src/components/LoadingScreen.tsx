@@ -38,7 +38,7 @@ export function LoadingScreen() {
       document.body.classList.add('stage-active-site');
       document.body.classList.remove('overflow-hidden');
       document.body.style.overflow = '';
-      window.dispatchEvent(new CustomEvent('slashdot:loading-ready'));
+      window.dispatchEvent(new CustomEvent('slashdot:loading-ready', { detail: { skipped: true } }));
       setIsVisible(false);
       return;
     }

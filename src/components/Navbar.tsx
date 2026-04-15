@@ -22,6 +22,7 @@ export function Navbar() {
   const pathname = usePathname();
   const logoRef = React.useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isSkipped, setIsSkipped] = React.useState(false);
   // Guard: skip scroll updates while a View Transition is in progress,
   // because the API temporarily resets scrollY to 0 during snapshot capture.
   const isTransitioningRef = React.useRef(false);
@@ -51,8 +52,11 @@ export function Navbar() {
     };
 
     // Safety check: reveal logo if loading screen is gone
-    const handleReady = () => {
+    const handleReady = (e?: any) => {
       setIsLoaded(true);
+      if (e?.detail?.skipped) {
+        setIsSkipped(true);
+      }
       if (logoRef.current) logoRef.current.style.opacity = "1";
     };
 
@@ -100,11 +104,23 @@ export function Navbar() {
               <div
                 id="final-logo-pos"
                 ref={logoRef}
-                className="flex items-center text-3xl font-heading tracking-[0.08em] transition-opacity duration-[var(--t-handoff)] ease-in-out select-none"
+                className={`flex items-center text-3xl font-heading tracking-[0.08em] select-none ${
+                  !isSkipped ? "transition-opacity duration-[var(--t-handoff)] ease-in-out" : ""
+                }`}
                 style={{ opacity: isLoaded ? 1 : 0 }}
               >
-                <span id="final-logo-text" className="text-neutral-800 dark:text-white">Slashdot</span>
-                <span className="text-[var(--color-primary)] ml-1">/.</span>
+                <span id="final-logo-text" className="text-neutral-800 dark:text-white flex items-center">
+                  {"Slashdot".split('').map((char, i) => (
+                    <span 
+                      key={i} 
+                      className={isSkipped ? "logo-char-reveal" : ""} 
+                      style={{ "--i": i } as any}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </span>
+                <span className={`text-[var(--color-primary)] ml-1 ${isSkipped ? "logo-dot-slide" : ""}`}>/.</span>
               </div>
             </Link>
           </div>
@@ -223,6 +239,33 @@ export function Navbar() {
         className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-primary)] transition-all duration-150 ease-out shadow-[0_0_8px_var(--color-primary)]"
         style={{ width: `${scrollProgress}%` }}
       />
+
+      <style jsx>{`
+        @keyframes mini-reveal-dot {
+          0% { transform: translateX(-150px); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes mini-reveal-char {
+          0% { opacity: 0; transform: translateY(4px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-char-reveal {
+          display: inline-block;
+          opacity: 0;
+          animation: mini-reveal-char 0.5s cubic-bezier(0.2, 0, 0, 1) forwards;
+          animation-delay: calc(var(--i) * 0.08s + 0.5s);
+        }
+
+        .logo-dot-slide {
+          display: inline-block;
+          opacity: 0;
+          animation: mini-reveal-dot 1.2s cubic-bezier(0.2, 0, 0, 1) forwards;
+          animation-delay: 0.3s;
+        }
+      `}</style>
     </nav>
   );
 }
