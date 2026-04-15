@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { TagPill } from "@/components/ui/TagPill";
+import { HeroCanvas } from "@/components/home/HeroCanvas";
 
 // --- CONSTANTS ---
 const REPO_NAME = "/slashdot-website-2026";
@@ -272,20 +273,28 @@ export default function FunZonePage() {
   }
 
   return (
-    <div className="min-h-screen pt-32 pb-16 px-4 sm:px-6 lg:px-12">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen pb-16">
+      {/* HERO HEADER with Canvas */}
+      <div className="relative overflow-hidden pt-44 pb-24 px-4 sm:px-6 lg:px-12">
+        {/* Viewport-sized canvas wrapper — cropped rather than squeezed */}
+        <div className="absolute top-0 left-0 pointer-events-none" style={{ width: '100vw', height: '100vh' }}>
+          <HeroCanvas opacity={100} />
+        </div>
+        <div className="max-w-5xl mx-auto relative z-10">
+          <header className="mb-0 relative text-center">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)] relative z-10 font-heading">
+              Fun <span className="text-[var(--color-primary)] font-heading">Zone</span>
+            </h1>
+            <p className="text-xl text-[var(--foreground)] opacity-80 max-w-2xl mx-auto relative z-10">
+              The interactive playground. A curated collection of tech culture, playable client-side experiments, and mathematically generated art exploring the Slashdot grid constraints.
+            </p>
+          </header>
+        </div>
+      </div>
 
-        {/* HEADER */}
-        <header className="mb-20 relative text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)] relative z-10 font-heading">
-            Fun <span className="text-[var(--color-primary)] font-heading">Zone</span>
-          </h1>
-          <p className="text-xl text-[var(--foreground)] opacity-80 max-w-2xl mx-auto relative z-10">
-            The interactive playground. A curated collection of tech culture, playable client-side experiments, and mathematically generated art exploring the Slashdot grid constraints.
-          </p>
-        </header>
-
-        <div className={`flex flex-col ${STRIP_CONFIG.gapSection}`}>
+      <div className="px-4 sm:px-6 lg:px-12 pt-12">
+        <div className="max-w-5xl mx-auto">
+          <div className={`flex flex-col ${STRIP_CONFIG.gapSection}`}>
 
           {/* MEMES SECTION */}
           <SidelongStrip
@@ -391,6 +400,7 @@ export default function FunZonePage() {
             <ArtCard title="Fluid Chaos Engine" blurColor="#ff4500" slug="art-fluid-chaos" onClick={() => handleCardClick('art-fluid-chaos')} className="snap-start" />
             <ArtCard title="Geometric Recursion" blurColor="#8a2be2" slug="art-geometric-recursion" onClick={() => handleCardClick('art-geometric-recursion')} className="snap-start" />
           </SidelongStrip>
+          </div>
         </div>
       </div>
     </div>

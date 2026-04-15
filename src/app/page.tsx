@@ -8,6 +8,12 @@ export default function Home() {
   const heroTextRef = useRef<HTMLDivElement>(null); // The transforming element
 
   useEffect(() => {
+    // ── Force manual scroll top on reload to protect animation context ─────
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     // ── Scroll Lock during loader ──────────────────────────────────────────
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
@@ -129,13 +135,8 @@ export default function Home() {
           taglineEl.style.opacity = String(Math.max(0, 1 - smoothRatio / 0.3));
         }
 
-        if (smoothRatio >= 0.98) {
-          navLogoEl.style.opacity = '1';
-          heroTextRef.current.style.opacity = '0';
-        } else {
-          navLogoEl.style.opacity = '0';
-          heroTextRef.current.style.opacity = '1';
-        }
+        // Keep the flying element permanently visible instead of swapping it out
+        heroTextRef.current.style.opacity = '1';
       }
 
       animFrameId = requestAnimationFrame(tick);
@@ -183,9 +184,9 @@ export default function Home() {
             Slashdot
           </div>
 
-          {/* Visible "Slashdot" — matches the LoadingScreen brand text exactly */}
-          <div className="absolute top-0 left-0 w-full whitespace-nowrap font-heading font-black tracking-[4px] leading-[0.85] text-[3.5rem] md:text-[6rem] text-neutral-800 dark:text-white">
-            Slashdot
+          {/* Visible "Slashdot /." — matches the final Navbar logo exactly */}
+          <div className="absolute top-0 left-0 w-full whitespace-nowrap font-heading font-black tracking-[4px] leading-[0.85] text-[3.5rem] md:text-[6rem] text-neutral-800 dark:text-white flex items-center">
+            Slashdot<span className="text-[var(--color-primary)] ml-1">/.</span>
           </div>
 
           {/* Tagline — fades out in the first 30% of the scroll transition */}

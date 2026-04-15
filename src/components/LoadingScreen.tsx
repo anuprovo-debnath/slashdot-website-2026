@@ -28,9 +28,21 @@ export function LoadingScreen() {
   const pathname = usePathname();
 
   useEffect(() => {
+    // Only run the loading animation on the home page.
+    // On all other pages, immediately reveal the site.
+    if (pathname !== '/') {
+      document.body.classList.add('stage-active-site');
+      document.body.classList.remove('overflow-hidden');
+      document.body.style.overflow = '';
+      window.dispatchEvent(new CustomEvent('slashdot:loading-ready', { detail: { skipped: true } }));
+      window.dispatchEvent(new CustomEvent('slashdot:loader-fade-complete'));
+      setIsVisible(false);
+      return;
+    }
+
     // Check for "Returning Visitor" to skip animation
     const SKIP_STORAGE_KEY = 'slashdot_last_visit';
-    const TWENTY_FOUR_HOURS = 60 * 1000;//24 * 60 * 60 * 1000;
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
     const now = Date.now();
     const lastVisit = localStorage.getItem(SKIP_STORAGE_KEY);
@@ -41,6 +53,7 @@ export function LoadingScreen() {
       document.body.classList.remove('overflow-hidden');
       document.body.style.overflow = '';
       window.dispatchEvent(new CustomEvent('slashdot:loading-ready', { detail: { skipped: true } }));
+      window.dispatchEvent(new CustomEvent('slashdot:loader-fade-complete'));
       setIsVisible(false);
       return;
     }
@@ -49,7 +62,6 @@ export function LoadingScreen() {
     localStorage.setItem(SKIP_STORAGE_KEY, now.toString());
 
     if (!isVisible) return;
-
 
 
     const getMs = (varName: string) => {

@@ -16,7 +16,7 @@ export const CONFIG = {
   SLOW_FRAME_TOLERANCE: 10,    // Consecutive laggy frames before culling triggers
 
   // 2. Base Symbol Attributes
-  GLOBAL_ALPHA_LIMIT: 0.8,     // Global master opacity cap ensuring text legibility (0.0 - 1.0)
+  GLOBAL_ALPHA_LIMIT: 1,     // Global master opacity cap ensuring text legibility (0.0 - 1.0)
   FONT_SIZE_MIN: 10,
   FONT_SIZE_MAX: 24,
   BASE_OPACITY_MIN: 0.5,       // Minimum native opacity of a particle
@@ -54,6 +54,7 @@ class BackgroundSymbol {
   radius: number;
   speed: number;
   baseOpacity: number;
+  hue: number;         // Random hue across full 0–360 spectrum (HSV x,100,100)
   canvas: HTMLCanvasElement;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -73,6 +74,9 @@ class BackgroundSymbol {
     // True Inverse Proportionality: Opacity = k / size
     // Where k = MAX_OPACITY * MIN_SIZE. This yields 1.0 at min font, and naturally scales down as size increases.
     this.baseOpacity = (CONFIG.BASE_OPACITY_MAX * CONFIG.FONT_SIZE_MIN) / (this.size || 1);
+
+    // Full-spectrum vivid color: HSV(x, 100, 100) → HSL(x, 100%, 50%)
+    this.hue = Math.random() * 360;
   }
 
   update() {
@@ -91,7 +95,7 @@ class BackgroundSymbol {
     this.y = this.cy + Math.sin(this.angle * 0.8) * this.radius;
   }
 
-  draw(ctx: CanvasRenderingContext2D, baseColor: string, mouseX: number, mouseY: number, noise3D: any, time: number) {
+  draw(ctx: CanvasRenderingContext2D, mouseX: number, mouseY: number, noise3D: any, time: number) {
     const dx = this.x - mouseX;
     const dy = this.y - mouseY;
     const r = Math.sqrt(dx * dx + dy * dy);
@@ -119,13 +123,14 @@ class BackgroundSymbol {
 
     ctx.font = `${this.size}px monospace`;
     ctx.globalAlpha = finalOpacity;
-    ctx.fillStyle = baseColor;
+    // HSV(hue, 100, 100) → HSL(hue, 100%, 50%) — fully saturated, full brightness
+    ctx.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
     ctx.fillText(this.char, this.x, this.y);
     ctx.globalAlpha = 1.0;
   }
 }
 
-export function HeroCanvas() {
+export function HeroCanvas({ opacity = 100 }: { opacity?: number } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -171,7 +176,6 @@ export function HeroCanvas() {
     window.addEventListener("resize", resizeHandler);
     window.addEventListener("mousemove", mouseMoveHandler);
 
-    let primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
     let lastTime = 0;
     let slowFramesTracker = 0;
 
@@ -192,17 +196,11 @@ export function HeroCanvas() {
       }
       lastTime = timestamp;
 
-      // Update color dynamically every frame in case of seamless theme toggling
-      const activeThemeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-      if (activeThemeColor) {
-        primaryColor = activeThemeColor;
-      }
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       symbols.forEach(symbol => {
         symbol.update();
-        symbol.draw(ctx, primaryColor, mouseX, mouseY, noise3D, time);
+        symbol.draw(ctx, mouseX, mouseY, noise3D, time);
       });
 
       animationFrameId = requestAnimationFrame(render);
@@ -220,7 +218,7 @@ export function HeroCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-80"
+      className={`absolute inset-0 w-full h-full pointer-events-none opacity-${opacity}`}
       style={{ zIndex: -10 }}
       aria-hidden="true"
     />

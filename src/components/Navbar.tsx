@@ -58,17 +58,9 @@ export function Navbar() {
       if (e?.detail?.skipped) {
         setIsSkipped(true);
         setShouldAnimate(true);
-        // On home page, scroll drives the logo reveal — keep it hidden.
-        if (logoRef.current && pathname !== '/') {
-          logoRef.current.style.opacity = '1';
-        }
       } else {
-        // Wait for flight to end (~1.2s) before triggering typing
-        setTimeout(() => {
-          setShouldAnimate(true);
-          // On home page, scroll drives it — do NOT reveal here.
-          // On other pages, loader already handled opacity reveal.
-        }, 1200);
+        // Wait for flight animation to finish before triggering the typing reveal
+        setTimeout(() => setShouldAnimate(true), 1200);
       }
     };
 
@@ -82,12 +74,9 @@ export function Navbar() {
       handleReady();
     }
 
-    // If logo is still hidden after 8 seconds (timeout), reveal it — but NOT on home page (scroll drives it)
+    // Failsafe: if still hidden after 8 seconds, reveal regardless
     const timer = setTimeout(() => {
       setIsLoaded(true);
-      if (logoRef.current && pathname !== '/') {
-        logoRef.current.style.opacity = '1';
-      }
     }, 8000);
 
     return () => {
@@ -114,25 +103,34 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center group relative no-underline">
               {/* Collision prevention overlay */}
-              <div className="absolute inset-0 z-10 cursor-pointer" />
               <div
                 id="final-logo-pos"
                 ref={logoRef}
-                className={`flex items-center text-3xl font-heading tracking-[0.08em] select-none ${shouldAnimate ? "mini-reveal-logo" : ""}`}
-                style={{ opacity: 0 }} // Initially hidden, revealed by JS
+                className={`flex items-center text-3xl font-heading tracking-[0.08em] select-none transition-opacity duration-500 ${pathname !== '/' && shouldAnimate ? "mini-reveal-logo" : ""}`}
+                style={{
+                  // Keep it physically hidden on home page so the other animation can take over
+                  opacity: pathname !== '/' ? (isLoaded ? 1 : 0) : 0,
+                  visibility: pathname !== '/' ? 'visible' : 'hidden' // Added visibility for extra safety
+                }}
               >
                 <span id="final-logo-text" className="text-neutral-800 dark:text-white flex items-center">
                   {"Slashdot".split('').map((char, i) => (
                     <span
                       key={i}
-                      className={shouldAnimate ? "logo-char-reveal" : "opacity-0"}
+                      // ONLY apply the animation class if we are NOT on the home page
+                      className={pathname !== '/' && shouldAnimate ? "logo-char-reveal" : "opacity-0"}
                       style={{ "--i": i } as any}
                     >
                       {char}
                     </span>
                   ))}
                 </span>
-                <span className={`text-[var(--color-primary)] ml-1 ${shouldAnimate ? "logo-dot-slide" : "opacity-0"}`}>/.</span>
+                <span
+                  // ONLY apply the animation class if we are NOT on the home page
+                  className={`text-[var(--color-primary)] ml-1 ${pathname !== '/' && shouldAnimate ? "logo-dot-slide" : "opacity-0"}`}
+                >
+                  /.
+                </span>
               </div>
             </Link>
           </div>

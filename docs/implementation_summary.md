@@ -54,6 +54,7 @@ The `Navbar` component was refactored to be a high-fidelity, interactive compone
 - **Intro Skip Cache**: Integrated a `localStorage` check (`slashdot_last_visit`) that caches the user's visit. Returning visitors within a 24-hour window bypass the 5-second loading sequence for an immediate site reveal.
 - **Global Scrollbar Removal**: Achieved a clean, app-like aesthetic by hiding the default OS scrollbars via CSS (`scrollbar-width: none` and `::-webkit-scrollbar { display: none }`). Navigation progress is instead tracked by the custom Navbar indicator.
 - **Mobile Geometric Stability**: Resolved the "disappearing navbar" bug by switching from `sticky` to `fixed` positioning and using the `Visual Viewport API` to account for the dynamic height of mobile address bars.
+- **Viewport Reset (Mobile Android Fix)**: Applied a strict `overflow-x: hidden` and `width: 100%` lock on `html` and `body` in `globals.css`. This prevents "bleeding" from absolute animations or complex grids that previously caused the site to appear off-center on Chrome Android.
 - **Responsive Branding**: Implemented CSS media queries in the loading sequence to scale terminal fonts and brand sizes specifically for mobile viewports, preventing layout overflows.
 
 ## 4. Assets & Icons
@@ -113,9 +114,11 @@ The `Footer` was evolved from a simple list into a high-precision architectural 
 We implemented a high-fidelity terminal boot sequence with a perfectly synchronized brand handoff.
 
 - **Conceptual Architecture**: A two-stage sequence. **Stage 1** simulates a terminal typing process. **Stage 2** initiates a "flight" transformation where the brand name moves to the navbar.
+- **Route-Aware Isolation**: The loading sequence is restricted to only execute on the Home route (`/`). Internal navigations or deep-links skip the animation entirely for a faster interactive experience.
 - **Session-Based Persistence**:
     - Uses `localStorage` to check for recent visits (24-hour window).
     - Returning visitors bypass the main terminal sequence, seeing only the lighter "Mini-Reveal" in the navbar.
+- **Event-Driven Scroll Unlocking**: To ensure the scroll is always unlocked, even when the animation is skipped (via cache or route isolation), the `LoadingScreen` explicitly dispatches `slashdot:loader-fade-complete` in all exit branches.
 - **The "Pixel Handoff" Synchronization**:
     - **Shared Timing Engine**: Both `LoadingScreen` and `Navbar` utilize a shared stagger (`0.16s`) and linear travel speed.
     - **Page Context Branching**: The loader checks the `usePathname` scope. On internal routing (`/blog`, `/team`), the brand translates functionally to the top-left Nav space (`final-logo-pos`). But if the user mounts natively at `/` (Home), the flight translates nowhere; it executes a massive optical illusion cross-fade exposing the statically aligned Hero logo physically behind it via a fading background transparency.
@@ -142,8 +145,6 @@ This is mathematically equivalent to `y = k/x`. Smaller symbols (10px) receive f
 > **Note for maintainers**: Because particles are spawned once in `useEffect`, changes to `baseOpacity` logic only take effect on a full page reload (not hot-reload). This is expected behaviour.
 
 ### Scroll-Corrected Mouse Tracking
-The raw `e.clientX / e.clientY` values from `mousemove` are viewport-relative and drift out of sync when the page is scrolled. The fix (mirroring the approach in `ThemeToggle.tsx`) translates coordinates into true canvas-space via:
-
 ```js
 const rect = canvas.getBoundingClientRect();
 mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
@@ -151,6 +152,19 @@ mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
 ```
 
 This also applies `scaleX/scaleY` ratios to handle any CSS layout stretching of the canvas element, ensuring the Gaussian ring perfectly envelops the cursor at any scroll depth.
+
+### Performance & Culling Engine
+The canvas includes a performance-aware culling system:
+- **Frame Monitoring**: Tracks frame processing time; if consistency drops below 30FPS (`delta > 35ms`) for 10 consecutive frames, it initiates culling.
+- **Dynamic Density**: Removes symbols in chunks of 50 until a stable floor of 200 is reached, ensuring UI responsiveness on low-end mobile hardware.
+
+## 11. Global Page Architecture (`PageHero.tsx`)
+
+To maintain visual continuity across the entire platform while respecting Next.js Server Components, we implemented the `PageHero` architecture.
+
+- **Non-Distorted Canvas (Cropping)**: Unlike standard background scaling, the sub-page heroes use a "Cropping" strategy. The `HeroCanvas` is rendered inside a hard-coded viewport-sized container (`100vw x 100vh`). The parent element's `overflow: hidden` then clips the unused space. This ensures symbol sizes and densities are identical to the landing page, regardless of the hero section's specific height.
+- **Client/Server Hybrid**: `PageHero` acts as a thin client-side wrapper. This allows deep pages like the Team Page to remain server-side for SEO and data-fetching while still enjoying the animated background.
+- **Enhanced Visibility**: Sub-page heroes use `opacity={100}` on the canvas (compared to the home page's `80`) to ensure symbols remain striking against content-heavy layouts.
 
 ---
 *Last Updated: April 2026*

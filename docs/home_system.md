@@ -33,13 +33,14 @@ The centrepiece interaction of the Home Page. As the user scrolls, the large her
 
 **Architecture:**
 - **Dead Zone**: The first 40px of scroll have no effect. The fly only begins after this threshold.
-- **`position: fixed` Switch**: The instant `smoothRatio` exceeds 0, the hero text element is detached from the document flow via `position: fixed`, locked to its current exact viewport coordinates (`getBoundingClientRect()`). This is the key to jitter-free animation — the element is now fully **decoupled from the scroll offset**.
-- **Stable Delta Vectors**: `fixedDx`, `fixedDy`, and `fixedScale` are computed once (hero viewport center → navbar logo viewport center). Since both the hero (now fixed) and the navbar (`position: fixed`) live in viewport space, these deltas never change.
-- **Lerp Loop**: A continuous `requestAnimationFrame` loop lerps `smoothRatio` toward `targetRatio` (set by the scroll event) using a factor of `0.12`. All transform math uses `smoothRatio` exclusively — multiply by the cached fixed deltas, zero scroll math in the hot path.
-- **Snap at Completion**: When `smoothRatio >= 0.98`, the real Navbar logo snaps to `opacity: 1` and the flying hero text to `opacity: 0` — an invisible swap since they visually overlap perfectly.
-- **Restore on Scroll-Up**: When `smoothRatio <= 0.001`, the element is restored to normal flow (`position` cleared) and the Navbar logo returns to `opacity: 0`.
+- **`position: fixed` Switch**: The instant `smoothRatio` exceeds 0, the hero text element is detached from the document flow via `position: fixed`, locked to its current exact viewport coordinates. This is the key to jitter-free animation.
+- **Stable Delta Vectors**: `fixedDx`, `fixedDy`, and `fixedScale` are computed once. Since both the hero (now fixed) and the navbar (`position: fixed`) live in viewport space, these deltas never change.
+- **Permanent Parking (No Swap)**: Unlike technical routes where an optical swap occurs, the home page flying element now **permanently serves as the navbar logo** once the transition completes. The static navbar logo is kept hidden on this route to maintain visual continuity.
+- **Teal Dots Sync**: The flying text explicitly mimics the Navbar branding by including a `/.` suffix in the primary theme color, ensuring perfect identity parity when parked.
+- **Lerp Loop**: A continuous `requestAnimationFrame` loop lerps `smoothRatio` toward `targetRatio` (set by the scroll event) using a factor of `0.12`.
+- **Scroll Restoration**: Forced `manual` scroll restoration combined with `window.scrollTo(0,0)` on mount ensures the animation always begins from its intended origin, even after a page reload.
 
-**Tagline Fade**: The tagline block (`The Coding & Designing / Club of IISER Kolkata`) fades out over the first 30% of the scroll transition range, independently of the logo fly speed.
+**Tagline Fade**: The tagline block (`The Coding & Designing / Club of IISER Kolkata`) fades out over the first 30% of the scroll transition range.
 
 ## 4. Technical Specifications
 

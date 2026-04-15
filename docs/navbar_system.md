@@ -33,7 +33,8 @@ Uses the `usePathname` hook from `next/navigation` to compare current location w
 ### Branding & Logo
 - **Logo Zone**: Transitioned to the text-based **Arista Pro Bold** branding with the iconic **" /."** suffix for identity parity with the Navbar.
 - **Typography**: Uses theme-aware coloring (Neutral-800 for light, White for dark) for the brand text, with the suffix in the primary accent color.
-- **Alignment**: Centered branding to serve as a visual anchor.
+- **Home Page Aware Visibility**: On the home page (`/`), the navbar logo is statically set to `opacity: 0`. This allows the Home Page morphing animation to exclusively control the logo's reveal without React overriding it. On all other routes, it is revealed once the site loads.
+- **Animation Skipping**: The typewriter reveal animation (`mini-reveal-logo`) is disabled on the home page to maintain visual parity with the hero morph.
 
 ### Synchronized Anchor Navigation
 To ensure a smooth transition to the footer's `#join-us` anchor:
