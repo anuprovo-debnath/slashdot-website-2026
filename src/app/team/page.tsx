@@ -34,7 +34,7 @@ export default function TeamPage() {
   });
 
   return (
-    <main className="min-h-screen pb-24 pt-36">
+    <main className="min-h-screen pb-24 pt-36 overflow-x-hidden">
       {/* Page Header */}
       <div className="max-w-7xl mx-auto px-6 mb-20 text-center flex flex-col items-center">
         <div className="inline-flex items-center justify-center space-x-4 mb-6">

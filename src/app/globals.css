@@ -44,11 +44,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 html {
   scroll-behavior: smooth;
   /* Hide standard scrollbar across all browsers */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
+  
+  /* Prevent horizontal overflow causing off-center site on mobile */
+  overflow-x: hidden;
+  width: 100%;
 }
 
 html::-webkit-scrollbar {
@@ -60,6 +70,12 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   
+  /* Prevent horizontal bleeding */
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+
   /* Redundant safety for hiding scrollbar on body */
   scrollbar-width: none;
   -ms-overflow-style: none;
