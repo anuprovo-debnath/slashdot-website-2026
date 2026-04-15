@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { name: "Team", href: "/team" },
   { name: "Blog", href: "/blog" },
   { name: "Projects", href: "/projects" },
-  { name: "Events", href: "/events" },
+  { name: "Events", href: "/events", hasLiveDot: true },
   { name: "Fun Zone", href: "/fun-zone" },
 ];
 
@@ -24,6 +24,7 @@ export function Navbar() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isSkipped, setIsSkipped] = React.useState(false);
   const [shouldAnimate, setShouldAnimate] = React.useState(false);
+  const [hasLiveEvent, setHasLiveEvent] = React.useState(false);
   // Guard: skip scroll updates while a View Transition is in progress,
   // because the API temporarily resets scrollY to 0 during snapshot capture.
   const isTransitioningRef = React.useRef(false);
@@ -79,12 +80,30 @@ export function Navbar() {
       setIsLoaded(true);
     }, 8000);
 
+    // Check for live events
+    const checkLiveStatus = async () => {
+      try {
+        const response = await fetch('/slashdot-website-2026/api/events/status');
+        if (response.ok) {
+          const data = await response.json();
+          setHasLiveEvent(data.hasLiveEvent);
+        }
+      } catch (err) {
+        // Fallback or ignore
+        console.error("Failed to fetch live status", err);
+      }
+    };
+
+    checkLiveStatus();
+    const statusInterval = setInterval(checkLiveStatus, 60000 * 5); // Check every 5 mins
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener('slashdot:loading-ready', handleReady);
       window.removeEventListener('slashdot:transition-start', handleTransitionStart);
       window.removeEventListener('slashdot:transition-end', handleTransitionEnd);
       clearTimeout(timer);
+      clearInterval(statusInterval);
     };
   }, []);
 
@@ -145,12 +164,18 @@ export function Navbar() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className={`px-4 py-2 rounded-full text-base font-medium transition-all duration-200 ${isActive
+                    className={`px-4 py-2 rounded-full text-base font-medium transition-all duration-200 relative ${isActive
                       ? "text-[var(--color-primary)]"
                       : "text-neutral-600 dark:text-neutral-400 hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/5"
                       }`}
                   >
                     {link.name}
+                    {link.hasLiveDot && hasLiveEvent && (
+                      <span className="absolute top-2 right-2 flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                      </span>
+                    )}
                   </Link>
                 );
               })}
@@ -195,7 +220,15 @@ export function Navbar() {
               {isOpen ? (
                 <X className="block h-6 w-6" aria-hidden="true" />
               ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
+                <div className="relative">
+                  <Menu className="block h-6 w-6" aria-hidden="true" />
+                  {hasLiveEvent && (
+                    <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+                    </span>
+                  )}
+                </div>
               )}
             </button>
           </div>
@@ -256,12 +289,18 @@ export function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`block px-4 py-3 rounded-xl font-medium transition-colors ${isActive
+                className={`block px-4 py-3 rounded-xl font-medium transition-colors relative ${isActive
                   ? "text-[var(--color-primary)]"
                   : "hover:text-[var(--color-primary)] hover:bg-black/5 dark:hover:bg-white/5"
                   }`}
               >
                 {link.name}
+                {link.hasLiveDot && hasLiveEvent && (
+                  <span className="absolute top-4 right-4 flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+                  </span>
+                )}
               </Link>
             );
           })}

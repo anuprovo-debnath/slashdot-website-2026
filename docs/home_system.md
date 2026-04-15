@@ -42,20 +42,24 @@ The centrepiece interaction of the Home Page. As the user scrolls, the large her
 
 **Tagline Fade**: The tagline block (`The Coding & Designing / Club of IISER Kolkata`) fades out over the first 30% of the scroll transition range.
 
-## 4. Technical Specifications
+## 4. Server-Side Content Hub Architecture
+The primary `src/app/page.tsx` has been conceptually split to maximize performance and SEO structure.
+- **`HomeHero.tsx` Extaction**: All high-performance client-side animations (canvas rendering, scroll-linked flying logo, and lerp loops) are fully self-contained within the isolated `<HomeHero />` client component.
+- **Server Data Handlers**: The root page is explicitly a Server Component, injecting markdown and local data statically using Next.js build-time fetchers (`getMarkdownFiles`, `getEvents`, `getProjects`).
+- **`HomeStrip` Ecosystem**: Content is surfaced in standardized, horizontally scrolling grid containers (`<HomeStrip />`). This features snap-mandatory scrolling, keeping previews strictly aligned with the rest of the site grid.
+
+## 5. Technical Specifications
 
 | Feature               | Implementation                                |
 |-----------------------|-----------------------------------------------|
-| **Component Layout**  | `src/app/page.tsx`                           |
+| **Primary Route**     | `src/app/page.tsx` (Server Component)         |
+| **Hero Encapsulation**| `src/components/home/HomeHero.tsx`            |
 | **Canvas Sub-Engine** | `src/components/home/HeroCanvas.tsx`         |
-| **Rendering Strategy**| Client Component (`"use client"`) for Scroll Lock |
-| **Animation Loop**    | `requestAnimationFrame` (lerp-smoothed)       |
-| **Class Abstraction** | `BackgroundSymbol` Class (`x, y, char, vec`)  |
-| **Viewport Control**  | Native DOM (`document.documentElement.style`) |
+| **Data Fetching**     | Static/Server `getMarkdownFiles`, `getEvents`, `getProjects` |
+| **Animation Loop**    | `requestAnimationFrame` (lerp-smoothed) inside `HomeHero` |
 | **Fly Technique**     | `position: fixed` + viewport-space delta lerp |
 
-## 5. Maintenance Guidelines
+## 6. Maintenance Guidelines
 
 - **Adjusting Symbol Density**: Alter the `length: 400` inside `initCanvas` array setup to globally increase or decrease computation weight. Ensure you verify performance on mobile platforms when scaling above `800`.
-- **Primary Color Binding**: The canvas fetches its tint via `getComputedStyle(document.documentElement).getPropertyValue('--color-primary')`. If the Next.js Theme architecture significantly shifts away from root-attached CSS variables, this lookup must be refactored to fetch hex strings explicitly.
-- **Modifying Drift Logic**: The exact floating speed vectors are instantiated statically inside the `constructor()` of `BackgroundSymbol`. For different motions (e.g. falling, diagonal wind), map both `this.x` and `this.y` inside `update()`.
+- **Modifying Previews**: The home page fetches limited slices of data (e.g., `allEvents.slice(0, 8)` or `recentBlogs.slice(0, 9)`). Modify these splice constraints directly in `app/page.tsx` to expand or shrink the `HomeStrip` track widths.
