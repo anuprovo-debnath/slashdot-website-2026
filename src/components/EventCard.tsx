@@ -53,7 +53,7 @@ export function EventCard({ event }: EventCardProps) {
   const displayTime = schedule && schedule.length > 0 ? "Scheduled Sessions" : time;
 
   return (
-    <div className="group relative flex flex-col md:flex-row rounded-2xl bg-[var(--background)] ring-[3px] ring-[var(--color-primary)]/30 shadow-xl transition-all duration-300 ease-out transform-gpu hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.4)] dark:hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.25)] hover:ring-[var(--color-primary)]/80 overflow-hidden p-5 gap-4 w-full z-10">
+    <div className="group relative flex flex-col md:flex-row rounded-2xl bg-[var(--background)] ring-[3px] ring-[var(--color-primary)]/20 shadow-xl transition-all duration-300 ease-out transform-gpu hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.4)] dark:hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.25)] hover:ring-[var(--color-primary)]/80 overflow-hidden p-5 gap-4 w-full z-10">
       {/* Absolute link mapping the card to details page */}
       <Link href={`/events/${event.slug}`} className="absolute inset-0 z-[10]" aria-label={`View details for ${title}`} />
       

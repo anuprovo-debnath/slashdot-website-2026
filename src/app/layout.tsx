@@ -37,7 +37,7 @@ export default function RootLayout({
       <head>
         <base href="/slashdot-website-2026/" />
       </head>
-      <body className="min-h-full flex flex-col overflow-hidden">
+      <body className="min-h-full flex flex-col overflow-x-hidden">
         <LoadingScreen />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div id="site-wrapper-loading" className="flex-1 flex flex-col min-h-screen">

@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { isDayInEvent } from '@/lib/eventUtils';
 
-type CalendarEvent = { 
-  date: string; 
+type CalendarEvent = {
+  date: string;
   status: 'Live' | 'Upcoming' | 'Past';
   schedule?: { date: string; time: string }[];
 };
@@ -17,10 +17,10 @@ interface InteractiveCalendarProps {
 }
 
 export function InteractiveCalendar({ events, selectedDate, activeDate, onSelectDate }: InteractiveCalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(new Date(2026, 3, 1)); 
+  const [currentMonth, setCurrentMonth] = useState(new Date(2026, 3, 1));
   const [viewMode, setViewMode] = useState<'month' | 'year'>('month');
   const [mounted, setMounted] = useState(false);
-  
+
   // Track today
   const d = new Date();
   const todayFormat = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -54,7 +54,7 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
 
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
-  
+
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfMonth = new Date(year, month, 1).getDay();
 
@@ -77,18 +77,18 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
 
   for (let i = 1; i <= daysInMonth; i++) {
     const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-    
+
     const overlappingEvents = events.filter(e => isDayInEvent(dStr, { date: e.date, schedule: e.schedule }));
     const eventForDay = overlappingEvents.length > 0 ? overlappingEvents[0] : null; // Optionally we could sort by status LIVE > UPCOMING
     const hasEvent = !!eventForDay;
     const isSelected = selectedDate === dStr;
-    const isActive = activeDate === dStr && !selectedDate; 
+    const isActive = activeDate === dStr && !selectedDate;
     const isToday = dStr === todayFormat;
 
     // 2. Color assignment for Selected / HasEvent / NoEvent
     // Less importance for no events
-    let colorClasses = 'text-foreground/40 hover:bg-foreground/10'; 
-    
+    let colorClasses = 'text-foreground/40 hover:bg-foreground/10';
+
     if (isSelected) {
       // Keep event colors if selected, but solid
       if (hasEvent) {
@@ -133,15 +133,15 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
           const isCurrentMonthInYear = index === month;
           const today = new Date();
           const isActualTodayMonth = today.getFullYear() === year && today.getMonth() === index;
-          
+
           const eventsInMonth = events.filter(e => {
             // Check if any day 1..daysInMonth is inside this event
             const daysInThisMonth = new Date(year, index + 1, 0).getDate();
             for (let d = 1; d <= daysInThisMonth; d++) {
-                const targetDayStr = `${year}-${String(index + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                if (isDayInEvent(targetDayStr, { date: e.date, schedule: e.schedule })) {
-                    return true;
-                }
+              const targetDayStr = `${year}-${String(index + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+              if (isDayInEvent(targetDayStr, { date: e.date, schedule: e.schedule })) {
+                return true;
+              }
             }
             return false;
           }).length;
@@ -181,9 +181,9 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
   };
 
   return (
-    <div className="bg-background border-2 border-primary/30 rounded-xl p-6">
+    <div className="bg-background/80 backdrop-blur-md border-2 border-primary/20 rounded-xl p-6 shadow-2xl relative z-10">
       <div className="flex justify-between items-center mb-6">
-        <button 
+        <button
           onClick={() => setViewMode(viewMode === 'month' ? 'year' : 'month')}
           className="font-extrabold text-lg flex items-center gap-2 hover:text-primary transition-colors group"
         >
@@ -195,7 +195,7 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
           <button onClick={nextMonth} className="px-2 py-1 text-xs border border-foreground/10 rounded hover:bg-foreground/10 transition-colors cursor-pointer">&gt;</button>
         </div>
       </div>
-      
+
       {viewMode === 'month' ? (
         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="grid grid-cols-7 gap-y-2 place-items-center mb-4">
@@ -212,17 +212,17 @@ export function InteractiveCalendar({ events, selectedDate, activeDate, onSelect
       )}
 
       {/* 1. Shift color coding legend below calendar */}
-      <div className="flex gap-4 justify-center mt-8 pt-6 border-t border-foreground/5 text-[9px] font-black uppercase tracking-[0.2em] opacity-60">
+      <div className="flex gap-4 justify-center mt-8 pt-6 border-t-2 border-foreground/5 text-[9px] font-black uppercase tracking-[0.2em] opacity-60">
         <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-live shadow-[0_0_8px_rgba(var(--color-live-rgb),0.5)]"></span> Live</span>
         <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-upcoming shadow-[0_0_8px_rgba(var(--color-upcoming-rgb),0.5)]"></span> Upcoming</span>
         <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-primary/80 shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.4)]"></span> Past</span>
       </div>
-      
+
       {selectedDate && (
         <div className="mt-3 text-center animate-in fade-in">
-          <button 
+          <button
             onClick={() => onSelectDate(null)}
-             className="text-xs font-semibold text-primary/80 hover:text-primary transition-colors cursor-pointer"
+            className="text-xs font-semibold text-primary/80 hover:text-primary transition-colors cursor-pointer"
           >
             Clear Selected Date
           </button>

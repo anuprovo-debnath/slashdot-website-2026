@@ -6,6 +6,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Search } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { getEventStatus } from "@/lib/eventUtils";
+import { EventData } from "@/lib/events";
 
 const NAV_LINKS = [
   { name: "Team", href: "/team" },
@@ -53,7 +55,6 @@ export function Navbar() {
       setScrollProgress(calcProgress());
     };
 
-    // Safety check: reveal logo if loading screen is gone
     const handleReady = (e?: any) => {
       setIsLoaded(true);
       if (e?.detail?.skipped) {
@@ -83,19 +84,29 @@ export function Navbar() {
     // Check for live events
     const checkLiveStatus = async () => {
       try {
-        const response = await fetch('/slashdot-website-2026/api/events/status');
+        const response = await fetch('/slashdot-website-2026/search-index.json', { cache: 'no-store' });
         if (response.ok) {
           const data = await response.json();
-          setHasLiveEvent(data.hasLiveEvent);
+          const events = data.filter((item: any) => item.type === 'event');
+          const isAnythingLive = events.some((event: any) => {
+            // Reconstruct minimal frontmatter for getEventStatus
+            const fm = {
+              date: event.date,
+              time: event.time || '',
+              schedule: event.schedule || [],
+            };
+            const calculatedStatus = getEventStatus(fm as any);
+            return calculatedStatus === 'Live' || event.status === 'Live';
+          });
+          setHasLiveEvent(isAnythingLive);
         }
       } catch (err) {
-        // Fallback or ignore
         console.error("Failed to fetch live status", err);
       }
     };
 
     checkLiveStatus();
-    const statusInterval = setInterval(checkLiveStatus, 60000 * 5); // Check every 5 mins
+    const statusInterval = setInterval(checkLiveStatus, 30000); // 30s Heartbeat for live status sync (matches existing Dynamic Status Hub heartbeat)
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -172,8 +183,8 @@ export function Navbar() {
                     {link.name}
                     {link.hasLiveDot && hasLiveEvent && (
                       <span className="absolute top-2 right-2 flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-live opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-live shadow-[0_0_8px_rgba(var(--color-live-rgb),0.5)]"></span>
                       </span>
                     )}
                   </Link>
@@ -296,9 +307,9 @@ export function Navbar() {
               >
                 {link.name}
                 {link.hasLiveDot && hasLiveEvent && (
-                  <span className="absolute top-4 right-4 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+                  <span className="absolute top-1/2 -translate-y-1/2 right-4 flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-live opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-live shadow-[0_0_8px_rgba(var(--color-live-rgb),0.5)]"></span>
                   </span>
                 )}
               </Link>

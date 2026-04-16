@@ -6,8 +6,12 @@ export const parseTimeRange = (dateStr: string, timeStr: string) => {
   const [_, start, end, tz] = timeMatch;
 
   const createDate = (d: string, t: string) => {
-    let isoStr = `${d}T${t.padStart(5, '0')}:00`;
-    if (tz === 'IST') isoStr += '+05:30';
+    // Ensure d is YYYY-MM-DD
+    const datePart = d.trim();
+    const timePart = t.trim().padStart(5, '0');
+    let isoStr = `${datePart}T${timePart}:00`;
+    
+    if (tz && tz.toUpperCase() === 'IST') isoStr += '+05:30';
     else isoStr += 'Z';
     return new Date(isoStr);
   };

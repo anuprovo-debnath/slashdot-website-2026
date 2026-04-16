@@ -17,27 +17,29 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
   const [placeholder, setPlaceholder] = useState('Search events...');
   const lastPlaceholder = useRef('Search events...');
 
-  // Layout Constants
+  // ── Layout Constants (preserved from original working code) ────────────
   const SEARCH_BAR_HEIGHT = 56; // h-14
-  const SEARCH_BAR_GAP = 28;    // space between search bar and content
+  const SEARCH_BAR_GAP = 28; // space between search bar and content
   const PADDING_TOP = SEARCH_BAR_HEIGHT + SEARCH_BAR_GAP; // 84px
-  const STICKY_TOP_PX = 96;     // matching top-24 (24 * 4)
+  const STICKY_TOP_PX = 112; // Navbar (88px) + 24px Gap
+  const DOCKED_GAP = 24; // matches gap-6 between cards (24px)
+  const SIDEBAR_WIDTH = 0.30;
+  const CARDS_BTM_PAD = 24; // matches gap-6 between cards (24px)
 
-  // Scroll Threshold Constants
+  // ── Scroll Thresholds (preserved from original) ────────────────────────
   const PHASE2_START = 200;
-  const PHASE3_START = PHASE2_START + 50;
-  const INTERPOLATION_START = PHASE2_START - 50; // Start morphing at 150px
+  const PHASE3_START = PHASE2_START + 50; // 250
+  const PHASE3_END = PHASE3_START + 50; // 300
+  const INTERPOLATION_START = PHASE2_START - 50; // 150
   const PRE_TRIGGER_OFFSET = SEARCH_BAR_HEIGHT + 70;
 
   const observerRef = useRef<IntersectionObserver | null>(null);
-
-  // Layout refs
   const parentRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
-
-  // Direct DOM refs for high-performance scroll sync
-  const searchContainerRef = useRef<HTMLDivElement>(null);
-  const sidebarRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null); // original morphing bar
+  const searchDockedRef = useRef<HTMLDivElement>(null); // fixed bar (Phase 3+)
+  const calendarRef = useRef<HTMLDivElement>(null); // fixed calendar overlay
 
   const calendarEvents = initialEvents.map(e => ({
     date: e.frontmatter.date,
@@ -48,140 +50,183 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
   const filteredEvents = initialEvents.filter(event => {
     let matchDate = true;
     let matchTag = true;
-
-    if (selectedDate) {
-      matchDate = event.frontmatter.date === selectedDate;
-    }
-
+    if (selectedDate) matchDate = event.frontmatter.date === selectedDate;
     if (searchTag.startsWith('#')) {
       const tag = searchTag.replace('#', '').toLowerCase();
-      const contentStr = (event.content + ' ' + event.frontmatter.title + ' ' + event.frontmatter.category).toLowerCase();
-      matchTag = contentStr.includes(tag);
+      const str = (event.content + ' ' + event.frontmatter.title + ' ' + event.frontmatter.category).toLowerCase();
+      matchTag = str.includes(tag);
     } else if (searchTag.trim() !== '') {
-      const query = searchTag.toLowerCase();
-      const contentStr = (event.content + ' ' + event.frontmatter.title + ' ' + event.frontmatter.category).toLowerCase();
-      matchTag = contentStr.includes(query);
+      const str = (event.content + ' ' + event.frontmatter.title + ' ' + event.frontmatter.category).toLowerCase();
+      matchTag = str.includes(searchTag.toLowerCase());
     }
-
     return matchDate && matchTag;
   });
 
-  // Active Highlight Scroll Tracker
+  // Active Highlight Scroll Tracker (unchanged from original)
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => entries.forEach(entry => {
         if (entry.isIntersecting) {
           const date = entry.target.getAttribute('data-event-date');
           if (date) setActiveDate(date);
         }
-      });
-    };
-
-    observerRef.current = new IntersectionObserver(handleIntersect, {
-      root: null,
-      rootMargin: "-20% 0px -60% 0px",
-      threshold: 0
-    });
-
-    const elements = document.querySelectorAll('.scroll-event-item');
-    elements.forEach(el => observerRef.current?.observe(el));
-
-    return () => {
-      observerRef.current?.disconnect();
-    };
+      }),
+      { root: null, rootMargin: '-20% 0px -60% 0px', threshold: 0 }
+    );
+    document.querySelectorAll('.scroll-event-item').forEach(el =>
+      observerRef.current?.observe(el)
+    );
+    return () => observerRef.current?.disconnect();
   }, [filteredEvents]);
 
-  // Continuous Scroll Interpolation Logic
+  // Main scroll + positioning engine
   useEffect(() => {
+    /**
+     * Anchors the fixed sidebar elements (calendar + docked search bar)
+     * to the parent container's left-column position.
+     */
+    const anchorSidebar = () => {
+      if (!parentRef.current) return;
+      if (window.innerWidth < 768) return;
+      const rect = parentRef.current.getBoundingClientRect();
+      const left = rect.left;
+      const width = rect.width * SIDEBAR_WIDTH;
+      if (calendarRef.current) {
+        calendarRef.current.style.left = `${left}px`;
+        calendarRef.current.style.width = `${width}px`;
+      }
+      if (searchDockedRef.current) {
+        searchDockedRef.current.style.left = `${left}px`;
+        searchDockedRef.current.style.width = `${width}px`;
+      }
+    };
+
     const handleScroll = () => {
-      if (!parentRef.current || !rightRef.current || !searchContainerRef.current || !sidebarRef.current) return;
+      if (!parentRef.current || !rightRef.current || !searchContainerRef.current) return;
+
       if (window.innerWidth < 768) {
         searchContainerRef.current.style.width = '100%';
-        searchContainerRef.current.style.transform = `translateX(0px)`;
+        searchContainerRef.current.style.transform = 'translateX(0px)';
         searchContainerRef.current.style.opacity = '1';
+        searchContainerRef.current.style.pointerEvents = 'auto';
         return;
       }
 
-      const sy = window.scrollY;
+      anchorSidebar();
 
+      const sy = window.scrollY;
       const parentWidth = parentRef.current.offsetWidth;
-      const leftWidth = sidebarRef.current.offsetWidth;
+      const leftWidth = parentWidth * SIDEBAR_WIDTH;
       const rightWidth = rightRef.current.offsetWidth;
       const rightX = rightRef.current.offsetLeft;
-      const leftX = sidebarRef.current.offsetLeft;
+      const leftX = 0; // sidebar is at the left edge of parentRef
 
+      // ── 3-Phase Morphing Search Bar (original logic, untouched) ─────────
       let targetWidth = rightWidth;
       let targetX = rightX;
 
-      // 1. Proactive Interpolated Padding (Eliminates the jump by growing 1:1 with scroll)
+      // 1. Proactive sidebar padding (original)
       const paddingTriggerStart = PHASE2_START - PRE_TRIGGER_OFFSET;
       const targetPadding = Math.min(Math.max(sy - paddingTriggerStart, 0), PADDING_TOP);
+      void targetPadding; // kept for original compatibility; applied below where needed
 
-      // 2. Expansion Phase (Right -> Full)
       if (sy > INTERPOLATION_START && sy <= PHASE2_START) {
         const p = (sy - INTERPOLATION_START) / (PHASE2_START - INTERPOLATION_START);
         targetWidth = rightWidth + (parentWidth - rightWidth) * p;
         targetX = rightX * (1 - p);
-      }
-      // 3. FULL WIDTH PLATEAU! (The requested lock)
-      else if (sy > PHASE2_START && sy <= PHASE3_START) {
+      } else if (sy > PHASE2_START && sy <= PHASE3_START) {
         targetWidth = parentWidth;
         targetX = 0;
-      }
-      // 4. Contraction Phase (Full -> Left)
-      else if (sy > PHASE3_START && sy <= (PHASE3_START + 50)) {
+      } else if (sy > PHASE3_START && sy <= PHASE3_END) {
         const p = (sy - PHASE3_START) / 50;
         targetWidth = parentWidth - (parentWidth - leftWidth) * p;
         targetX = leftX * p;
-      }
-      // 5. Final State (Locked Left)
-      else if (sy > (PHASE3_START + 50)) {
+      } else if (sy > PHASE3_END) {
         targetWidth = leftWidth;
         targetX = leftX;
       }
 
-      // Dynamic Placeholder Toggle
-      let nextPlaceholder = 'Search events, workshops, or use #tags...'; // Phase 1
-      if (sy > PHASE2_START && sy <= PHASE3_START) {
-        nextPlaceholder = 'Search events, workshops, or use #tags...'; // Phase 2 (Full)
-      } else if (sy > PHASE3_START) {
-        nextPlaceholder = 'Search...'; // Phase 3 (Docked)
-      }
+      const isDocked = sy > PHASE3_END;
 
-      if (nextPlaceholder !== lastPlaceholder.current) {
-        lastPlaceholder.current = nextPlaceholder;
-        setPlaceholder(nextPlaceholder);
-      }
-
-      // Apply styles directly to DOM for 60fps smoothness (bypass React render loop)
+      // ── Morphing bar: fade out once search has docked ────────────────────
       searchContainerRef.current.style.width = `${targetWidth}px`;
       searchContainerRef.current.style.transform = `translateX(${targetX}px)`;
-      searchContainerRef.current.style.opacity = '1';
+      searchContainerRef.current.style.opacity = isDocked ? '0' : '1';
+      searchContainerRef.current.style.pointerEvents = isDocked ? 'none' : 'auto';
 
-      sidebarRef.current.style.paddingTop = `${targetPadding}px`;
+      // ── Placeholder ─────────────────────────────────────────────────────
+      let next = 'Search events, workshops, or use #tags...';
+      if (sy > PHASE3_START) next = 'Search...';
+      if (next !== lastPlaceholder.current) { lastPlaceholder.current = next; setPlaceholder(next); }
+
+      // ── Fixed calendar + docked search ──────────────────────────────────
+      if (!calendarRef.current || !cardsRef.current) return;
+
+      /**
+       * Calendar top: slides down during Phase 3 to make room for the
+       * docked search bar. By the time the docked bar appears (isDocked),
+       * the calendar is already offset exactly by (SEARCH_BAR_HEIGHT + DOCKED_GAP).
+       */
+      const phase3Progress = Math.min(Math.max((sy - PHASE3_START) / 50, 0), 1);
+      const calTop = STICKY_TOP_PX + phase3Progress * (SEARCH_BAR_HEIGHT + DOCKED_GAP);
+      calendarRef.current.style.top = `${calTop}px`;
+
+      // Docked search bar is always at STICKY_TOP_PX; appears in Phase 3+
+      if (searchDockedRef.current) {
+        searchDockedRef.current.style.top = `${STICKY_TOP_PX}px`;
+        searchDockedRef.current.style.opacity = isDocked ? '1' : '0';
+        searchDockedRef.current.style.pointerEvents = isDocked ? 'auto' : 'none';
+      }
+
+      // ── translateY clamp: bounds calendar (and docked bar) to cards ─────
+      /**
+       * Entry: push calendar DOWN so its top aligns with the first card.
+       * Exit:  pull BOTH UP so calendar bottom doesn't pass the last card.
+       * The docked search bar shares the same translateY so they exit together.
+       */
+      const calHeight = calendarRef.current.offsetHeight;
+      const cardsRect = cardsRef.current.getBoundingClientRect();
+      const trueCardsBottom = cardsRect.bottom - CARDS_BTM_PAD;
+
+      const entryOffset = Math.max(0, cardsRect.top - calTop);
+      const exitBoundary = trueCardsBottom - calHeight;
+      const exitOffset = Math.min(0, exitBoundary - calTop);
+      const translateY = exitBoundary < calTop ? exitOffset : entryOffset;
+
+      calendarRef.current.style.transform = `translateY(${translateY}px)`;
+      if (searchDockedRef.current) {
+        searchDockedRef.current.style.transform = `translateY(${translateY}px)`;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
-    handleScroll(); // Initial run
+    // Initial fixed placement
+    if (calendarRef.current) {
+      calendarRef.current.style.position = 'fixed';
+      calendarRef.current.style.top = `${STICKY_TOP_PX}px`;
+      calendarRef.current.style.transform = 'translateY(0px)';
+    }
+    anchorSidebar();
+    handleScroll();
 
+    const onResize = () => { anchorSidebar(); handleScroll(); };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 
   return (
     <div className="relative w-full" ref={parentRef}>
 
-      {/* 3-Phase Continuous Floating Search Layer */}
-      <div className="sticky z-[100] w-full pointer-events-none mb-2" style={{ top: `${STICKY_TOP_PX}px` }}>
-        <div
-          ref={searchContainerRef}
-          className="pointer-events-auto h-14"
-        >
+      {/* ── 3-Phase Floating Search Bar (sticky, original) ──────────────── */}
+      <div
+        className="sticky z-[40] w-full pointer-events-none mb-2"
+        style={{ top: `${STICKY_TOP_PX}px` }}
+      >
+        <div ref={searchContainerRef} className="pointer-events-auto h-14">
           <input
             type="text"
             placeholder={placeholder}
@@ -192,30 +237,20 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
         </div>
       </div>
 
-      {/* Main Grid Wrapper */}
-      <div className="flex flex-col md:flex-row gap-8 w-full" style={{ marginTop: `-${SEARCH_BAR_HEIGHT + 8}px` }}>
+      {/* ── Main Grid ───────────────────────────────────────────────────── */}
+      <div
+        className="flex flex-col md:flex-row gap-8 w-full"
+        style={{ marginTop: `-${SEARCH_BAR_HEIGHT + 8}px` }}
+      >
+        {/* Spacer: reserves 30% column so feed doesn't bleed under the fixed calendar */}
+        <div className="hidden md:block md:w-[30%] shrink-0" aria-hidden="true" />
 
-        {/* 30% Sidebar */}
-        <aside
-          ref={sidebarRef}
-          className="w-full md:w-[30%] shrink-0 flex flex-col sticky self-start overflow-visible"
-          style={{ top: `${STICKY_TOP_PX}px` }}
-        >
-          <div className="w-full">
-            <InteractiveCalendar
-              events={calendarEvents}
-              selectedDate={selectedDate}
-              activeDate={activeDate}
-              onSelectDate={setSelectedDate}
-            />
-          </div>
-        </aside>
-
-        {/* 70% Main Feed */}
+        {/* ── Event Feed (70%) ──────────────────────────────────────────── */}
         <main className="w-full md:w-[70%] flex flex-col" ref={rightRef}>
           <div className="h-14 mb-8 opacity-0 pointer-events-none hidden md:block w-full shrink-0" />
 
-          <div className="flex flex-col gap-6 pb-20 w-full relative">
+          {/* cardsRef = exact cards wrapper (no spacer), used for entry/exit bounds */}
+          <div ref={cardsRef} className="flex flex-col gap-6 pb-10 w-full relative">
             {filteredEvents.length > 0 ? (
               filteredEvents.map(event => (
                 <div
@@ -239,6 +274,61 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
             )}
           </div>
         </main>
+      </div>
+
+      {/*
+        ── Fixed Calendar Overlay (desktop) ────────────────────────────────
+        position:fixed — immune to overflow-hidden on ancestors (which breaks sticky).
+        top / translateY managed by scroll engine.
+        Slides down during Phase 3 to make room for the docked search bar.
+      */}
+      <div
+        ref={calendarRef}
+        className="hidden md:flex md:flex-col z-[30]"
+        style={{ position: 'fixed', top: `${STICKY_TOP_PX}px` }}
+      >
+        <InteractiveCalendar
+          events={calendarEvents}
+          selectedDate={selectedDate}
+          activeDate={activeDate}
+          onSelectDate={setSelectedDate}
+        />
+      </div>
+
+      {/*
+        ── Docked Search Bar (desktop, Phase 3+) ────────────────────────────
+        Sits at the same XY as where the morphing bar lands (top: STICKY_TOP_PX,
+        left + width = sidebar column). Always opacity:0 until Phase 3 ends.
+        Shares translateY with the calendar so they exit together as one unit.
+      */}
+      <div
+        ref={searchDockedRef}
+        className="hidden md:block z-[41] h-14"
+        style={{
+          position: 'fixed',
+          top: `${STICKY_TOP_PX}px`,
+          opacity: 0,
+          pointerEvents: 'none',
+          transition: 'opacity 0.15s ease',
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTag}
+          onChange={(e) => setSearchTag(e.target.value)}
+          className="w-full h-full bg-background border-2 border-primary/40 rounded-xl px-4 font-bold placeholder-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+        />
+      </div>
+
+      {/* ── Mobile: inline calendar above the feed ──────────────────────── */}
+      <div className="md:hidden w-full mb-6 mt-6">
+        <InteractiveCalendar
+          events={calendarEvents}
+          selectedDate={selectedDate}
+          activeDate={activeDate}
+          onSelectDate={setSelectedDate}
+        />
       </div>
     </div>
   );
