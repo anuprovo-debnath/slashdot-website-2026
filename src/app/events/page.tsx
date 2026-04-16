@@ -10,9 +10,16 @@ export const metadata: Metadata = {
 
 export default function EventsPage() {
   const events = getEvents();
+  const statusData = events.map(e => ({
+    date: e.frontmatter.date,
+    time: e.frontmatter.time,
+    schedule: e.frontmatter.schedule
+  }));
 
   return (
     <div className="min-h-screen pb-16">
+      {/* Hidden signal for Navbar to scrape in dev/prod regardless of search-index staleness */}
+      <script id="live-status-data" type="application/json" dangerouslySetInnerHTML={{ __html: JSON.stringify(statusData) }} />
       <PageHero className="pt-44 pb-24 px-4 sm:px-6 lg:px-12">
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-[var(--foreground)] font-heading">

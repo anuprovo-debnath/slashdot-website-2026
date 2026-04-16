@@ -111,6 +111,8 @@ Every event can now attach external hubs in its frontmatter:
 - **Automatic Chip Generation**: The `EventCard` detects `github`, `youtube`, and `website` keys in the `resources` block.
 - **Context-Aware Branding**: YouTube links leverage the **Live Red** theme, while GitHub links use **Neutral Mono** to maintain visual hierarchy.
 
+---
+
 ## 7. UI Components & Card Physics
 
 ### 🏗️ Event Cards

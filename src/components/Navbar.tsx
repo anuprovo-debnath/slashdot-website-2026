@@ -8,6 +8,7 @@ import { Menu, X, Search } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { getEventStatus } from "@/lib/eventUtils";
 import { EventData } from "@/lib/events";
+import { REPO_NAME } from "@/lib/imgUtils";
 
 const NAV_LINKS = [
   { name: "Team", href: "/team" },
@@ -81,21 +82,31 @@ export function Navbar() {
       setIsLoaded(true);
     }, 8000);
 
-    // Check for live events
+    // Check for live events by scraping the data hub embedded in the Events page
+    // This gives us fresh markdown data in dev and time-aware logic in prod
     const checkLiveStatus = async () => {
       try {
-        const response = await fetch('/api/events/status', { cache: 'no-store' });
+        const response = await fetch(`${REPO_NAME}/events/`, { cache: 'no-store' });
         if (response.ok) {
-          const data = await response.json();
-          setHasLiveEvent(data.hasLiveEvent);
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const script = doc.getElementById('live-status-data');
+          if (script) {
+            const events = JSON.parse(script.textContent || '[]');
+            const isAnythingLive = events.some((event: any) => {
+              return getEventStatus(event) === 'Live';
+            });
+            setHasLiveEvent(isAnythingLive);
+          }
         }
       } catch (err) {
-        console.error("Failed to fetch live status", err);
+        console.error("Failed to fetch live status from Events hub", err);
       }
     };
 
     checkLiveStatus();
-    const statusInterval = setInterval(checkLiveStatus, 30000); // 30s Heartbeat for live status sync (matches existing Dynamic Status Hub heartbeat)
+    const statusInterval = setInterval(checkLiveStatus, 30000); // 30s Heartbeat for live status sync
 
     return () => {
       window.removeEventListener("scroll", handleScroll);

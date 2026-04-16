@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { flushSync } from 'react-dom';
 import { X, Clock, ChevronRight, BookOpen, Calendar, Rocket, Search, Users } from 'lucide-react';
 import type Fuse from 'fuse.js';
+import { REPO_NAME } from '@/lib/imgUtils';
 
 interface SearchIndexItem {
   id: string;
@@ -57,7 +58,7 @@ export function SearchOverlay() {
 
     const loadIndex = async () => {
       try {
-        const res = await fetch('/slashdot-website-2026/search-index.json');
+        const res = await fetch(`${REPO_NAME}/search-index.json`, { cache: 'no-store' });
         const data = await res.json();
         setFullIndex(data);
       } catch (err) {
