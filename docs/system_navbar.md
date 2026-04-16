@@ -55,7 +55,13 @@ Consolidated on the far right of the nav:
 - **Responsive Stack**: Links expand to full-width touch targets with rounded corners (`rounded-xl`).
 - **Primary Action**: A full-width "JOIN THE CLUB" button anchored at the bottom of the drawer.
 
+### Touch-Parity System
+To ensure premium mobile feedback, the navbar integrated with the global `TouchNavDelay` system:
+- **Instant Activation**: Navigation links apply the `.touch-nav-active` class on touchstart to mirror hover effects immediately.
+- **250ms Delay**: Navigation is programmatically delayed to allow "pill" and "glow" animations to complete before the page unmounts.
+
 ## 5. Technical Specifications
+
 
 | Feature | Implementation |
 | :--- | :--- |
@@ -72,5 +78,5 @@ Consolidated on the far right of the nav:
 - **Hardware Acceleration**: The Navbar uses `transform-gpu` to ensure it remains stable during theme-toggle view transitions.
 - **Fixed Positioning**: Migrated from `sticky` to `fixed top-0` positioning to eliminate detachment flickers caused by mobile address bar auto-hiding.
 - **Viewport-Aware Indicators**: The scroll progress indicator uses `window.visualViewport` to accurately calculate document height on mobile devices with dynamic system UI bars.
-- **Staggered Reveal Logic**: The logo (`final-logo-pos`) uses a CSS `@keyframes` system (`logo-char-reveal`) triggered by the `shouldAnimate` state. This state is synchronized with the `LoadingScreen` exit sequence to provide a sub-second "typing" effect when the site becomes interactive.
-- **Transition Guard**: Implemented a ref-based guard (`isTransitioningRef`) that suspends scroll updates during the **View Transitions API** snapshot phase. This prevents the custom scroll indicator from incorrectly jumping to 0% when the theme is toggled.
+- **Transition Guard (View Transitions API)**: Implemented a ref-based guard (`isTransitioningRef`) that suspends scroll updates during the transition snapshot phase. This prevents the custom scroll indicator from incorrectly jumping to 0% when the theme is toggled.
+- **Live Event Heartbeat**: Maintains a **30-second recursive fetch** of the search index to drive the site-wide "Live" status dot indicator. Use a separate `slashdot:loading-ready` event listener to coordinate the logo typing animation with the loader's exit.

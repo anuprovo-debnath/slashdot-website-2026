@@ -11,7 +11,7 @@ export interface EventData {
     time: string;
     schedule?: { date: string; time: string }[];
     category: 'Workshop' | 'Seminar' | 'Hackathon';
-    status: 'Live' | 'Upcoming' | 'Past';
+    status?: 'Live' | 'Upcoming' | 'Past';
     coverImage?: string;
     resources?: {
       youtube?: string;
@@ -40,9 +40,14 @@ export function getEvents(): EventData[] {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const matterResult = matter(fileContents);
 
+      const frontmatter = matterResult.data as EventData['frontmatter'];
+      if (!frontmatter.status) {
+        frontmatter.status = getEventStatus(frontmatter as any);
+      }
+
       return {
         slug,
-        frontmatter: matterResult.data as EventData['frontmatter'],
+        frontmatter,
         content: matterResult.content,
       };
     });

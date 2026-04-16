@@ -45,7 +45,13 @@ The footer is designed to be a high-fidelity, responsive "anchor" for the site. 
     - **Interaction**: Brand identity is revealed on hover via a full solid brand color fill and subtle shadow.
     - **Layout**: Spacious `w-12 h-12` icons with `gap-6` spacing.
 
+### Touch-Parity System
+The social icons utilize the global Touch-Parity system to mirror desktop hover effects on mobile:
+- **Instant Brand Color**: Tapping a social icon instantly triggers its full brand color fill.
+- **Micro-Animations**: The `translate-y-1` and `scale-110` effects are preserved during the 250ms navigation delay.
+
 ## 5. Technical Specification
+
 
 ### Dynamic Icon System
 The social section uses a centralized configuration to manage platform metadata:

@@ -8,6 +8,7 @@ import SlashdotFallbackCover from '@/components/ui/SlashdotFallbackCover';
 import { TagPill } from '@/components/ui/TagPill';
 import { TypePill } from '@/components/ui/TypePill';
 import { getImgPath, MDX_COMPONENTS } from '@/lib/imgUtils';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 
 export const dynamicParams = false;
 
@@ -42,6 +43,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="min-h-screen pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+      <ScrollToTop />
       <article className="max-w-3xl mx-auto">
         {/* Back link — mirrors blog detail */}
         <Link

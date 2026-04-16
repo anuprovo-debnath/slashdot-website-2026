@@ -8,6 +8,7 @@ import { Footer } from '@/components/Footer';
 import SlashdotFallbackCover from '@/components/ui/SlashdotFallbackCover';
 import SlashdotBackground from '@/components/ui/SlashdotBackground';
 import HeroMatrixArt from '@/components/fun-zone/HeroMatrixArt';
+import { HeroArt } from '@/components/fun-zone/HeroArt';
 import MemeViewer from '@/components/fun-zone/MemeViewer';
 
 interface ArtViewerClientProps {
@@ -23,9 +24,12 @@ const COMPONENT_MAP = {
   art: {
     'primary-slant': SlashdotFallbackCover,
     'temporal-matrix': SlashdotBackground,
+    'hero-engine-1': HeroMatrixArt,
+    'hero-engine-2': HeroArt,
   },
   design: {
-    'hero-engine': HeroMatrixArt,
+    'hero-engine-1': HeroMatrixArt,
+    'hero-engine-2': HeroArt,
   },
   meme: MemeViewer
 };
@@ -36,6 +40,7 @@ export default function ArtViewerClient({ slug, meta }: ArtViewerClientProps) {
 
   useEffect(() => {
     setMounted(true);
+    window.scrollTo(0, 0);
   }, []);
 
   if (!mounted) return null;

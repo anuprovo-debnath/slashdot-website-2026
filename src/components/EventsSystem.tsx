@@ -12,14 +12,18 @@ interface EventsSystemProps {
 
 export function EventsSystem({ initialEvents }: EventsSystemProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [activeDate, setActiveDate] = useState<string | null>(null);
+  const [activeDate, setActiveDate] = useState<string | null>(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  });
+  const activeDateRef = useRef<string | null>(null);
   const [searchTag, setSearchTag] = useState<string>('');
   const [placeholder, setPlaceholder] = useState('Search events...');
   const lastPlaceholder = useRef('Search events...');
 
   // ── Layout Constants (preserved from original working code) ────────────
   const SEARCH_BAR_HEIGHT = 56; // h-14
-  const SEARCH_BAR_GAP = 28; // space between search bar and content
+  const SEARCH_BAR_GAP = 24; // space between search bar and content
   const PADDING_TOP = SEARCH_BAR_HEIGHT + SEARCH_BAR_GAP; // 84px
   const STICKY_TOP_PX = 112; // Navbar (88px) + 24px Gap
   const DOCKED_GAP = 24; // matches gap-6 between cards (24px)
@@ -40,6 +44,8 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
   const searchContainerRef = useRef<HTMLDivElement>(null); // original morphing bar
   const searchDockedRef = useRef<HTMLDivElement>(null); // fixed bar (Phase 3+)
   const calendarRef = useRef<HTMLDivElement>(null); // fixed calendar overlay
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
+  const mobileCalendarRef = useRef<HTMLDivElement>(null);
 
   const calendarEvents = initialEvents.map(e => ({
     date: e.frontmatter.date,
@@ -69,7 +75,10 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       (entries) => entries.forEach(entry => {
         if (entry.isIntersecting) {
           const date = entry.target.getAttribute('data-event-date');
-          if (date) setActiveDate(date);
+          if (date) {
+            setActiveDate(date);
+            activeDateRef.current = date;
+          }
         }
       }),
       { root: null, rootMargin: '-20% 0px -60% 0px', threshold: 0 }
@@ -105,17 +114,54 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
     const handleScroll = () => {
       if (!parentRef.current || !rightRef.current || !searchContainerRef.current) return;
 
+      const sy = window.scrollY;
+
+      // When at the top, focus on today's week
+      if (sy < 100) {
+        const d = new Date();
+        const todayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        if (activeDateRef.current !== todayStr) {
+          setActiveDate(todayStr);
+          activeDateRef.current = todayStr;
+        }
+      }
+
       if (window.innerWidth < 768) {
-        searchContainerRef.current.style.width = '100%';
-        searchContainerRef.current.style.transform = 'translateX(0px)';
-        searchContainerRef.current.style.opacity = '1';
-        searchContainerRef.current.style.pointerEvents = 'auto';
+        if (!mobileSearchRef.current || !mobileCalendarRef.current || !cardsRef.current || !parentRef.current) return;
+
+        requestAnimationFrame(() => {
+          if (!mobileSearchRef.current || !mobileCalendarRef.current || !cardsRef.current || !parentRef.current) return;
+          
+          const stickyTop = 89;
+          const mobileGap = 16;
+          
+          // Calculate search bottom relative to viewport
+          const parentRect = parentRef.current.getBoundingClientRect();
+          const searchTop = parentRect.top + 16; // derived from pt-4/px-4 styling
+          const searchHeight = 56;
+          const searchBottom = searchTop + searchHeight;
+          
+          // Entry: Push down so it visually sits underneath the search bar
+          const naturalTop = searchBottom + mobileGap;
+          const entryOffset = Math.max(0, naturalTop - stickyTop);
+          
+          // Exit: Pull up so it doesn't cross the end of the cards 
+          const calHeight = mobileCalendarRef.current.offsetHeight || 184;
+          const cardsRect = cardsRef.current.getBoundingClientRect();
+          const trueCardsBottom = cardsRect.bottom - CARDS_BTM_PAD; 
+          
+          const exitBoundary = trueCardsBottom - calHeight;
+          const exitOffset = Math.min(0, exitBoundary - stickyTop);
+          
+          const translateY = exitBoundary < stickyTop ? exitOffset : entryOffset;
+          
+          mobileCalendarRef.current.style.transform = `translate3d(0, ${translateY}px, 0)`;
+        });
         return;
       }
 
       anchorSidebar();
 
-      const sy = window.scrollY;
       const parentWidth = parentRef.current.offsetWidth;
       const leftWidth = parentWidth * SIDEBAR_WIDTH;
       const rightWidth = rightRef.current.offsetWidth;
@@ -240,9 +286,9 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       const exitOffset = Math.min(0, exitBoundary - calTop);
       const translateY = exitBoundary < calTop ? exitOffset : entryOffset;
 
-      calendarRef.current.style.transform = `translateY(${translateY}px)`;
+      calendarRef.current.style.transform = `translate3d(0, ${translateY}px, 0)`;
       if (searchDockedRef.current) {
-        searchDockedRef.current.style.transform = `translateY(${translateY}px)`;
+        searchDockedRef.current.style.transform = `translate3d(0, ${translateY}px, 0)`;
       }
     };
 
@@ -269,7 +315,7 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
 
       {/* ── 3-Phase Floating Search Bar (sticky, original) ──────────────── */}
       <div
-        className="sticky z-[40] w-full pointer-events-none mb-2"
+        className="hidden md:block sticky z-[40] w-full pointer-events-none mb-2"
         style={{ top: `${STICKY_TOP_PX}px` }}
       >
         <div ref={searchContainerRef} className="pointer-events-auto h-14">
@@ -283,17 +329,55 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
         </div>
       </div>
 
+      {/* ── Mobile Search & Calendar (Dedicated Overhaul) ────────────────── */}
+      <div className="md:hidden flex flex-col pt-4 gap-4">
+        {/* Search Bar: Freely scrolls away */}
+        <div ref={mobileSearchRef} className="w-full h-14 shrink-0">
+          <input
+            type="text"
+            placeholder="Search events..."
+            value={searchTag}
+            onChange={(e) => setSearchTag(e.target.value)}
+            className="w-full h-full bg-background border-2 border-primary/40 rounded-2xl px-4 font-bold placeholder-foreground/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-lg"
+          />
+        </div>
+
+        {/* Mobile Calendar Placeholder to prevent feed jumping */}
+        <div className="w-full h-[184px] shrink-0" aria-hidden="true" />
+      </div>
+
+      {/* Calendar: Fixed Mobile Version relying on translateY */}
+      <div
+        ref={mobileCalendarRef}
+        className="fixed md:hidden top-[89px] left-0 right-0 z-[30] px-4 py-2 pointer-events-none will-change-transform"
+        style={{ transform: 'translate3d(0, 0px, 0)' }}
+      >
+        <div className="w-full max-w-5xl mx-auto pointer-events-auto">
+          <InteractiveCalendar
+            initialViewMode="week"
+            events={calendarEvents}
+            selectedDate={selectedDate}
+            activeDate={activeDate}
+            onSelectDate={setSelectedDate}
+          />
+        </div>
+      </div>
+
       {/* ── Main Grid ───────────────────────────────────────────────────── */}
       <div
         className="flex flex-col md:flex-row gap-8 w-full"
-        style={{ marginTop: `-${SEARCH_BAR_HEIGHT + 8}px` }}
+        style={{
+          marginTop: typeof window !== 'undefined' && window.innerWidth >= 768
+            ? `-${SEARCH_BAR_HEIGHT + 8}px`
+            : '0'
+        }}
       >
         {/* Spacer: reserves 30% column so feed doesn't bleed under the fixed calendar */}
         <div className="hidden md:block md:w-[30%] shrink-0" aria-hidden="true" />
 
         {/* ── Event Feed (70%) ──────────────────────────────────────────── */}
         <main className="w-full md:w-[70%] flex flex-col" ref={rightRef}>
-          <div className="h-14 mb-8 opacity-0 pointer-events-none hidden md:block w-full shrink-0" />
+          <div className="mb-4 opacity-0 pointer-events-none hidden md:block w-full shrink-0" />
 
           {/* cardsRef = exact cards wrapper (no spacer), used for entry/exit bounds */}
           <div ref={cardsRef} className="flex flex-col gap-6 pb-10 w-full relative">
@@ -330,14 +414,15 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       */}
       <div
         ref={calendarRef}
-        className="hidden md:flex md:flex-col z-[30]"
-        style={{ position: 'fixed', top: `${STICKY_TOP_PX}px` }}
+        className="hidden md:flex md:flex-col z-[30] will-change-transform"
+        style={{ position: 'fixed', top: `${STICKY_TOP_PX}px`, transform: 'translate3d(0, 0px, 0)' }}
       >
         <InteractiveCalendar
           events={calendarEvents}
           selectedDate={selectedDate}
           activeDate={activeDate}
           onSelectDate={setSelectedDate}
+          showViewToggle={false}
         />
       </div>
 
@@ -367,15 +452,7 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
         />
       </div>
 
-      {/* ── Mobile: inline calendar above the feed ──────────────────────── */}
-      <div className="md:hidden w-full mb-6 mt-6">
-        <InteractiveCalendar
-          events={calendarEvents}
-          selectedDate={selectedDate}
-          activeDate={activeDate}
-          onSelectDate={setSelectedDate}
-        />
-      </div>
+      {/* ── Mobile: Removed redundant inline calendar ────────── */}
     </div>
   );
 }

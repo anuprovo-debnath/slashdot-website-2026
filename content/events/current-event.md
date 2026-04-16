@@ -1,9 +1,9 @@
 ---
-title: "Ongoing Workshop"
-date: "2026-04-16"
-time: "00:00 - 23:59 IST"
+title: "Future Workshop"
+date: "2026-04-22"
+time: "17:00 - 19:00 IST"
 category: "Workshop"
-status: "Live"
+status: "Upcoming"
 resources:
   youtube: "https://youtube.com/"
   github: "https://github.com/"

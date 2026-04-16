@@ -22,7 +22,30 @@ To ensure design consistency, the system uses a **24px Vertical Cadence** matchi
 
 ---
 
-## 2. Content-Bound Sidebar & LERP Engine
+## 2. 🏗️ 2026 Mobile UX Overhaul
+
+The Events page features a dedicated architecture for mobile devices that prioritizes horizontal space and vertical efficiency.
+
+### 📱 Phased Mobile Anchoring
+On mobile, the header system operates in a "phased" attachment mode to ensure no visual gaps:
+- **Phase 1 (Scrolling Search)**: The search bar is placed at the top of the feed and scrolls away freely to maximize viewport real estate.
+- **Phase 2 (Gapless Follow)**: The Weekly Calendar follows the search bar's bottom edge (16px gap) while the search bar is still in view.
+- **Phase 3 (Navbar Lock)**: Once the calendar reaches the bottom of the Navbar (`89px`), it locks into a `fixed` position. This is handled by a high-performance math engine using `parentRef` as a baseline.
+
+### 🗓️ Weekly Focus Mode
+- **Mobile Default**: On small screens, the calendar automatically defaults to **Weekly View**.
+- **Self-Centering**: When the user is at the top of the page, the calendar automatically focuses on the **Current Week (Today)**.
+- **Toggleable Expansion**: Users can still toggle to a full **Monthly View** via the view switcher, which is hidden by default on desktop.
+
+### ⚡ Jitter-Free Scroll Physics
+To ensure premium "glassy" movement on mobile:
+- **RAF Execution**: All coordinate updates happen inside `requestAnimationFrame` to match the display refresh rate.
+- **GPU Promotion**: The sticky container uses `translate3d` and `will-change: transform` to offload painting to the GPU.
+- **Memoized Hub**: The `InteractiveCalendar` is wrapped in `React.memo` to prevent re-renders of the calendar grid during active scroll-movement.
+
+---
+
+## 3. Content-Bound Sidebar & LERP Engine
 
 The sidebar is not just `sticky`; it's a **Fixed Content-Aware Overlay** that tracks the event feed vertically.
 
@@ -34,7 +57,7 @@ The system uses a linear interpolation (LERP) handler to calculate the calendar'
 
 ---
 
-## 3. Real-Time Status Engine (IST Aware)
+## 4. Real-Time Status Engine (IST Aware)
 
 Static status fields (`Live`, `Upcoming`) in markdown have been replaced by a **Dynamic Status Hub** to eliminate manual maintenance.
 
@@ -57,7 +80,7 @@ The engine natively supports two formats for events spanning multiple days, prop
 
 ---
 
-## 3. Interactive Calendar & Year View
+## 5. Interactive Calendar & Year View
 
 The sidebar calendar has been upgraded to a multi-modal navigation hub.
 
@@ -74,7 +97,21 @@ The calendar's internal state is bi-directionally synced with the viewport:
 
 ---
 
-## 5. UI Components & Card Physics
+## 6. Global Live Integration & Resources
+
+The Events System is now globally integrated into the site's brand awareness.
+
+### 🛰️ Section 6a: Live Status Hub
+- **Navbar Heartbeat**: The primary Navbar maintains a **30s recursive heartbeat** that fetches the event index and triggers a pulsing red "Live" dot next to the "Events" link if any workshop or hackathon is active.
+- **Card-Level Feedback**: Active events on the Events page receive a `bg-live/20` highlight in the calendar and a high-contrast pulsing status badge on the `EventCard`.
+- **IST Synchronization**: Both the site-wide and page-level hubs utilize `eventUtils.ts` to ensure perfect alignment with IST (UTC+5:30) timezones.
+
+### 🛠️ Section 6b: Resource Integration
+Every event can now attach external hubs in its frontmatter:
+- **Automatic Chip Generation**: The `EventCard` detects `github`, `youtube`, and `website` keys in the `resources` block.
+- **Context-Aware Branding**: YouTube links leverage the **Live Red** theme, while GitHub links use **Neutral Mono** to maintain visual hierarchy.
+
+## 7. UI Components & Card Physics
 
 ### 🏗️ Event Cards
 - **Unified Borders**: Cards, the Search Bar, and the Calendar all share a matched **2px Brand-Teal Border** aesthetic (`border-2 border-primary/20`).
@@ -86,7 +123,7 @@ The calendar's internal state is bi-directionally synced with the viewport:
 
 ---
 
-## 6. Architectural Guardrails
+## 8. Architectural Guardrails
 
 ### 🔒 Client-Server Decoupling
 To avoid build errors related to Node.js `fs` (File System) in the browser, all date-parsing and status logic is isolated in `src/lib/eventUtils.ts`. 
@@ -100,4 +137,4 @@ To avoid build errors related to Node.js `fs` (File System) in the browser, all 
 ---
 
 **Last Updated**: 2026-04-16
-**Status**: Production Ready / LERP Validated
+**Status**: Production Ready / Mobile Overhaul Complete / LERP Validated

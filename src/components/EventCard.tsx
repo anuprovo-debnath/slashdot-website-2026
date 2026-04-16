@@ -1,9 +1,8 @@
 "use client";
 
 import { EventData } from '@/lib/events';
-import { getEventStatus } from '@/lib/eventUtils';
+import { EventStatusBadge } from './events/EventStatusBadge';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import { TagPill } from './ui/TagPill';
 
 interface EventCardProps {
@@ -11,20 +10,8 @@ interface EventCardProps {
 }
 
 export function EventCard({ event }: EventCardProps) {
-  // Initialize with the status calculated during the build/fetch phase
-  const [status, setStatus] = useState<'Live' | 'Upcoming' | 'Past'>(event.frontmatter.status);
   const { title, date, time, category, resources, schedule } = event.frontmatter;
 
-  useEffect(() => {
-    // Immediate update on mount to catch shifts since the server-render
-    const current = getEventStatus(event.frontmatter);
-    setStatus(current);
-
-    const timer = setInterval(() => {
-      setStatus(getEventStatus(event.frontmatter));
-    }, 30000); 
-    return () => clearInterval(timer);
-  }, [event.frontmatter]);
   const formatRange = (rangeStr: string) => {
     const parts = rangeStr.split(' - ');
     if (parts.length === 1) {
@@ -64,7 +51,7 @@ export function EventCard({ event }: EventCardProps) {
           <span className="text-xs text-foreground/50 mt-1 uppercase tracking-widest font-medium">{displayTime}</span>
         </div>
         <div className="mt-0 md:mt-4">
-          <StatusBadge status={status} />
+          <EventStatusBadge event={event.frontmatter} />
         </div>
       </div>
 
@@ -98,32 +85,5 @@ export function EventCard({ event }: EventCardProps) {
         )}
       </div>
     </div>
-  );
-}
-
-function StatusBadge({ status }: { status: EventData['frontmatter']['status'] }) {
-  const baseClasses = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border uppercase tracking-wider";
-  
-  if (status === 'Live') {
-    return (
-      <span className={`${baseClasses} border-live/30 text-live bg-live/10 shadow-[0_0_10px_rgba(var(--color-live-rgb),0.2)]`}>
-        <span className="w-2 h-2 mr-2 bg-live rounded-full animate-pulse" />
-        LIVE
-      </span>
-    );
-  }
-  
-  if (status === 'Upcoming') {
-    return (
-      <span className={`${baseClasses} border-upcoming/30 text-upcoming bg-upcoming/10`}>
-        UPCOMING
-      </span>
-    );
-  }
-
-  return (
-    <span className={`${baseClasses} border-foreground/30 text-foreground/60 bg-foreground/5`}>
-      PAST
-    </span>
   );
 }

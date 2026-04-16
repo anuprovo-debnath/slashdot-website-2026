@@ -6,6 +6,7 @@ import { HomeStrip } from "@/components/home/HomeStrip";
 import { BlogCard } from "@/components/BlogCard";
 import { ProjectCard } from "@/components/ProjectCard";
 import { EventCard } from "@/components/EventCard";
+import { HomeFunPreview } from "@/components/home/HomeFunPreview";
 import Link from 'next/link';
 
 import { Metadata } from 'next';
@@ -25,6 +26,14 @@ export default function Home() {
 
   const allProjects = getProjects();
   const activeProjects = allProjects.slice(0, 9); // Same as blogs
+
+  const allFunZone = getMarkdownFiles('content/funzone');
+  const funMemes = allFunZone.filter(item => item.frontmatter.category?.trim().toLowerCase() === 'meme');
+  const funGames = allFunZone.filter(item => item.frontmatter.category?.trim().toLowerCase() === 'game');
+  const funArt = allFunZone.filter(item => {
+    const cat = item.frontmatter.category?.trim().toLowerCase();
+    return cat === 'art' || cat === 'design';
+  });
 
   return (
     <div className="flex flex-col w-full">
@@ -78,18 +87,25 @@ export default function Home() {
           ))}
         </HomeStrip>
 
-        {/* Discovery Portals (Fun Zone & Team) */}
-        <section className="w-full max-w-5xl mx-auto px-10 my-16 grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Link href="/fun-zone" className="group relative flex flex-col justify-end p-8 h-64 rounded-2xl bg-[var(--background)] ring-[3px] ring-foreground/10 hover:ring-primary/80 transition-all overflow-hidden hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.3)]">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <h3 className="text-2xl font-heading font-black tracking-widest uppercase relative z-10 group-hover:text-primary transition-colors">The Fun Zone</h3>
-            <p className="text-foreground/70 mt-2 relative z-10 text-sm">Memes, HTML5 Games, and Generative Art strictly calibrated for zero productivity.</p>
-          </Link>
+        {/* 4. NEURAL PLAYGROUND (Fun Zone Preview) */}
+        <HomeFunPreview memes={funMemes} games={funGames} art={funArt} />
 
-          <Link href="/team" className="group relative flex flex-col justify-end p-8 h-64 rounded-2xl bg-[var(--background)] ring-[3px] ring-foreground/10 hover:ring-primary/80 transition-all overflow-hidden hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(var(--color-primary-rgb),0.3)]">
+        {/* 5. TEAM PORTAL - High impact standalone banner */}
+        <section className="w-full max-w-5xl mx-auto px-10 mt-20">
+          <Link
+            href="/team"
+            className="group relative flex flex-col md:flex-row items-center justify-between p-12 rounded-3xl bg-[var(--background)] ring-[3px] ring-foreground/5 hover:ring-primary/40 transition-all overflow-hidden hover:shadow-[0_0_60px_rgba(2,145,178,0.15)] group"
+          >
             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <h3 className="text-2xl font-heading font-black tracking-widest uppercase relative z-10 group-hover:text-primary transition-colors">Core Nodes</h3>
-            <p className="text-foreground/70 mt-2 relative z-10 text-sm">Explore the Slashdot Team hierarchy and view individual member contributions.</p>
+            <div className="relative z-10 space-y-2 text-center md:text-left">
+              <h3 className="text-3xl font-heading font-black tracking-widest uppercase group-hover:text-primary transition-colors">Core Nodes</h3>
+              <p className="text-foreground/70 max-w-md">Meet the humans behind the matrices. Explore the Slashdot hierarchy and contributor profiles.</p>
+            </div>
+            <div className="mt-8 md:mt-0 relative z-10">
+              <div className="px-8 py-4 bg-foreground text-background dark:bg-white dark:text-black rounded-full font-black uppercase tracking-widest text-sm group-hover:bg-primary group-hover:var(--color-primary) transition-all transform group-hover:scale-105 active:scale-95">
+                Meet the Team
+              </div>
+            </div>
           </Link>
         </section>
 

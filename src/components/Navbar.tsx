@@ -84,21 +84,10 @@ export function Navbar() {
     // Check for live events
     const checkLiveStatus = async () => {
       try {
-        const response = await fetch('/slashdot-website-2026/search-index.json', { cache: 'no-store' });
+        const response = await fetch('/api/events/status', { cache: 'no-store' });
         if (response.ok) {
           const data = await response.json();
-          const events = data.filter((item: any) => item.type === 'event');
-          const isAnythingLive = events.some((event: any) => {
-            // Reconstruct minimal frontmatter for getEventStatus
-            const fm = {
-              date: event.date,
-              time: event.time || '',
-              schedule: event.schedule || [],
-            };
-            const calculatedStatus = getEventStatus(fm as any);
-            return calculatedStatus === 'Live' || event.status === 'Live';
-          });
-          setHasLiveEvent(isAnythingLive);
+          setHasLiveEvent(data.hasLiveEvent);
         }
       } catch (err) {
         console.error("Failed to fetch live status", err);

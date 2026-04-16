@@ -85,7 +85,7 @@ export function HomeStrip({
   return (
     <section
       ref={containerRef}
-      className="w-full max-w-5xl mx-auto my-12"
+      className="w-full max-w-5xl mx-auto my-8"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onPointerDown={() => setIsHovered(true)}

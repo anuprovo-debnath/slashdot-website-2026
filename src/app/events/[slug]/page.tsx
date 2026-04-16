@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import { TagPill } from '@/components/ui/TagPill';
+import { EventStatusBadge } from '@/components/events/EventStatusBadge';
 import { getImgPath, MDX_COMPONENTS } from '@/lib/imgUtils';
 
 export const dynamicParams = false;
@@ -60,7 +61,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             </div>
             
             <div className="flex items-center gap-4">
-              <StatusBadge status={status} />
+              <EventStatusBadge event={event.frontmatter} />
             </div>
           </div>
 
@@ -107,29 +108,3 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const baseClasses = "inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold border uppercase tracking-widest shadow-sm";
-  
-  if (status === 'Live') {
-    return (
-      <span className={`${baseClasses} border-red-500/30 text-red-500 bg-red-500/10 shadow-[0_0_15px_rgba(239,68,68,0.2)]`}>
-        <span className="w-2 h-2 mr-2 bg-red-500 rounded-full animate-pulse" />
-        LIVE
-      </span>
-    );
-  }
-  
-  if (status === 'Upcoming') {
-    return (
-      <span className={`${baseClasses} border-[#0291B2]/30 text-[#0291B2] bg-[#0291B2]/10`}>
-        UPCOMING
-      </span>
-    );
-  }
-
-  return (
-    <span className={`${baseClasses} border-foreground/20 text-foreground/70 bg-foreground/5`}>
-      PAST
-    </span>
-  );
-}

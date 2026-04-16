@@ -71,24 +71,40 @@ export function TouchNavDelay() {
       ) as HTMLAnchorElement | null;
       if (!link) return;
 
-      const href = link.getAttribute("href");
-      if (!href) return;
+      const hrefAttr = link.getAttribute("href");
+      if (!hrefAttr) return;
 
-      const isExternal = !href.startsWith("/") && !href.startsWith(window.location.origin);
+      // Use the .href property to get the absolute URL for external check
+      const absoluteHref = link.href;
+      const isExternal = !absoluteHref.startsWith(window.location.origin);
       const isNewTab = link.target === "_blank";
+
+      // If it's a new tab, don't prevent default or delay navigation.
+      // The browser will open the tab. We just keep the touch-nav-active class
+      // on the CURRENT page so the user sees the animation before they leave/switch.
+      if (isNewTab) {
+        cleanupTimer = setTimeout(clearPending, 500);
+        return;
+      }
 
       if (NAV_DELAY > 0) {
         e.preventDefault();
         setTimeout(() => {
           clearPending();
           if (isExternal) {
-            window.location.href = href;
+            window.location.href = absoluteHref;
           } else {
-            router.push(href);
+            // Next.js router.push() expects the path WITHOUT the basePath.
+            // If the hrefAttr already includes it (rendered by <Link>), we must strip it.
+            const basePath = "/slashdot-website-2026";
+            let navPath = hrefAttr;
+            if (navPath.startsWith(basePath)) {
+              navPath = navPath.substring(basePath.length) || "/";
+            }
+            router.push(navPath);
           }
         }, NAV_DELAY);
       } else {
-        // For new tab or no delay, still keep the class for a moment
         cleanupTimer = setTimeout(clearPending, 300);
       }
     };

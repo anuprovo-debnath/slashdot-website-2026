@@ -168,5 +168,111 @@ To maintain visual continuity across the entire platform while respecting Next.j
 - **Client/Server Hybrid**: `PageHero` acts as a thin client-side wrapper. This allows deep pages like the Team Page to remain server-side for SEO and data-fetching while still enjoying the animated background.
 - **Enhanced Visibility**: Sub-page heroes use `opacity={100}` on the canvas (compared to the home page's `80`) to ensure symbols remain striking against content-heavy layouts.
 
+## 12. High-Fidelity Interaction & Mobile UX (The Touch-Parity System)
+
+To solve the "Hover Invisible" problem on touchscreens, we implemented a global **Touch-Parity System** that mirrors premium desktop hover effects for mobile users.
+
+### 1. The Global Navigation Delay (`TouchNavDelay.tsx`)
+Mobile devices trigger `:hover` only after a tap, and Next.js client-side navigation often unmounts the current page before any animation can repaint.
+- **Trigger**: Intercepts `touchstart` on all `<a>` tags to immediately apply a `.touch-nav-active` class to the parent `.group`. This forces CSS transitions to start before the finger even leaves the screen.
+- **Android Interceptor**: On Android devices, `click` events are intercepted in the capture phase.
+- **The 250ms Delay**: Navigation is delayed by **250ms** via a programmatic `router.push()` or `window.location.href`. This provides a stable window for "lift," "glow," and "zoom" animations to render, giving the site a native app-like tactile feel.
+- **Basepath Awareness (Critical Fix)**: The router interceptor dynamically strips the `/slashdot-website-2026` prefix from the `href` attribute before calling `router.push()`. This prevents Next.js from double-prefixing URLs, which previously caused 404 errors on mobile.
+- **Link Robustness**: The system detects `target="_blank"` and external URLs to use `window.location.assign` or standard browser behavior where appropriate.
+
+### 2. Global CSS Parity Mapping (`globals.css`)
+We used a single `@media (hover: none) and (pointer: coarse)` block to re-map every Tailwind `hover:` and `group-hover:` utility to two triggers:
+1. **`:active`**: For instant feedback during a long press.
+2. **`.touch-nav-active`**: Controlled by JS; ensures the animation is held during the 250ms navigation delay.
+- **Coverage**: This covers complex effects like social media brand colors (`--brand-color`), Instagram gradients, card lifts (`-translate-y-2`), image zooms (`scale-110`), and ring glows.
+
+### 3. Benefit
+This architecture allows us to write standard Tailwind `hover:` classes in components while automatically getting high-fidelity mobile interaction feedback across the entire project with zero additional component-level state.
+
+## 13. Homepage Rhythm & Section Spacing
+
+To maintain a clean, high-performance visual rhythm across the vertical landing sequence, we standardized all primary sections:
+
+- **Unified Gap System**: All horizontal scrollers (`HomeStrip`) and the Funzone teaser (`HomeFunPreview`) utilize a uniform `my-8` (32px) vertical margin to create a tight, energetic flow.
+- **Standard Width Constraint**: All sections are locked to `max-w-5xl` with `px-10` padding, ensuring that headers, scroll buttons, and card edges align perfectly across Event, Blog, Project, and Funzone categories.
+- **High-Impact Portals**: Specialized landing banners (like the Team "Core Nodes" portal) are similarly constrained to `max-w-5xl` but utilize larger internal padding (`p-12`) and standalone positioning to act as structural anchors between the primary content strips.
+
 ---
-*Last Updated: April 16, 2026 (Font Glyphs & Build Stabilization)*
+
+## 14. Interactive Calendar Enhancements
+
+The `InteractiveCalendar` component was refactored for performance and extensibility.
+
+### 1. Week View (`viewMode: 'week'`)
+A new calendar view mode renders the 7 days of the current week as a horizontal pill-button row. It includes:
+- **Scroll-Linked Navigation**: The week automatically advances as the user scrolls through events in the feed (via the `activeDate` prop).
+- **Today Reset**: When the scroll position returns to the top of the page (scrollY < 100), the calendar resets to today's week automatically.
+- **Compact Format**: Designed to fit inside the mobile fixed overlay, it shows only the day abbreviation (`Mo`, `Tu`, etc.) and the date number, suppressing the legend and year label.
+
+### 2. Props API
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `initialViewMode` | `'month' \| 'year' \| 'week'` | `'month'` | Controls the default view on mount. |
+| `showViewToggle` | `boolean` | `true` | Hides/shows the Week/Month toggle buttons. |
+| `className` | `string` | `""` | Passes extra CSS classes to the calendar wrapper. |
+
+### 3. Performance: `memo` Wrapping
+The component is wrapped in `React.memo` to prevent re-renders from parent scroll-event state updates that do not affect the calendar's visible data.
+
+---
+
+## 15. Events Page Mobile Layout Overhaul
+
+The Events page previously had a broken mobile experience. A dedicated system was built from scratch.
+
+### 1. Mobile Calendar (Fixed Overlay)
+A separate `mobileCalendarRef` element (distinct from the `calendarRef` used on desktop) is rendered as a `position: fixed` bar at `top: 89px` (below the navbar).
+- **GPU Compositing**: Uses `translate3d(0, Y, 0)` instead of `translateY()` to hint GPU layer promotion, eliminating repaints during scroll.
+- **`will-change-transform`**: Applied to both the mobile calendar and desktop sidebar to pre-promote them to compositor layers.
+
+### 2. Scroll Architecture (Mobile vs. Desktop)
+The `handleScroll` function now branches on `window.innerWidth`:
+- **Desktop (≥768px)**: Original multi-phase floating sidebar logic is preserved.
+- **Mobile (<768px)**: Drives only the `mobileCalendarRef`. Uses `requestAnimationFrame` to batch DOM reads and writes, preventing layout thrashing.
+
+### 3. Scroll-to-Top Today Reset
+A check at the top of `handleScroll` compares `scrollY < 100` to reset `activeDate` back to today's date. This keeps the calendar synchronized when a user scrolls all the way back to the top of the event feed.
+
+---
+
+## 16. Loading Screen Animation Refinement
+
+### 1. Progressive Dot Sequence
+The loading indicator after `/` was upgraded from a simple CSS blink to a JS-driven 4-frame progressive sequence:
+- **Frames**: `/` → `/.` → `/..` → `/...`
+- **Cycle Duration**: 250ms per frame, minimum 2500ms total (≥2 full cycles guaranteed).
+- **Final State**: Always terminates at `/.` before advancing to the typing sequence.
+
+### 2. Ligature Suppression
+To prevent `...` from being collapsed into a single `…` ellipsis glyph by the browser's font engine:
+- `fontVariantLigatures: 'none'` — disables standard ligatures.
+- `fontFeatureSettings: '"liga" 0'` — directly disables the liga OpenType feature.
+- `letterSpacing: '0.1em'` — adds geometric separation for visual clarity.
+
+### 3. Session Timing
+The returning-visitor skip window was tuned from 24 hours to **10 minutes** during development, allowing the animation to be tested more frequently.
+
+---
+## 17. Live Status Hub & Navbar Sync (The "Heartbeat")
+
+To drive community engagement, we implemented a global "Live Status" system that alerts users to ongoing events regardless of their current page.
+
+### 1. The 30s Heartbeat (`Navbar.tsx`)
+The Navbar initializes a recursive heartbeat on mount:
+- **Index Fetch**: It fetches `/slashdot-website-2026/search-index.json` periodically.
+- **Status Calculation**: Using `getEventStatus` from `lib/eventUtils.ts`, it validates if any currently indexed event is "Live" based on the user's system time (corrected for IST).
+- **Efficiency**: The interval is set to **30,000ms** to provide a balance between real-time responsiveness and network/battery efficiency.
+
+### 2. Pulse Indicators
+- **Navbar Dot**: A red pulsing `ping` animation appears in the Navbar next to the "Events" link when `hasLiveEvent` is true.
+- **Calendar Highlight**: The `InteractiveCalendar` maps this status to a `bg-live/20` background on active dates, providing a direct visual link between the notification and the content.
+
+---
+
+*Last Updated: April 16, 2026 (Live Status Hub, Date Ranges, & Resource Hub)*
+

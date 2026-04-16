@@ -133,6 +133,19 @@ body::-webkit-scrollbar {
   display: none;            /* Chrome, Safari and Opera */
 }
 
+/* Horizontal Fade Mask - used for mobile scrollers */
+.mask-horizontal-faded {
+  mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+}
+
+@media (min-width: 1024px) {
+  .mask-horizontal-faded {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+}
+
 @keyframes pulseScale {
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }

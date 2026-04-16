@@ -38,7 +38,7 @@ export default function RootLayout({
       <head>
         <base href="/slashdot-website-2026/" />
       </head>
-      <body className="min-h-full flex flex-col overflow-x-hidden">
+      <body className="min-h-full flex flex-col overflow-x-clip">
         <LoadingScreen />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TouchNavDelay />

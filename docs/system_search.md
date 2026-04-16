@@ -55,12 +55,13 @@ scripts/generate-search-index.js  → fetch('/search-index.json')
 
 ### 2a. Scanned Directories
 
-| Directory | Index `type` |
-| --- | --- |
-| `content/blog/` | `"blog"` |
-| `content/events/` | `"event"` |
-| `content/projects/` | `"project"` |
-| `content/funzone/` | `"funzone"` |
+| Directory | Index `type` | Description |
+| --- | --- | --- |
+| `content/blog/` | `"blog"` | Regular posts |
+| `content/events/` | `"event"` | Workshops/Hackathons |
+| `content/projects/` | `"project"` | Club repositories |
+| `content/funzone/` | `"funzone"` | Memes, games, art |
+| `content/team/` | `"team"` | Member profiles & roles |
 
 ### 2b. Index Item Schema
 
@@ -68,18 +69,20 @@ Each `.md` / `.mdx` file produces one entry:
 
 ```ts
 interface SearchIndexItem {
-  id: string;          // e.g. "blog-my-first-post"
-  title: string;       // frontmatter.title (fallback: slug)
-  type: 'blog' | 'event' | 'project' | 'funzone';
+  id: string;          // e.g. "team-anuprovo"
+  title: string;       // frontmatter.title or .name
+  type: 'blog' | 'event' | 'project' | 'funzone' | 'team';
   slug: string;        // filename without extension
   tags: string[];      // frontmatter.tags OR tech_stack; always includes category
-  description: string; // frontmatter.description / excerpt / content snippet (200 chars)
-  category: string;    // frontmatter.category (e.g. "Workshop", "Internal_Tools")
+  description: string; // excerpt / content snippet (200 chars)
+  category: string;    // frontmatter.category or .committee
   date: string;        // frontmatter.date
-  image: string;       // frontmatter.image or coverImage (used for funzone thumbnails)
-  url: string;         // frontmatter.url (used for external game links)
+  image: string;       // coverImage (used for funzone thumbnails)
+  url: string;         // external links or internal team anchor
   author: string;      // frontmatter.author (blog posts)
-  projectType: string; // frontmatter.category (projects, for type: searches)
+  projectType: string; // frontmatter.category (projects)
+  time: string;        // Timing metadata (Events)
+  schedule: any[];     // Timing metadata (Events)
 }
 ```
 
@@ -117,7 +120,8 @@ Typing a scope followed by `/` instantly filters the Fuse.js data to that subset
 | `events/` | Events only |
 | `projects/` | Projects only |
 | `funzone/` | Fun Zone items only |
-| `all/` | Everything (default when no scope given) |
+| `team/` | Team members only |
+| `all/` | Everything (default) |
 
 **Example**: `events/ React` searches only events for "React".
 
@@ -164,7 +168,15 @@ const { activeScope, searchTerms, isTagMode, isAuthorMode, isTypeMode } = useMem
 | **Author** (`@`) | `@` prefix | — | 0.1 | — | **1.0** | — | 0.25 |
 | **Type** (`type:`) | `type:` prefix | — | 0.1 | — | — | **1.0** | 0.25 |
 
-### 4c. Prefix Stripping Before Search
+### 4c. Result Rendering Physics
+
+The `SearchOverlay` uses specialized renderers for different content types to maximize situational awareness:
+- **Events**: Labeled with a `Calendar` icon. These results map to the same `getEventStatus` logic used site-wide to trigger **Live** status badges where applicable.
+- **Team Members**: Labeled with a `Users` icon. Results navigate directly to anchored sections in the team page (e.g., `/team#anuprovo-debnath`).
+- **Fun Zone**: Renders a **40px rounded thumbnail** if an `image` is present in the index.
+- **Blogs/Projects**: High-contrast typography with instant tag previews enabled by the Fuse.js index.
+
+### 4d. Prefix Stripping Before Search
 
 The prefix character is stripped before the query reaches `fuseInstance.search()`:
 
@@ -392,7 +404,23 @@ document.startViewTransition(() => {
 
 ---
 
-## 11. Component Map
+## 11. Global Search vs. Page Filtering
+
+It is important to distinguish between the two distinct search implementations on the site:
+
+1. **Global Universal Search (`SearchOverlay.tsx`)**:
+   - Triggered via `Ctrl + K`.
+   - Uses **Fuse.js** for fuzzy matching across the entire repository.
+   - Ideal for finding specific topics, people, or projects.
+
+2. **Page-Specific Filtering (`EventsSystem.tsx`, `Team.tsx`, etc.)**:
+   - Integrated directly into the page layout.
+   - Often uses **Local State Search** (e.g., `query.toLowerCase()`) or Tag Filtering.
+   - Purpose-built for narrowing down a specific list (like current/past events).
+
+---
+
+## 12. Component Map
 
 ```
 src/components/ui/

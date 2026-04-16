@@ -9,17 +9,14 @@ The Slashdot Home Page is the central entry point of the platform, designed to d
 ## 2. Visual Architecture
 
 ### Hero Canvas Background Layer (`HeroCanvas.tsx`)
-- **Symbol Density**: Precisely calibrated to 600 floating symbols ensuring a rich textual texture without overwhelming system resources.
-- **Symbol Pools**: Characters are dynamically pooled from three distinct categories symbolizing the diverse multidisciplinary nature of the club:
-  - **Mathematics**: `∫, ∂, ψ, λ, ∑, ∏, ∆, ∇, ∞, ≈, ⊕, ⊗`
-  - **Code/Syntax**: `</>, =>, ptr*, {}, [], (), &&, ||, ==, !=, ;`
-  - **Chemistry/Nodes**: `⏣, ⌬, ⎔`
-- **Theme Awareness**: The floating symbols perfectly integrate into the site's dark/light modes by dynamically mapping to the CSS variable `--color-primary`.
+- **Symbol Density**: Precisely calibrated to 600 floating symbols ensuring a rich textual texture.
+- **Vivid Spectrum Aesthetic**: Symbols use a full-spectrum **HSL(0-360, 100%, 50%)** vivid color palette. This provides a striking, high-energy technological texture that contrasts beautifully against the site's dark and light backgrounds.
 - **Depth-Linked Opacity (Inverse Proportion)**: Each symbol's `baseOpacity` is calculated as `(MAX_OPACITY × MIN_SIZE) / size`, a true `y = k/x` inverse proportion. Smaller symbols appear sharper and more prominent as if farther away, while larger symbols are subtly diffused, amplifying the faux-parallax depth effect naturally.
 
 ### Depth & Topology
-- **Layering System**: The canvas rests immutably in a specialized absolute layer (`z-[-1]`) ensuring that all interactive elements, typographic headers, and CTA buttons sit structurally floating on top (`z-10`).
-- **Parallax Emulation**: Symbols drift gently upwards (`speedY` randomized between `0.1` and `0.5`). Coupled with varied opacities (`0.1` to `0.6`) and varied font sizes (`10px` to `24px`), this creates a visual faux-parallax depth effect mimicking a vast spatial volume.
+- **The Gaussian Ring**: A mouse-tracked Gaussian focus ring creates a "flashlight" effect. This ring features a **sine-wave breathing cycle** (`RING_BREATHE`) that dynamically expands and retracts the illumination radius for a living, organic feel.
+- **Simplex Noise "Blobs"**: The focus ring is further modulated by **3D Simplex Noise**. This creates "organic gaps" or "blobs" in the illumination, preventing it from being a perfect circle and instead appearing like light filtering through a complex digital medium.
+- **Parallax Emulation**: Symbols drift gently using a synchronized Brownian jitter and Lissajous-inspired oscillation. Coupled with varied opacities and varied font sizes, this creates a visual faux-parallax depth effect mimicking a vast spatial volume.
 
 ## 3. Interaction Design
 
@@ -29,16 +26,14 @@ The Slashdot Home Page is the central entry point of the platform, designed to d
 - **Scroll-Corrected Mouse Tracking**: The `mousemove` handler uses `canvas.getBoundingClientRect()` to translate the raw viewport-relative `clientX/Y` into true canvas-space coordinates. It additionally applies `scaleX/scaleY` ratios to account for any CSS stretching of the canvas element. This mirrors the fix applied in `ThemeToggle.tsx` and ensures the Gaussian ring effect tracks the cursor correctly at any scroll depth.
 
 ### Scroll-Linked Physical Fly (Hero → Navbar)
-The centrepiece interaction of the Home Page. As the user scrolls, the large hero "Slashdot" text physically translates and scales into the Navbar logo position, creating a cinematic brand flyaway.
+The centrepiece interaction of the Home Page. As the user scrolls, the large hero "Slashdot /." branding physically **translates and scales** into the Navbar logo position via a fixed-coordinate lerper.
 
 **Architecture:**
 - **Dead Zone**: The first 40px of scroll have no effect. The fly only begins after this threshold.
-- **`position: fixed` Switch**: The instant `smoothRatio` exceeds 0, the hero text element is detached from the document flow via `position: fixed`, locked to its current exact viewport coordinates. This is the key to jitter-free animation.
-- **Stable Delta Vectors**: `fixedDx`, `fixedDy`, and `fixedScale` are computed once. Since both the hero (now fixed) and the navbar (`position: fixed`) live in viewport space, these deltas never change.
-- **Permanent Parking (No Swap)**: Unlike technical routes where an optical swap occurs, the home page flying element now **permanently serves as the navbar logo** once the transition completes. The static navbar logo is kept hidden on this route to maintain visual continuity.
-- **Teal Dots Sync**: The flying text explicitly mimics the Navbar branding by including a `/.` suffix in the primary theme color, ensuring perfect identity parity when parked.
-- **Lerp Loop**: A continuous `requestAnimationFrame` loop lerps `smoothRatio` toward `targetRatio` (set by the scroll event) using a factor of `0.12`.
-- **Scroll Restoration**: Forced `manual` scroll restoration combined with `window.scrollTo(0,0)` on mount ensures the animation always begins from its intended origin, even after a page reload.
+- **`position: fixed` Switch**: At the exact moment travel begins, the hero text is detached from the document flow via `position: fixed` and locked to its current viewport coordinates.
+- **High-Precision Lerp**: A `requestAnimationFrame` loop smoothly interpolates `smoothRatio` toward `targetRatio` (lerp factor: `0.12`). This drives the `translate3d` and `scale` values based on a pre-cached delta vector to the navbar logo's static position.
+- **Continuous Logic**: The flying element **permanently serves as the navbar logo** on the Home route once the transition completes, avoiding visual snapping or optical resets.
+- **Scroll Restoration**: Forced `manual` scroll restoration combined with `window.scrollTo(0,0)` on mount ensures the animation always begins from its intended origin.
 
 **Tagline Fade**: The tagline block (`The Coding & Designing / Club of IISER Kolkata`) fades out over the first 30% of the scroll transition range.
 

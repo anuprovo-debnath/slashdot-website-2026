@@ -87,7 +87,6 @@ contentDirs.forEach(({ dir, type }) => {
         // Timing fields for live status detection
         time: frontmatter.time || '',
         schedule: frontmatter.schedule || [],
-        status: frontmatter.status || '',
       });
     } catch (err) {
       console.error(`Error processing ${file}:`, err.message);

@@ -116,7 +116,7 @@ export function Footer() {
               <div className="flex flex-col space-y-6 items-end text-right">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-[var(--color-primary)]">Resources</h3>
                 <ul className="space-y-3">
-                  <li><Link href="/tech" className="opacity-70 hover:opacity-100 hover:text-[var(--color-primary)] transition-all">Design System</Link></li>
+                  <li><a href="https://github.com/anuprovo-debnath/slashdot-website-2026" target="_blank" className="opacity-70 hover:opacity-100 hover:text-[var(--color-primary)] transition-all">Design Systems</a></li>
                   <li><Link href="/fun-zone" className="opacity-70 hover:opacity-100 hover:text-[var(--color-primary)] transition-all">Fun Zone</Link></li>
                   <li><a href="https://github.com/slashdot-iiserk" target="_blank" className="opacity-70 hover:opacity-100 hover:text-[var(--color-primary)] transition-all">Open Source</a></li>
                   <li><a href="mailto:slashdot@iiserkol.ac.in" className="opacity-70 hover:opacity-100 hover:text(--color-primary) transition-all">Help Center</a></li>

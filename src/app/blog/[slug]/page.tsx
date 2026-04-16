@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { TagPill } from '@/components/ui/TagPill';
 import { AuthorPill } from '@/components/ui/AuthorPill';
 import { getImgPath, MDX_COMPONENTS } from '@/lib/imgUtils';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 
 export const dynamicParams = false;
 
@@ -30,6 +31,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="min-h-screen pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+      <ScrollToTop />
       <article className="max-w-3xl mx-auto">
         <Link href="/blog" className="inline-flex items-center text-[#0291B2] hover:text-[#0291B2]/80 font-semibold mb-8 transition-colors group">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

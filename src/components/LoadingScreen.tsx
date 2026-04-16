@@ -32,12 +32,12 @@ export function LoadingScreen() {
 
     // Check for "Returning Visitor" to skip animation
     const SKIP_STORAGE_KEY = 'slashdot_last_visit';
-    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    const TIME_SKIP = 10 * 60 * 1000;//10 minutes now //24 * 60 * 60 * 1000; //in milisecond
 
     const now = Date.now();
     const lastVisit = localStorage.getItem(SKIP_STORAGE_KEY);
 
-    if (lastVisit && (now - parseInt(lastVisit)) < TWENTY_FOUR_HOURS) {
+    if (lastVisit && (now - parseInt(lastVisit)) < TIME_SKIP) {
       // Immediate reveal for returning users
       document.body.classList.add('stage-active-site');
       document.body.classList.remove('overflow-hidden');
@@ -116,12 +116,28 @@ export function LoadingScreen() {
 
       // 1. Type '/'
       await type(cmdOutRef, '/', getMs('--t-type-cmd') || 150);
+
       if (dotRef.current) {
-        dotRef.current.style.display = 'inline';
-        dotRef.current.classList.add('loading-blink');
+        const dotEl = dotRef.current;
+        dotEl.style.display = 'inline';
+        dotEl.innerHTML = '';
+
+        const frames = ['', '.', '..', '...'];
+        const frameDuration = 250; // ms
+        const minDuration = 2500; // Ensure at least 2 cycles (4 frames * 250ms * 2 = 2000))
+        const totalDuration = Math.max(getMs('--t-pause-loading') || 1200, minDuration);
+        const startTime = Date.now();
+
+        let frame = 0;
+        while (Date.now() - startTime < totalDuration) {
+          dotEl.innerHTML = frames[frame % frames.length];
+          frame++;
+          await new Promise(r => setTimeout(r, frameDuration));
+        }
+
+        // "always stop at '/.'"
+        dotEl.innerHTML = '.';
       }
-      await new Promise(r => setTimeout(r, getMs('--t-pause-loading') || 1200));
-      if (dotRef.current) dotRef.current.classList.remove('loading-blink');
 
       // 2. Type "Welcome to" and "Slashdot"
       if (welcomeRowRef.current) welcomeRowRef.current.style.visibility = "visible";
@@ -262,7 +278,7 @@ export function LoadingScreen() {
           --t-type-welcome: 60ms;
           --t-type-brand: 150ms;
           --t-type-tagline: 30ms;
-          --t-pause-loading: 1.2s;
+          --t-pause-loading: 2.4s;
           --t-pause-morph: 1s;
           --t-flight: 1.2s;
           --t-handoff: 0.8s;
@@ -367,7 +383,11 @@ export function LoadingScreen() {
           <div className="flex whitespace-pre">
             <span className="text-white font-[family-name:var(--font-geist-mono)]">{"> "}</span>
             <span className="text-[var(--color-primary)] font-[family-name:var(--font-geist-mono)]" ref={cmdOutRef}></span>
-            <span className="text-[var(--color-primary)] font-[family-name:var(--font-geist-mono)] hidden" ref={dotRef}>.</span>
+            <span
+              className="text-[var(--color-primary)] font-[family-name:var(--font-geist-mono)] hidden"
+              ref={dotRef}
+              style={{ fontVariantLigatures: 'none', fontFeatureSettings: '"liga" 0', letterSpacing: '0.1em' }}
+            ></span>
           </div>
           <div className="flex invisible whitespace-pre" ref={welcomeRowRef}>
             <span className="text-white font-[family-name:var(--font-geist-mono)]">{"> "}</span>
