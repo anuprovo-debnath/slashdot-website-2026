@@ -5,6 +5,7 @@ import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import { TagPill } from '@/components/ui/TagPill';
 import { AuthorPill } from '@/components/ui/AuthorPill';
+import { getImgPath, MDX_COMPONENTS } from '@/lib/imgUtils';
 
 export const dynamicParams = false;
 
@@ -65,7 +66,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {post.frontmatter.coverImage && (
           <div className="mb-14 rounded-2xl overflow-hidden shadow-xl border border-[var(--border)]">
             <img
-              src={post.frontmatter.coverImage}
+              src={getImgPath(post.frontmatter.coverImage)}
               alt={post.frontmatter.title}
               className="w-full h-auto object-cover max-h-[500px]"
             />
@@ -80,7 +81,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6
                         [&>li]:mb-2     [&>a]:text-[#0291B2] [&>a]:underline [&>a]:font-medium
                         [&>blockquote]:border-l-4 [&>blockquote]:border-[#0291B2] [&>blockquote]:pl-4 [&>blockquote]:italic">
-          <MDXRemote source={post.content} />
+          <MDXRemote source={post.content} components={MDX_COMPONENTS} />
         </div>
       </article>
     </div>

@@ -8,6 +8,8 @@ import SlashdotFallbackCover from './ui/SlashdotFallbackCover';
 import { TagSystem } from './ui/TagSystem';
 import { AuthorPill } from './ui/AuthorPill';
 
+import { getImgPath } from '@/lib/imgUtils';
+
 interface BlogCardProps {
   post: MarkdownData;
   index: number;
@@ -78,7 +80,7 @@ export function BlogCard({ post, index }: BlogCardProps) {
       <div className="flex flex-col h-[376px] overflow-hidden">
         <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
           {hasImage ? (
-            <img src={post.frontmatter.coverImage} alt={post.frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+            <img src={getImgPath(post.frontmatter.coverImage)} alt={post.frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
           ) : (
             <SlashdotFallbackCover className="h-full" />
           )}

@@ -1,6 +1,7 @@
 import type { EventData } from './events';
 
 export const parseTimeRange = (dateStr: string, timeStr: string) => {
+  if (!timeStr) return null;
   const timeMatch = timeStr.match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})\s*(IST)?/);
   if (!timeMatch) return null;
   const [_, start, end, tz] = timeMatch;

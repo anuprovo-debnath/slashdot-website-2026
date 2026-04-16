@@ -8,6 +8,7 @@ links:
   github: "https://github.com/slashdot-iiserk/qiskit_fallfest"
   website: "https://slashdot-iiserk.github.io/qiskit_fallfest/"
   contact: "mailto:slashdot@iiserkol.ac.in"
+coverImage: "/images/qiskit-fall-fest.jpg"
 ---
 
 ### Project Overview

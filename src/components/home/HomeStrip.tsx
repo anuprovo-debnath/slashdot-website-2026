@@ -165,7 +165,9 @@ export function HomeStrip({
           className={`
             grid grid-flow-col gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar py-6
             px-10 scroll-pl-10
-            ${rows === 2 ? "grid-rows-2 h-[520px]" : "grid-rows-1 h-[500px]"}
+            ${rows === 2 
+              ? "grid-rows-1 md:grid-rows-2 h-[500px] md:h-[520px]" 
+              : "grid-rows-1 h-[500px]"}
             ${columnLayout}
           `}
         >

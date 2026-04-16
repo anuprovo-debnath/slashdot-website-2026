@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import { TagPill } from '@/components/ui/TagPill';
+import { getImgPath, MDX_COMPONENTS } from '@/lib/imgUtils';
 
 export const dynamicParams = false;
 
@@ -80,10 +81,10 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           )}
         </header>
 
-        {gallery && gallery.length > 0 && (
+        {(gallery && gallery.length > 0 ? gallery[0] : event.frontmatter.coverImage) && (
           <div className="mb-14 rounded-2xl overflow-hidden shadow-xl border border-[var(--border)]">
             <img
-              src={gallery[0]}
+              src={getImgPath((gallery && gallery.length > 0 ? gallery[0] : event.frontmatter.coverImage) as string)}
               alt={`${title} highlight`}
               className="w-full h-auto object-cover max-h-[500px]"
             />
@@ -99,7 +100,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                         [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6
                         [&>li]:mb-2     [&>a]:text-[#0291B2] [&>a]:underline [&>a]:font-medium
                         [&>blockquote]:border-l-4 [&>blockquote]:border-[#0291B2] [&>blockquote]:pl-4 [&>blockquote]:italic">
-          <MDXRemote source={event.content} />
+          <MDXRemote source={event.content} components={MDX_COMPONENTS} />
         </div>
       </article>
     </div>

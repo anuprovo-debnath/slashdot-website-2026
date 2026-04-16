@@ -12,6 +12,7 @@ export interface EventData {
     schedule?: { date: string; time: string }[];
     category: 'Workshop' | 'Seminar' | 'Hackathon';
     status: 'Live' | 'Upcoming' | 'Past';
+    coverImage?: string;
     resources?: {
       youtube?: string;
       github?: string;

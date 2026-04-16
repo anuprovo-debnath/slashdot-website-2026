@@ -47,6 +47,11 @@ The primary `src/app/page.tsx` has been conceptually split to maximize performan
 - **`HomeHero.tsx` Extaction**: All high-performance client-side animations (canvas rendering, scroll-linked flying logo, and lerp loops) are fully self-contained within the isolated `<HomeHero />` client component.
 - **Server Data Handlers**: The root page is explicitly a Server Component, injecting markdown and local data statically using Next.js build-time fetchers (`getMarkdownFiles`, `getEvents`, `getProjects`).
 - **`HomeStrip` Ecosystem**: Content is surfaced in standardized, horizontally scrolling grid containers (`<HomeStrip />`). This features snap-mandatory scrolling, keeping previews strictly aligned with the rest of the site grid.
+- **Sidelong Strip Architecture**:
+    - **Gutter Strategy**: Employs a fixed `px-10` (40px) internal padding shift and `scroll-pl-10` snapping to ensure first-card alignment with headers while allowing shadows to bleed into the edges.
+    - **Adaptive Stacking (Events)**: Utilizes a responsive `grid-rows` configuration. While showing 2 stacked rows on desktop to optimize card density, it automatically reverts to a single row on mobile devices to preserve readability and viewport height.
+    - **Edge-Fade Optimization**: Implemented via `mask-image` with a 24px-40px horizontal gradient, explicitly buffered by the internal padding to prevent washing out the active/snapped card.
+    - **Column-by-Column Navigation**: Scrolling (both manual and auto) moves precisely by one card width (plus gap) to ensure content is never partially cut off during transitions.
 
 ## 5. Technical Specifications
 

@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { TagSystem } from './TagSystem';
 import { FaGithub, FaLinkedin, FaTwitter, FaLink } from 'react-icons/fa';
+import { getImgPath } from '@/lib/imgUtils';
 
 export interface TeamMember {
   slug: string;
@@ -50,7 +51,7 @@ export function MemberFlipCard({ member }: { member: TeamMember }) {
           <div className="w-full h-[340px] relative bg-[#0291B2]/5 overflow-hidden border-b border-black/10 dark:border-white/10 shrink-0">
             {image ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={image} alt={name} className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-110" />
+              <img src={getImgPath(image)} alt={name} className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-110" />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                 <span className="font-heading text-6xl text-gray-400 opacity-20">/.</span>

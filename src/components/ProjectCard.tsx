@@ -7,6 +7,7 @@ import { ProjectData } from '@/lib/projects';
 import SlashdotFallbackCover from './ui/SlashdotFallbackCover';
 import { TagSystem } from './ui/TagSystem';
 import { TypePill } from './ui/TypePill';
+import { getImgPath } from '@/lib/imgUtils';
 
 // ─── Inline SVGs (version-stable) ────────────────────────────────────────────
 const GithubIcon = () => (
@@ -99,7 +100,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div className="flex flex-col h-[376px] overflow-hidden">
         <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
           {hasImage ? (
-            <img src={frontmatter.coverImage} alt={frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+            <img src={getImgPath(frontmatter.coverImage)} alt={frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
           ) : (
             <SlashdotFallbackCover className="h-full" />
           )}

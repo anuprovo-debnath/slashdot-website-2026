@@ -7,6 +7,7 @@ import Link from 'next/link';
 import SlashdotFallbackCover from '@/components/ui/SlashdotFallbackCover';
 import { TagPill } from '@/components/ui/TagPill';
 import { TypePill } from '@/components/ui/TypePill';
+import { getImgPath, MDX_COMPONENTS } from '@/lib/imgUtils';
 
 export const dynamicParams = false;
 
@@ -122,7 +123,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         {/* Cover image */}
         {frontmatter.coverImage ? (
           <div className="mb-14 rounded-2xl overflow-hidden shadow-xl border border-black/10 dark:border-white/10">
-            <img src={frontmatter.coverImage} alt={frontmatter.title} className="w-full h-auto object-cover max-h-[500px]" />
+            <img src={getImgPath(frontmatter.coverImage)} alt={frontmatter.title} className="w-full h-auto object-cover max-h-[500px]" />
           </div>
         ) : (
           <div className="mb-14 rounded-2xl overflow-hidden shadow-xl border border-black/10 dark:border-white/10 h-[280px]">
@@ -139,7 +140,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                         [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6
                         [&>li]:mb-2     [&>a]:text-[#0291B2] [&>a]:underline [&>a]:font-medium
                         [&>blockquote]:border-l-4 [&>blockquote]:border-[#0291B2] [&>blockquote]:pl-4 [&>blockquote]:italic">
-          <MDXRemote source={content} />
+          <MDXRemote source={content} components={MDX_COMPONENTS} />
         </div>
       </article>
     </div>

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { TagPill } from "@/components/ui/TagPill";
 import { HeroCanvas } from "@/components/home/HeroCanvas";
+import { getImgPath } from "@/lib/imgUtils";
 
 // --- CONSTANTS ---
 const REPO_NAME = "/slashdot-website-2026";
@@ -32,7 +32,7 @@ const StatusBadge = ({ status }: { status: string }) => {
   );
 };
 
-const MemeCard = ({ title, category, img, slug, onClick, className = "" }: { title: string; category: string; img: string; slug: string; onClick: () => void; className?: string }) => (
+const MemeCard = ({ title, category, img, description, slug, onClick, className = "" }: { title: string; category: string; img: string; description: string; slug: string; onClick: () => void; className?: string }) => (
   <div className={`group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full ${className}`}>
     <Link
       href={`/fun-zone/${slug}`}
@@ -42,13 +42,10 @@ const MemeCard = ({ title, category, img, slug, onClick, className = "" }: { tit
     />
     <div className="flex flex-col h-[406px] overflow-hidden">
       <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
-        <Image
-          src={img.startsWith('http') ? img : `${REPO_NAME}${img}`}
+        <img
+          src={getImgPath(img)}
           alt={title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-          unoptimized
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
       </div>
@@ -58,7 +55,7 @@ const MemeCard = ({ title, category, img, slug, onClick, className = "" }: { tit
             {title}
           </h3>
           <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
-            Curated dev humor collected from the corners of the network. High visual fidelity, low productivity.
+            {description}
           </p>
         </div>
       </div>
@@ -84,13 +81,10 @@ const GameCard = ({ title, description, url, imgUrl, imgClassName = "object-cove
     />
       <div className="flex flex-col h-[406px] overflow-hidden">
         <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-[var(--background)]">
-          <Image
-            src={imgUrl.startsWith('http') ? imgUrl : `${REPO_NAME}${imgUrl}`}
+          <img
+            src={getImgPath(imgUrl)}
             alt={title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className={imgClassName}
-            unoptimized
           />
           <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
         </div>
@@ -164,7 +158,7 @@ const ArtCard = ({ title, blurColor, slug, onClick, className = "" }: { title: s
             {title}
           </h3>
           <p className="text-base sm:text-sm leading-relaxed text-[var(--foreground)] opacity-80 line-clamp-4 sm:line-clamp-5 overflow-hidden text-ellipsis">
-            Procedurally generated geometric patterns running raw via CSS variables without external dependencies.
+            Mathematical explorations of the Slashdot brand matrix. Constructed on a strict Tan=3 slope for maximum visual fidelity and geometric precision.
           </p>
         </div>
       </div>
@@ -341,51 +335,57 @@ export default function FunZonePage() {
             onScroll={(dir) => scrollAction(memeScrollRef, dir)}
           >
             <MemeCard
-              title="When the code compiles cleanly on the first try and you don't know why."
-              category="compilation-panic"
-              img="https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&auto=format&fit=crop&q=80"
-              slug="compilation-panic-meme"
-              onClick={() => handleCardClick('compilation-panic-meme')}
+              title={'The Developer\'s Classic: "It Works on My Machine"'}
+              category="#ProgrammerHumor"
+              img="/images/memes/works-on-my-machine.webp"
+              description="A humorous take on the environment-specific bugs that plague developers. When a bug is reported, the first reaction is often to check if it works locally, leading to the infamous phrase."
+              slug="works-on-my-machine"
+              onClick={() => handleCardClick('works-on-my-machine')}
               className="snap-start"
             />
             <MemeCard
-              title="Centering a div with CSS in 2026: Still googling it."
-              category="css-centering"
-              img="https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=800&auto=format&fit=crop&q=80"
-              slug="css-centering-meme"
-              onClick={() => handleCardClick('css-centering-meme')}
+              title="UI vs. UX: The Desire Path"
+              category="#UXDesign"
+              img="/images/memes/ui-vs-ux-desire-path.jpg"
+              description="This meme perfectly illustrates the difference between User Interface (the paved path) and User Experience (the shortcut people actually take). It reminds designers that users will always find the most efficient route, regardless of the design."
+              slug="ui-vs-ux-desire-path"
+              onClick={() => handleCardClick('ui-vs-ux-desire-path')}
               className="snap-start"
             />
             <MemeCard
-              title="The Junior Dev pushing directly to production on Friday afternoon."
-              category="friday-deploy"
-              img="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=80"
-              slug="friday-deploy-meme"
-              onClick={() => handleCardClick('friday-deploy-meme')}
+              title="99 Little Bugs in the Code"
+              category="#DebuggingLife"
+              img="/images/memes/99-bugs-in-the-code.jpg"
+              description={'Based on the "99 Bottles of Beer" song, this meme describes the never-ending cycle of debugging where fixing one bug inevitably leads to discovering many more.'}
+              slug="99-bugs-in-the-code"
+              onClick={() => handleCardClick('99-bugs-in-the-code')}
               className="snap-start"
             />
             <MemeCard
-              title="Senior dev looking at the new intern's pull request."
-              category="senior-dev"
-              img="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80"
-              slug="senior-dev-meme"
-              onClick={() => handleCardClick('senior-dev-meme')}
+              title="Graphic Design is My Passion"
+              category="#GraphicDesign"
+              img="/images/memes/graphic-design-passion.jpg"
+              description={'A sarcastic meme featuring a poorly edited rainbow background and a frog. It is used by designers to mock low-quality design work or "client-ready" requests that ignore all design principles.'}
+              slug="graphic-design-passion"
+              onClick={() => handleCardClick('graphic-design-passion')}
               className="snap-start"
             />
             <MemeCard
-              title="Reacting to the new hydration mismatch in production."
-              category="next-tears"
-              img="https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop&q=80"
-              slug="hydration-mismatch-meme"
-              onClick={() => handleCardClick('hydration-mismatch-meme')}
+              title="Frontend vs. Backend (The Horse)"
+              category="#WebDev"
+              img="/images/memes/frontend-vs-backend-horse.webp"
+              description="This meme shows a drawing of a horse where the front is a majestic, detailed masterpiece (Frontend) and the back is a crude stick-figure sketch (Backend), or vice versa, representing the disparity in polish between different parts of a project."
+              slug="frontend-vs-backend-horse"
+              onClick={() => handleCardClick('frontend-vs-backend-horse')}
               className="snap-start"
             />
             <MemeCard
-              title="Convincing the team to rewrite the entire backend in Rust."
-              category="blazingly-fast"
-              img="https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=800&auto=format&fit=crop&q=80"
-              slug="rust-rewrite-meme"
-              onClick={() => handleCardClick('rust-rewrite-meme')}
+              title="CSS Overflow: The Struggle is Real"
+              category="#CSS"
+              img="/images/memes/css-overflow-struggle.webp"
+              description={'A simple but effective visual of a container where the word "OVERFLOW" spills out of its borders. It’s a meta-commentary on the difficulty of mastering the CSS box model and layout properties.'}
+              slug="css-overflow-struggle"
+              onClick={() => handleCardClick('css-overflow-struggle')}
               className="snap-start"
             />
           </SidelongStrip>
@@ -434,9 +434,27 @@ export default function FunZonePage() {
             scrollRef={artScrollRef}
             onScroll={(dir) => scrollAction(artScrollRef, dir)}
           >
-            <ArtCard title="Morphing Anomalies" blurColor="var(--color-primary)" slug="art-morphing-anomalies" onClick={() => handleCardClick('art-morphing-anomalies')} className="snap-start" />
-            <ArtCard title="Fluid Chaos Engine" blurColor="#ff4500" slug="art-fluid-chaos" onClick={() => handleCardClick('art-fluid-chaos')} className="snap-start" />
-            <ArtCard title="Geometric Recursion" blurColor="#8a2be2" slug="art-geometric-recursion" onClick={() => handleCardClick('art-geometric-recursion')} className="snap-start" />
+            <ArtCard 
+              title="The Primary Slant" 
+              blurColor="var(--color-primary)" 
+              slug="primary-slant" 
+              onClick={() => handleCardClick('primary-slant')} 
+              className="snap-start" 
+            />
+            <ArtCard 
+              title="Temporal Matrix" 
+              blurColor="#06b6d4" 
+              slug="temporal-matrix" 
+              onClick={() => handleCardClick('temporal-matrix')} 
+              className="snap-start" 
+            />
+            <ArtCard 
+              title="Hero Engine V2" 
+              blurColor="#8a2be2" 
+              slug="hero-engine" 
+              onClick={() => handleCardClick('hero-engine')} 
+              className="snap-start" 
+            />
           </SidelongStrip>
           </div>
         </div>

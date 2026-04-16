@@ -8,6 +8,7 @@ import { ProjectData } from '@/lib/projects';
 import SlashdotFallbackCover from './ui/SlashdotFallbackCover';
 import { TagSystem } from './ui/TagSystem';
 import { TypePill } from './ui/TypePill';
+import { getImgPath } from '@/lib/imgUtils';
 
 // ─── Inline SVGs (version-stable) ────────────────────────────────────────────
 const GithubIcon = () => (
@@ -30,9 +31,9 @@ const ExternalLinkIcon = () => (
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    Active:     'bg-gradient-to-r from-[#0291B2] to-[#06b6d4] text-white border-white/20',
+    Active: 'bg-gradient-to-r from-[#0291B2] to-[#06b6d4] text-white border-white/20',
     Maintained: 'bg-white/20 text-white border-white/20',
-    Archived:   'bg-black/30 text-white/60 border-white/10',
+    Archived: 'bg-black/30 text-white/60 border-white/10',
   };
   return (
     <span className={`px-5 py-2 text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border ${styles[status] ?? 'bg-white/20 text-white border-white/20'}`}>
@@ -109,7 +110,7 @@ export default function ProjectGrid({ projects }: { projects: ProjectData[] }) {
               {/* Image / Fallback Cover — exact same classes */}
               <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10">
                 {hasImage ? (
-                  <img src={frontmatter.coverImage} alt={frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+                  <img src={getImgPath(frontmatter.coverImage)} alt={frontmatter.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                 ) : (
                   <SlashdotFallbackCover className="h-full" />
                 )}
