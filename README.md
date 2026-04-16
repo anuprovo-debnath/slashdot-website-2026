@@ -93,8 +93,9 @@ The site is configured for **Static Export** (`output: 'export'`) and is optimiz
 
 ## 🤝 Contributing & Support
 
-For issues, feature requests, or collaboration, please reach out via the official channels:
-- **Email**: [slashdot@iiserkol.ac.in](mailto:slashdot@iiserkol.ac.in)
-- **GitHub**: [slashdot-iiserk](https://github.com/slashdot-iiserk)
+Developed by: 
+
+- [Anuprovo Debnath](https://github.com/anuprovo-debnath) (Lead Developer)
+- [Sattwik Pradhan](https://github.com/sattwik-pradhan) (Co-Developer)
 
 &copy; 2026 Slashdot Club, IISER Kolkata. 

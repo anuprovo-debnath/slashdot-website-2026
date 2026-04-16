@@ -20,6 +20,14 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
   const [searchTag, setSearchTag] = useState<string>('');
   const [placeholder, setPlaceholder] = useState('Search events...');
   const lastPlaceholder = useRef('Search events...');
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkSize = () => setIsDesktop(window.innerWidth >= 768);
+    checkSize();
+    window.addEventListener('resize', checkSize);
+    return () => window.removeEventListener('resize', checkSize);
+  }, []);
 
   // ── Layout Constants (preserved from original working code) ────────────
   const SEARCH_BAR_HEIGHT = 56; // h-14
@@ -131,30 +139,30 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
 
         requestAnimationFrame(() => {
           if (!mobileSearchRef.current || !mobileCalendarRef.current || !cardsRef.current || !parentRef.current) return;
-          
+
           const stickyTop = 89;
           const mobileGap = 16;
-          
+
           // Calculate search bottom relative to viewport
           const parentRect = parentRef.current.getBoundingClientRect();
           const searchTop = parentRect.top + 16; // derived from pt-4/px-4 styling
           const searchHeight = 56;
           const searchBottom = searchTop + searchHeight;
-          
+
           // Entry: Push down so it visually sits underneath the search bar
           const naturalTop = searchBottom + mobileGap;
           const entryOffset = Math.max(0, naturalTop - stickyTop);
-          
+
           // Exit: Pull up so it doesn't cross the end of the cards 
           const calHeight = mobileCalendarRef.current.offsetHeight || 184;
           const cardsRect = cardsRef.current.getBoundingClientRect();
-          const trueCardsBottom = cardsRect.bottom - CARDS_BTM_PAD; 
-          
+          const trueCardsBottom = cardsRect.bottom - CARDS_BTM_PAD;
+
           const exitBoundary = trueCardsBottom - calHeight;
           const exitOffset = Math.min(0, exitBoundary - stickyTop);
-          
+
           const translateY = exitBoundary < stickyTop ? exitOffset : entryOffset;
-          
+
           mobileCalendarRef.current.style.transform = `translate3d(0, ${translateY}px, 0)`;
         });
         return;
@@ -367,17 +375,20 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       <div
         className="flex flex-col md:flex-row gap-8 w-full"
         style={{
-          marginTop: typeof window !== 'undefined' && window.innerWidth >= 768
-            ? `-${SEARCH_BAR_HEIGHT + 8}px`
-            : '0'
+          marginTop: isDesktop ? `-${SEARCH_BAR_HEIGHT + 8}px` : '0'
         }}
       >
         {/* Spacer: reserves 30% column so feed doesn't bleed under the fixed calendar */}
         <div className="hidden md:block md:w-[30%] shrink-0" aria-hidden="true" />
 
         {/* ── Event Feed (70%) ──────────────────────────────────────────── */}
-        <main className="w-full md:w-[70%] flex flex-col" ref={rightRef}>
-          <div className="mb-4 opacity-0 pointer-events-none hidden md:block w-full shrink-0" />
+        <main className="w-full md:w-[70%] flex flex-col pt-0" ref={rightRef}>
+          {/* Spacer to compensate for the negative margin/sticky search bar overlap */}
+          <div
+            style={{ height: `${PADDING_TOP}px` }}
+            className="hidden md:block w-full shrink-0 pointer-events-none"
+            aria-hidden="true"
+          />
 
           {/* cardsRef = exact cards wrapper (no spacer), used for entry/exit bounds */}
           <div ref={cardsRef} className="flex flex-col gap-6 pb-10 w-full relative">
