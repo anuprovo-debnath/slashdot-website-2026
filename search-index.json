@@ -254,21 +254,24 @@
   },
   {
     "id": "project-qiskit-fall-fest",
-    "title": "Qiskit Fall Fest",
+    "title": "Qiskit Fall Fest 2025 Resources",
     "type": "project",
     "slug": "qiskit-fall-fest",
     "tags": [
-      "Quantum Computing",
       "Qiskit",
-      "Other"
+      "Python",
+      "Error Mitigation",
+      "Quantum Algorithms",
+      "Error Correction",
+      "Quantum Computing"
     ],
-    "description": "A collaborative event focused on quantum computing, bringing together students to learn and build using the Qiskit framework....",
-    "category": "Other",
-    "date": "2026-04-10",
+    "description": "Project Overview This repository serves as the central hub for the IBM Qiskit Fall Fest 2025 at IISER Kolkata. Repository Contents: Educational Notebooks: Interactive Jupyter sessions for qubits, gat...",
+    "category": "Quantum Computing",
+    "date": "2025-10-24",
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Other",
+    "projectType": "Quantum Computing",
     "time": "",
     "schedule": [],
     "status": "Archived"
