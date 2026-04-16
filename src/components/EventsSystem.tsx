@@ -143,8 +143,10 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       }
 
       // Dynamic Placeholder Toggle
-      let nextPlaceholder = 'Search events, workshops, or use #tags...'; // Phase 1&2
-      if (sy > PHASE3_START) {
+      let nextPlaceholder = 'Search events, workshops, or use #tags...'; // Phase 1
+      if (sy > PHASE2_START && sy <= PHASE3_START) {
+        nextPlaceholder = 'Search events, workshops, or use #tags...'; // Phase 2 (Full)
+      } else if (sy > PHASE3_START) {
         nextPlaceholder = 'Search...'; // Phase 3 (Docked)
       }
 
