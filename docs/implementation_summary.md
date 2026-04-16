@@ -61,7 +61,9 @@ The `Navbar` component was refactored to be a high-fidelity, interactive compone
 
 - **Standardization**: Migrated all branding and social icons to **`react-icons/fa6`** components. This ensures SVG consistency across the site and allows for easy color management.
 - **Favicon**: The primary logo was set as the website icon via `src/app/icon.png`.
-- **Typography**: Configured `@font-face` for **Arista Pro Bold**, sourced from `/slashdot-website-2026/fonts/AristaProBold.ttf`.
+- **Typography**: 
+    - Custom Font: Configured `@font-face` for **Arista Pro Bold**, sourced from `/slashdot-website-2026/fonts/AristaProBold.ttf`.
+    - **Character Fallback Strategy**: To address missing glyphs for numerals (0-9) and the `@` symbol, we use a `unicode-range` exclusion in `globals.css`. These ranges fall back to a compatible geometric sans-serif (Inter/Geist), ensuring legibility for dates and handles without breaking the brand aesthetic.
 - **Tech Page**: Created `/tech` to showcase the color palette and design tokens.
 
 ## 5. Deployment (GitHub Pages)
@@ -167,4 +169,4 @@ To maintain visual continuity across the entire platform while respecting Next.j
 - **Enhanced Visibility**: Sub-page heroes use `opacity={100}` on the canvas (compared to the home page's `80`) to ensure symbols remain striking against content-heavy layouts.
 
 ---
-*Last Updated: April 2026*
+*Last Updated: April 16, 2026 (Font Glyphs & Build Stabilization)*

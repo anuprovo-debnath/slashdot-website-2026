@@ -26,9 +26,9 @@ const ExternalLinkIcon = () => (
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    Active:     'bg-gradient-to-r from-[#0291B2] to-[#06b6d4] text-white border-white/20',
+    Active: 'bg-gradient-to-r from-[#0291B2] to-[#06b6d4] text-white border-white/20',
     Maintained: 'bg-white/20 text-white border-white/20',
-    Archived:   'bg-black/30 text-white/60 border-white/10',
+    Archived: 'bg-black/30 text-white/60 border-white/10',
   };
   return (
     <span className={`px-5 py-2 text-[12px] font-black rounded-full shadow-2xl uppercase tracking-widest border ${styles[status] ?? 'bg-white/20 text-white border-white/20'}`}>
@@ -44,7 +44,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   const [mounted, setMounted] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => { setMounted(true); }, []);
 
   const { frontmatter, slug, content } = project;

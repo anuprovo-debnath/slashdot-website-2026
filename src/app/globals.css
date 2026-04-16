@@ -8,6 +8,17 @@
   font-weight: bold;
   font-style: normal;
   font-display: swap;
+  /* Exclude 0-9 (U+0030-0039) and @ (U+0040) */
+  unicode-range: U+0000-002F, U+003A-003F, U+0041-10FFFF;
+}
+
+/* Fallback for numbers and @ symbol since Arista Pro lacks proper glyphs for them */
+@font-face {
+  font-family: 'Arista Pro';
+  src: local('Inter Bold'), local('Segoe UI Bold'), local('Arial Bold'), local('sans-serif');
+  font-weight: bold;
+  font-style: normal;
+  unicode-range: U+0030-0039, U+0040;
 }
 
 :root {
@@ -130,4 +141,98 @@ body::-webkit-scrollbar {
 
 .animate-pulse-scale {
   animation: pulseScale 3s infinite ease-in-out;
+}
+
+/* ─── Touch-device hover parity ──────────────────────────────────────────────
+   On true pointer devices (mouse/trackpad) CSS :hover fires normally.
+   On touch devices (hover: none / pointer: coarse) :hover never fires.
+   This block re-applies every hover and group-hover utility used anywhere in
+   the project as :active equivalents so mobile taps get identical feedback.
+   Add new entries here as new hover effects are introduced.
+   ──────────────────────────────────────────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+
+  /* ── Card lift & glow (BlogCard, ProjectCard, ProjectGrid, MemberFlipCard) ── */
+  .hover\:-translate-y-2:active,
+  .group:active .group-hover\:-translate-y-2 {
+    --tw-translate-y: -0.5rem;
+    transform: translateY(var(--tw-translate-y));
+  }
+
+  .hover\:ring-\[\#0291B2\]\/80:active,
+  .group:active .group-hover\:ring-\[\#0291B2\]\/80 {
+    --tw-ring-color: rgb(2 145 178 / 0.8);
+    box-shadow: 0 0 0 3px var(--tw-ring-color);
+  }
+
+  .hover\:shadow-\[0_0_40px_rgba\(2\,145\,178\,0\.4\)\]:active,
+  .group:active .group-hover\:shadow-\[0_0_40px_rgba\(2\,145\,178\,0\.4\)\] {
+    box-shadow: 0 0 0 3px rgb(2 145 178 / 0.8), 0 0 40px rgba(2, 145, 178, 0.4);
+  }
+
+  /* ── Image zoom on card thumbnail ── */
+  .group:active .group-hover\:scale-110 {
+    --tw-scale-x: 1.1;
+    --tw-scale-y: 1.1;
+    transform: scale(1.1);
+  }
+
+  /* ── Title / icon colour change ── */
+  .group:active .group-hover\:text-\[\#0291B2\] {
+    color: #0291B2;
+  }
+  .group:active .group-hover\:text-\[var\(--color-primary\)\] {
+    color: var(--color-primary);
+  }
+  .group:active .group-hover\:text-primary {
+    color: var(--color-primary);
+  }
+
+  /* ── Navbar & button background tints ── */
+  .hover\:bg-black\/10:active        { background-color: rgb(0 0 0 / 0.1); }
+  .hover\:bg-white\/10:active        { background-color: rgb(255 255 255 / 0.1); }
+  .hover\:bg-black\/5:active         { background-color: rgb(0 0 0 / 0.05); }
+  .hover\:bg-white\/5:active         { background-color: rgb(255 255 255 / 0.05); }
+  .hover\:bg-primary\/10:active      { background-color: rgb(var(--color-primary-rgb) / 0.1); }
+  .hover\:bg-\[var\(--color-primary\)\]\/70:active {
+    background-color: rgb(var(--color-primary-rgb) / 0.7);
+  }
+  .hover\:bg-red-600:active          { background-color: #dc2626; }
+  .hover\:bg-violet-500\/20:active   { background-color: rgb(139 92 246 / 0.2); }
+  .hover\:bg-\[\#0291B2\]\/20:active { background-color: rgb(2 145 178 / 0.2); }
+
+  /* ── Border colour changes ── */
+  .hover\:border-\[var\(--color-primary\)\]:active { border-color: var(--color-primary); }
+  .hover\:border-primary\/20:active               { border-color: rgb(var(--color-primary-rgb) / 0.2); }
+  .hover\:border-violet-500\/40:active            { border-color: rgb(139 92 246 / 0.4); }
+  .hover\:border-\[\#0291B2\]\/40:active          { border-color: rgb(2 145 178 / 0.4); }
+
+  /* ── Text colour changes ── */
+  .hover\:text-white:active                       { color: #fff; }
+  .hover\:text-\[var\(--color-primary\)\]:active  { color: var(--color-primary); }
+
+  /* ── Scale / transform ── */
+  .hover\:scale-\[1\.03\]:active    { transform: scale(1.03); }
+  .hover\:scale-110:active          { transform: scale(1.1); }
+  .hover\:opacity-100:active        { opacity: 1; }
+  .hover\:opacity-80:active         { opacity: 0.8; }
+  .hover\:brightness-110:active     { filter: brightness(1.1); }
+  .hover\:underline:active          { text-decoration: underline; }
+
+  /* ── Grayscale removal for alumni cards ── */
+  .hover\:grayscale-0:active        { filter: grayscale(0); }
+
+  /* ── Journey timeline group effects ── */
+  .group:active .group-hover\:scale-125           { transform: scale(1.25); }
+  .group:active .group-hover\:translate-x-3       { --tw-translate-x: 0.75rem; transform: translateX(0.75rem); }
+  .group:active .group-hover\:border-\[var\(--color-primary\)\]\/50 {
+    border-color: rgb(var(--color-primary-rgb) / 0.5);
+  }
+  .group:active .group-hover\:shadow-\[0_0_30px_-10px_rgba\(0\,163\,204\,0\.3\)\] {
+    box-shadow: 0 0 30px -10px rgba(0, 163, 204, 0.3);
+  }
+  .group:active .group-hover\:translate-x-\[100\%\] { transform: translateX(100%); }
+
+  /* ── Search overlay item hover ── */
+  .group:active .group-hover\:translate-x-1 { --tw-translate-x: 0.25rem; transform: translateX(0.25rem); }
 }

@@ -71,14 +71,14 @@ const MemeCard = ({ title, category, img, description, slug, onClick, className 
 const GameCard = ({ title, description, url, imgUrl, imgClassName = "object-cover transition-transform duration-700 ease-out group-hover:scale-110", tags, slug, onClick, className = "" }: { title: string; description: string; url: string; imgUrl: string; imgClassName?: string; tags: string[]; slug: string; onClick: () => void; className?: string }) => {
   return (
     <div className={`group relative flex flex-col rounded-2xl bg-[var(--background)] ring-[3px] ring-[#0291B2]/30 shadow-xl transition-all hover:ring-[#0291B2]/80 hover:shadow-[0_0_40px_rgba(2,145,178,0.4)] dark:hover:shadow-[0_0_40px_rgba(2,145,178,0.25)] hover:-translate-y-2 overflow-hidden h-[450px] w-full ${className}`}>
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={onClick}
-      className="absolute inset-0 z-[10]"
-      aria-label={`Play ${title}`}
-    />
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClick}
+        className="absolute inset-0 z-[10]"
+        aria-label={`Play ${title}`}
+      />
       <div className="flex flex-col h-[406px] overflow-hidden">
         <div className="relative w-full h-[180px] shrink-0 overflow-hidden border-b border-black/10 dark:border-white/10 flex items-center justify-center bg-[var(--background)]">
           <img
@@ -189,7 +189,7 @@ const SidelongStrip = ({ title, scrollRef, onScroll, children }: SidelongStripPr
           const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
           // Calculate card width + gap (gap-8 = 32px)
           const cardWidth = scrollRef.current.firstElementChild.clientWidth + 32;
-          
+
           // If reached the end, reset to start. Otherwise scroll right by one card.
           if (Math.ceil(scrollLeft + clientWidth) >= scrollWidth) {
             scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
@@ -205,8 +205,8 @@ const SidelongStrip = ({ title, scrollRef, onScroll, children }: SidelongStripPr
   }, [isHovered, scrollRef]);
 
   return (
-    <section 
-      onMouseEnter={() => setIsHovered(true)} 
+    <section
+      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onPointerDown={() => setIsHovered(true)}
       onPointerUp={() => setIsHovered(false)}
@@ -328,134 +328,134 @@ export default function FunZonePage() {
         <div className="max-w-5xl mx-auto">
           <div className={`flex flex-col ${STRIP_CONFIG.gapSection}`}>
 
-          {/* MEMES SECTION */}
-          <SidelongStrip
-            title="Memes"
-            scrollRef={memeScrollRef}
-            onScroll={(dir) => scrollAction(memeScrollRef, dir)}
-          >
-            <MemeCard
-              title={'The Developer\'s Classic: "It Works on My Machine"'}
-              category="#ProgrammerHumor"
-              img="/images/memes/works-on-my-machine.webp"
-              description="A humorous take on the environment-specific bugs that plague developers. When a bug is reported, the first reaction is often to check if it works locally, leading to the infamous phrase."
-              slug="works-on-my-machine"
-              onClick={() => handleCardClick('works-on-my-machine')}
-              className="snap-start"
-            />
-            <MemeCard
-              title="UI vs. UX: The Desire Path"
-              category="#UXDesign"
-              img="/images/memes/ui-vs-ux-desire-path.jpg"
-              description="This meme perfectly illustrates the difference between User Interface (the paved path) and User Experience (the shortcut people actually take). It reminds designers that users will always find the most efficient route, regardless of the design."
-              slug="ui-vs-ux-desire-path"
-              onClick={() => handleCardClick('ui-vs-ux-desire-path')}
-              className="snap-start"
-            />
-            <MemeCard
-              title="99 Little Bugs in the Code"
-              category="#DebuggingLife"
-              img="/images/memes/99-bugs-in-the-code.jpg"
-              description={'Based on the "99 Bottles of Beer" song, this meme describes the never-ending cycle of debugging where fixing one bug inevitably leads to discovering many more.'}
-              slug="99-bugs-in-the-code"
-              onClick={() => handleCardClick('99-bugs-in-the-code')}
-              className="snap-start"
-            />
-            <MemeCard
-              title="Graphic Design is My Passion"
-              category="#GraphicDesign"
-              img="/images/memes/graphic-design-passion.jpg"
-              description={'A sarcastic meme featuring a poorly edited rainbow background and a frog. It is used by designers to mock low-quality design work or "client-ready" requests that ignore all design principles.'}
-              slug="graphic-design-passion"
-              onClick={() => handleCardClick('graphic-design-passion')}
-              className="snap-start"
-            />
-            <MemeCard
-              title="Frontend vs. Backend (The Horse)"
-              category="#WebDev"
-              img="/images/memes/frontend-vs-backend-horse.webp"
-              description="This meme shows a drawing of a horse where the front is a majestic, detailed masterpiece (Frontend) and the back is a crude stick-figure sketch (Backend), or vice versa, representing the disparity in polish between different parts of a project."
-              slug="frontend-vs-backend-horse"
-              onClick={() => handleCardClick('frontend-vs-backend-horse')}
-              className="snap-start"
-            />
-            <MemeCard
-              title="CSS Overflow: The Struggle is Real"
-              category="#CSS"
-              img="/images/memes/css-overflow-struggle.webp"
-              description={'A simple but effective visual of a container where the word "OVERFLOW" spills out of its borders. It’s a meta-commentary on the difficulty of mastering the CSS box model and layout properties.'}
-              slug="css-overflow-struggle"
-              onClick={() => handleCardClick('css-overflow-struggle')}
-              className="snap-start"
-            />
-          </SidelongStrip>
+            {/* MEMES SECTION */}
+            <SidelongStrip
+              title="Memes"
+              scrollRef={memeScrollRef}
+              onScroll={(dir) => scrollAction(memeScrollRef, dir)}
+            >
+              <MemeCard
+                title={'The Developer\'s Classic: "It Works on My Machine"'}
+                category="#ProgrammerHumor"
+                img="/images/memes/works-on-my-machine.webp"
+                description="A humorous take on the environment-specific bugs that plague developers. When a bug is reported, the first reaction is often to check if it works locally, leading to the infamous phrase."
+                slug="works-on-my-machine"
+                onClick={() => handleCardClick('works-on-my-machine')}
+                className="snap-start"
+              />
+              <MemeCard
+                title="UI vs. UX: The Desire Path"
+                category="#UXDesign"
+                img="/images/memes/ui-vs-ux-desire-path.jpg"
+                description="This meme perfectly illustrates the difference between User Interface (the paved path) and User Experience (the shortcut people actually take). It reminds designers that users will always find the most efficient route, regardless of the design."
+                slug="ui-vs-ux-desire-path"
+                onClick={() => handleCardClick('ui-vs-ux-desire-path')}
+                className="snap-start"
+              />
+              <MemeCard
+                title="99 Little Bugs in the Code"
+                category="#DebuggingLife"
+                img="/images/memes/99-bugs-in-the-code.jpg"
+                description={'Based on the "99 Bottles of Beer" song, this meme describes the never-ending cycle of debugging where fixing one bug inevitably leads to discovering many more.'}
+                slug="99-bugs-in-the-code"
+                onClick={() => handleCardClick('99-bugs-in-the-code')}
+                className="snap-start"
+              />
+              <MemeCard
+                title="Graphic Design is My Passion"
+                category="#GraphicDesign"
+                img="/images/memes/graphic-design-passion.jpg"
+                description={'A sarcastic meme featuring a poorly edited rainbow background and a frog. It is used by designers to mock low-quality design work or "client-ready" requests that ignore all design principles.'}
+                slug="graphic-design-passion"
+                onClick={() => handleCardClick('graphic-design-passion')}
+                className="snap-start"
+              />
+              <MemeCard
+                title="Frontend vs. Backend (The Horse)"
+                category="#WebDev"
+                img="/images/memes/frontend-vs-backend-horse.webp"
+                description="This meme shows a drawing of a horse where the front is a majestic, detailed masterpiece (Frontend) and the back is a crude stick-figure sketch (Backend), or vice versa, representing the disparity in polish between different parts of a project."
+                slug="frontend-vs-backend-horse"
+                onClick={() => handleCardClick('frontend-vs-backend-horse')}
+                className="snap-start"
+              />
+              <MemeCard
+                title="CSS Overflow: The Struggle is Real"
+                category="#CSS"
+                img="/images/memes/css-overflow-struggle.webp"
+                description={'A simple but effective visual of a container where the word "OVERFLOW" spills out of its borders. It’s a meta-commentary on the difficulty of mastering the CSS box model and layout properties.'}
+                slug="css-overflow-struggle"
+                onClick={() => handleCardClick('css-overflow-struggle')}
+                className="snap-start"
+              />
+            </SidelongStrip>
 
-          {/* GAMES SECTION */}
-          <SidelongStrip
-            title="Games"
-            scrollRef={gameScrollRef}
-            onScroll={(dir) => scrollAction(gameScrollRef, dir)}
-          >
-            <GameCard
-              title="2048"
-              description="Join the numbers and get to the 2048 tile!"
-              url="https://play2048.co/"
-              imgUrl="/images/games/2048.jpg"
-              tags={["Puzzles"]}
-              slug="game-2048"
-              onClick={() => handleCardClick('game-2048')}
-              className="snap-start"
-            />
-            <GameCard
-              title="Tetris"
-              description="The world favorite puzzle game. Clear lines, score high!"
-              url="https://play.tetris.com/"
-              imgUrl="/images/games/tetris.webp"
-              tags={["Classic"]}
-              slug="game-tetris"
-              onClick={() => handleCardClick('game-tetris')}
-              className="snap-start"
-            />
-            <GameCard
-              title="Clumsy Bird"
-              description="A retro-style arcade challenge. Don't hit the pipes!"
-              url="https://ellisonleao.github.io/clumsy-bird/"
-              imgUrl="/images/games/clumsy-bird.png"
-              tags={["Retro"]}
-              slug="game-clumsy-bird"
-              onClick={() => handleCardClick('game-clumsy-bird')}
-              className="snap-start"
-            />
-          </SidelongStrip>
+            {/* GAMES SECTION */}
+            <SidelongStrip
+              title="Games"
+              scrollRef={gameScrollRef}
+              onScroll={(dir) => scrollAction(gameScrollRef, dir)}
+            >
+              <GameCard
+                title="2048"
+                description="Join the numbers and get to the 2048 tile!"
+                url="https://play2048.co/"
+                imgUrl="/images/games/2048.jpg"
+                tags={["Puzzles"]}
+                slug="game-2048"
+                onClick={() => handleCardClick('game-2048')}
+                className="snap-start"
+              />
+              <GameCard
+                title="Tetris"
+                description="The world favorite puzzle game. Clear lines, score high!"
+                url="https://play.tetris.com/"
+                imgUrl="/images/games/tetris.webp"
+                tags={["Classic"]}
+                slug="game-tetris"
+                onClick={() => handleCardClick('game-tetris')}
+                className="snap-start"
+              />
+              <GameCard
+                title="Clumsy Bird"
+                description="A retro-style arcade challenge. Don't hit the pipes!"
+                url="https://ellisonleao.github.io/clumsy-bird/"
+                imgUrl="/images/games/clumsy-bird.png"
+                tags={["Retro"]}
+                slug="game-clumsy-bird"
+                onClick={() => handleCardClick('game-clumsy-bird')}
+                className="snap-start"
+              />
+            </SidelongStrip>
 
-          {/* ART GALLERY SECTION */}
-          <SidelongStrip
-            title="Art Gallery"
-            scrollRef={artScrollRef}
-            onScroll={(dir) => scrollAction(artScrollRef, dir)}
-          >
-            <ArtCard 
-              title="The Primary Slant" 
-              blurColor="var(--color-primary)" 
-              slug="primary-slant" 
-              onClick={() => handleCardClick('primary-slant')} 
-              className="snap-start" 
-            />
-            <ArtCard 
-              title="Temporal Matrix" 
-              blurColor="#06b6d4" 
-              slug="temporal-matrix" 
-              onClick={() => handleCardClick('temporal-matrix')} 
-              className="snap-start" 
-            />
-            <ArtCard 
-              title="Hero Engine V2" 
-              blurColor="#8a2be2" 
-              slug="hero-engine" 
-              onClick={() => handleCardClick('hero-engine')} 
-              className="snap-start" 
-            />
-          </SidelongStrip>
+            {/* ART GALLERY SECTION */}
+            <SidelongStrip
+              title="Art Gallery"
+              scrollRef={artScrollRef}
+              onScroll={(dir) => scrollAction(artScrollRef, dir)}
+            >
+              <ArtCard
+                title="The Primary Slant"
+                blurColor="var(--color-primary)"
+                slug="primary-slant"
+                onClick={() => handleCardClick('primary-slant')}
+                className="snap-start"
+              />
+              <ArtCard
+                title="Temporal Matrix"
+                blurColor="#06b6d4"
+                slug="temporal-matrix"
+                onClick={() => handleCardClick('temporal-matrix')}
+                className="snap-start"
+              />
+              <ArtCard
+                title="Hero Engine V2"
+                blurColor="#8a2be2"
+                slug="hero-engine"
+                onClick={() => handleCardClick('hero-engine')}
+                className="snap-start"
+              />
+            </SidelongStrip>
           </div>
         </div>
       </div>

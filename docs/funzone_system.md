@@ -29,24 +29,29 @@ All spacing, padding, and grid geometry is defined in a single `STRIP_CONFIG` co
 
 ---
 
-## 3. Responsive Grid & Sidelong Scroller
-The horizontal scrolling architecture is built for high-density, snap-mandatory interactions with automated traversal.
+## 3. Dynamic Viewing & Serialization
+To support static exports (`output: 'export'`) with dynamic detailed routes (`/fun-zone/[slug]`), the system employs a **Type-Based Selection Pattern**.
 
-### Layout Logic
-- **Geometry Inheritance**: Cards are strictly **450px** high, mirroring the Blog/Project grid geometry.
-- **Mask Fade & Shadow Safety**: Instead of strict clipping borders, the system applies a 16px fade effect using `mask-image` at the edges of the horizontal list, preserving enough non-faded padding (the remaining 16px) to allow aggressive hover box-shadows to bleed elegantly over the background context without visual severing.
-- **Auto-Scrolling Architecture**: A mathematical observer interval continually advances the scroll position by precisely computing `firstElementChild.clientWidth + 32px` on a 4-second cycle, guaranteeing an unbroken one-by-one slide view. If the physical boundary is intersected, the scroll smoothly resets to zero.
-- **Snap mandatory Behavior**: Full-width scrolling with `snap-start` provides a tactile, "app-like" experience for Memes and Games.
-- **Navigation Controls**: Desktop users can use smooth-scroll `<` and `>` buttons which advance fixed increments of the client viewport width.
-
----
-
-## 4. Asset Management & Links
-- **Local Assets**: Game thumbnail assets are stored locally in `/public/images/games/` to eliminate dependence on third-party GIF host reliability.
-- **External Redirection**: For Game Cards, the entire card body functions as a link precisely routing to the provided game URLs (e.g., play2048.co, play.tetris.com).
-- **Asset Pathing**: Images use the `${REPO_NAME}` constant prefix to ensure correct resolution on GitHub Pages deployments.
+### Serializable Registry Pattern
+Next.js prohibits passing raw component functions from Server Components to Client Components. The detail pages resolve this by storing only serializable metadata in the registry:
+- **Registry**: `src/app/fun-zone/[slug]/page.tsx`
+- **Logic**: The registry maps slugs to a `type` string (e.g., `'meme'`, `'art'`).
+- **Resolution**: The Client Component (`ArtViewerClient.tsx`) imports viewer components and selects the appropriate one internally based on this type.
 
 ---
+
+## 4. Asset Management & Pathing
+To ensure reliability on GitHub Pages (hosted at `/slashdot-website-2026/`), the site uses a centralized pathing system.
+
+### Repository-Aware Pathing (`getImgPath`)
+Located in `src/lib/imgUtils.tsx`, the `getImgPath` utility:
+- Detects the repository prefix and automatically prepends it to internal paths.
+- Ignores external `https://` URLs to allow mixed content sourcing.
+- **Rules for standard `<img>` tags**: Always wrap `src` values in this utility to prevent 404s in production.
+
+### Local Asset Migration
+- **Memes**: Migrated from external hotlinking to local assets in `public/images/memes/` to eliminate cross-origin blocking and high latency.
+- **Games**: Stored in `public/images/games/`.
 
 ## 5. Performance & Hydration
 - **Mounted State Guard**: The system implements a strict `mounted` check to prevent hydration mismatches during the `output: 'export'` process.
@@ -63,3 +68,6 @@ The horizontal scrolling architecture is built for high-density, snap-mandatory 
 ### 2. Base Pathing
 - **Navigation**: Use relative paths from the root (e.g., `/fun-zone`) as Next.js `basePath` handles the repo prefix.
 - **Static Assets**: Manually prepend the repository name constant for images or fonts within `page.tsx` components.
+
+## 7. Typography & Accessibility
+- **Character Fallback**: The Fun Zone heavily utilizes numbers for game scores and metadata. Since the primary brand font (Arista Pro) lacks glyphs for numerals and the `@` symbol, the system relies on a global `unicode-range` fallback in `globals.css` that maps these characters to a legible geometric sans-serif (Inter/Geist).
