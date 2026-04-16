@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 
 import { Footer } from "@/components/Footer";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { TouchNavDelay } from "@/components/TouchNavDelay";
 
 export default function RootLayout({
   children,
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <LoadingScreen />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <TouchNavDelay />
           <div id="site-wrapper-loading" className="flex-1 flex flex-col min-h-screen">
             <Navbar />
             <main className="flex-1 flex flex-col">

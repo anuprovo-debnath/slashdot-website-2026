@@ -146,45 +146,57 @@ body::-webkit-scrollbar {
 /* ─── Touch-device hover parity ──────────────────────────────────────────────
    On true pointer devices (mouse/trackpad) CSS :hover fires normally.
    On touch devices (hover: none / pointer: coarse) :hover never fires.
-   This block re-applies every hover and group-hover utility used anywhere in
-   the project as :active equivalents so mobile taps get identical feedback.
-   Add new entries here as new hover effects are introduced.
+
+   Two triggers are used:
+     :active           — fires immediately while finger is down
+     .touch-nav-active — added by TouchNavDelay.tsx on touchstart of an internal
+                         link; persists for 250 ms (Android nav delay) + buffer
+                        so the animation stays visible until route change.
+
+   Add new entries here whenever new hover effects are introduced.
    ──────────────────────────────────────────────────────────────────────────── */
 @media (hover: none) and (pointer: coarse) {
 
   /* ── Card lift & glow (BlogCard, ProjectCard, ProjectGrid, MemberFlipCard) ── */
   .hover\:-translate-y-2:active,
-  .group:active .group-hover\:-translate-y-2 {
+  .group:active .group-hover\:-translate-y-2,
+  .group.touch-nav-active .group-hover\:-translate-y-2 {
     --tw-translate-y: -0.5rem;
     transform: translateY(var(--tw-translate-y));
   }
 
   .hover\:ring-\[\#0291B2\]\/80:active,
-  .group:active .group-hover\:ring-\[\#0291B2\]\/80 {
+  .group:active .group-hover\:ring-\[\#0291B2\]\/80,
+  .group.touch-nav-active .group-hover\:ring-\[\#0291B2\]\/80 {
     --tw-ring-color: rgb(2 145 178 / 0.8);
     box-shadow: 0 0 0 3px var(--tw-ring-color);
   }
 
   .hover\:shadow-\[0_0_40px_rgba\(2\,145\,178\,0\.4\)\]:active,
-  .group:active .group-hover\:shadow-\[0_0_40px_rgba\(2\,145\,178\,0\.4\)\] {
+  .group:active .group-hover\:shadow-\[0_0_40px_rgba\(2\,145\,178\,0\.4\)\],
+  .group.touch-nav-active .group-hover\:shadow-\[0_0_40px_rgba\(2\,145\,178\,0\.4\)\] {
     box-shadow: 0 0 0 3px rgb(2 145 178 / 0.8), 0 0 40px rgba(2, 145, 178, 0.4);
   }
 
   /* ── Image zoom on card thumbnail ── */
-  .group:active .group-hover\:scale-110 {
+  .group:active .group-hover\:scale-110,
+  .group.touch-nav-active .group-hover\:scale-110 {
     --tw-scale-x: 1.1;
     --tw-scale-y: 1.1;
     transform: scale(1.1);
   }
 
   /* ── Title / icon colour change ── */
-  .group:active .group-hover\:text-\[\#0291B2\] {
+  .group:active .group-hover\:text-\[\#0291B2\],
+  .group.touch-nav-active .group-hover\:text-\[\#0291B2\] {
     color: #0291B2;
   }
-  .group:active .group-hover\:text-\[var\(--color-primary\)\] {
+  .group:active .group-hover\:text-\[var\(--color-primary\)\],
+  .group.touch-nav-active .group-hover\:text-\[var\(--color-primary\)\] {
     color: var(--color-primary);
   }
-  .group:active .group-hover\:text-primary {
+  .group:active .group-hover\:text-primary,
+  .group.touch-nav-active .group-hover\:text-primary {
     color: var(--color-primary);
   }
 
@@ -223,16 +235,55 @@ body::-webkit-scrollbar {
   .hover\:grayscale-0:active        { filter: grayscale(0); }
 
   /* ── Journey timeline group effects ── */
-  .group:active .group-hover\:scale-125           { transform: scale(1.25); }
-  .group:active .group-hover\:translate-x-3       { --tw-translate-x: 0.75rem; transform: translateX(0.75rem); }
-  .group:active .group-hover\:border-\[var\(--color-primary\)\]\/50 {
+  .group:active .group-hover\:scale-125,
+  .group.touch-nav-active .group-hover\:scale-125           { transform: scale(1.25); }
+
+  .group:active .group-hover\:translate-x-3,
+  .group.touch-nav-active .group-hover\:translate-x-3       { --tw-translate-x: 0.75rem; transform: translateX(0.75rem); }
+
+  .group:active .group-hover\:border-\[var\(--color-primary\)\]\/50,
+  .group.touch-nav-active .group-hover\:border-\[var\(--color-primary\)\]\/50 {
     border-color: rgb(var(--color-primary-rgb) / 0.5);
   }
-  .group:active .group-hover\:shadow-\[0_0_30px_-10px_rgba\(0\,163\,204\,0\.3\)\] {
+
+  .group:active .group-hover\:shadow-\[0_0_30px_-10px_rgba\(0\,163\,204\,0\.3\)\],
+  .group.touch-nav-active .group-hover\:shadow-\[0_0_30px_-10px_rgba\(0\,163\,204\,0\.3\)\] {
     box-shadow: 0 0 30px -10px rgba(0, 163, 204, 0.3);
   }
-  .group:active .group-hover\:translate-x-\[100\%\] { transform: translateX(100%); }
+
+  .group:active .group-hover\:translate-x-\[100\%\],
+  .group.touch-nav-active .group-hover\:translate-x-\[100\%\] { transform: translateX(100%); }
 
   /* ── Search overlay item hover ── */
-  .group:active .group-hover\:translate-x-1 { --tw-translate-x: 0.25rem; transform: translateX(0.25rem); }
+  .group:active .group-hover\:translate-x-1,
+  .group.touch-nav-active .group-hover\:translate-x-1 { --tw-translate-x: 0.25rem; transform: translateX(0.25rem); }
+
+  /* ── Social Media Icons & Brand Colors (Footer, etc) ── */
+  .hover\:-translate-y-1:active,
+  .group.touch-nav-active .group-hover\:-translate-y-1 {
+    --tw-translate-y: -0.25rem;
+    transform: translateY(var(--tw-translate-y));
+  }
+
+  .hover\:bg-\[var\(--brand-color\)\]:active,
+  .group.touch-nav-active.hover\:bg-\[var\(--brand-color\)\] {
+    background-color: var(--brand-color);
+  }
+
+  .hover\:shadow-\[var\(--brand-color\)\/20\]:active,
+  .group.touch-nav-active.hover\:shadow-\[var\(--brand-color\)\/20\] {
+    box-shadow: 0 0 20px var(--brand-color);
+  }
+
+  /* Instagram Gradient Support */
+  .hover\:bg-gradient-to-tr:active,
+  .group.touch-nav-active.hover\:bg-gradient-to-tr {
+    background-image: linear-gradient(to top right, #f9ce34, #ee2a7b, #6228d7);
+  }
+
+  /* General icon whitening */
+  .group:active .group-hover\:text-white,
+  .group.touch-nav-active .group-hover\:text-white {
+    color: white !important;
+  }
 }
