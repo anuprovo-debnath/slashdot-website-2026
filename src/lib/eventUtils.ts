@@ -64,7 +64,18 @@ export function getEventStatus(
   const parsedStart = parseTimeRange(startDateStr, frontmatter.time);
   const parsedEnd = parseTimeRange(endDateStr, frontmatter.time);
 
-  if (!parsedStart || !parsedEnd) return 'Upcoming';
+  // If time parsing fails, fallback to date-only comparison (whole day)
+  if (!parsedStart || !parsedEnd) {
+    const startOfDay = new Date(startDateStr);
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date(endDateStr);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    if (now >= startOfDay && now <= endOfDay) return 'Live';
+    if (now < startOfDay) return 'Upcoming';
+    return 'Past';
+  }
 
   if (now >= parsedStart.start && now <= parsedEnd.end) {
     return 'Live';
