@@ -17,8 +17,7 @@
     "author": "Slashdot Core",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "blog-qiskit-fall-fest",
@@ -41,8 +40,7 @@
     "author": "SlashDot Core",
     "projectType": "Seminar",
     "time": "17:00 - 19:30 IST",
-    "schedule": [],
-    "status": "Past"
+    "schedule": []
   },
   {
     "id": "blog-second-post",
@@ -62,8 +60,7 @@
     "author": "Design Team",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "blog-third-post",
@@ -83,12 +80,11 @@
     "author": "Founders",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "event-current-event",
-    "title": "Ongoing Workshop",
+    "title": "Future Workshop",
     "type": "event",
     "slug": "current-event",
     "tags": [
@@ -96,14 +92,13 @@
     ],
     "description": "This workshop covers the basics of Web3, blockchain fundamentals, and how to build your first dApp....",
     "category": "Workshop",
-    "date": "2026-04-16",
+    "date": "2026-04-22",
     "image": "",
     "url": "",
     "author": "",
     "projectType": "Workshop",
-    "time": "00:00 - 23:59 IST",
-    "schedule": [],
-    "status": "Live"
+    "time": "17:00 - 19:00 IST",
+    "schedule": []
   },
   {
     "id": "event-intro-to-web3",
@@ -121,8 +116,7 @@
     "author": "",
     "projectType": "Workshop",
     "time": "18:00 - 20:00 IST",
-    "schedule": [],
-    "status": "Upcoming"
+    "schedule": []
   },
   {
     "id": "event-live-hackathon",
@@ -132,16 +126,15 @@
     "tags": [
       "Hackathon"
     ],
-    "description": "The annual spring hackathon is live! Join us for 12 hours of coding....",
+    "description": "The annual spring hackathon is live! Join us for 72 hours of coding....",
     "category": "Hackathon",
-    "date": "2026-04-11",
+    "date": "2026-04-17 - 2026-04-19",
     "image": "",
     "url": "",
     "author": "",
     "projectType": "Hackathon",
-    "time": "10:00 - 22:00 IST",
-    "schedule": [],
-    "status": "Live"
+    "time": "00:01 - 23:59 IST",
+    "schedule": []
   },
   {
     "id": "event-option-a-test",
@@ -159,8 +152,7 @@
     "author": "",
     "projectType": "Hackathon",
     "time": "10:00 - 18:00 IST",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "event-option-b-test",
@@ -187,8 +179,7 @@
         "date": "2026-04-14",
         "time": "18:00 - 20:00 IST"
       }
-    ],
-    "status": ""
+    ]
   },
   {
     "id": "event-past-seminar",
@@ -206,8 +197,7 @@
     "author": "",
     "projectType": "Seminar",
     "time": "17:00 - 18:30 IST",
-    "schedule": [],
-    "status": "Past"
+    "schedule": []
   },
   {
     "id": "event-qiskit-fall-fest",
@@ -225,8 +215,7 @@
     "author": "",
     "projectType": "Workshop & Hackathon",
     "time": "Multiple Sessions (See Description)",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "project-example-project",
@@ -248,8 +237,7 @@
     "author": "",
     "projectType": "Internal_Tools",
     "time": "",
-    "schedule": [],
-    "status": "Active"
+    "schedule": []
   },
   {
     "id": "project-iiserk-app",
@@ -270,8 +258,7 @@
     "author": "",
     "projectType": "Internal_Tools",
     "time": "",
-    "schedule": [],
-    "status": "Archived"
+    "schedule": []
   },
   {
     "id": "project-legacy-webpage",
@@ -292,8 +279,7 @@
     "author": "",
     "projectType": "Internal_Tools",
     "time": "",
-    "schedule": [],
-    "status": "Archived"
+    "schedule": []
   },
   {
     "id": "project-qiskit-fall-fest",
@@ -316,8 +302,7 @@
     "author": "",
     "projectType": "Quantum Computing",
     "time": "",
-    "schedule": [],
-    "status": "Archived"
+    "schedule": []
   },
   {
     "id": "project-satvik-saha",
@@ -338,8 +323,7 @@
     "author": "",
     "projectType": "Member_Spotlight",
     "time": "",
-    "schedule": [],
-    "status": "Maintained"
+    "schedule": []
   },
   {
     "id": "project-sbs",
@@ -359,8 +343,7 @@
     "author": "",
     "projectType": "Member_Spotlight",
     "time": "",
-    "schedule": [],
-    "status": "Maintained"
+    "schedule": []
   },
   {
     "id": "project-welearn-bot",
@@ -381,8 +364,7 @@
     "author": "",
     "projectType": "Internal_Tools",
     "time": "",
-    "schedule": [],
-    "status": "Active"
+    "schedule": []
   },
   {
     "id": "funzone-99-bugs-in-the-code",
@@ -402,8 +384,7 @@
     "author": "",
     "projectType": "meme",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "funzone-css-overflow-struggle",
@@ -423,8 +404,7 @@
     "author": "",
     "projectType": "meme",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "funzone-frontend-vs-backend-horse",
@@ -444,8 +424,7 @@
     "author": "",
     "projectType": "meme",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "funzone-game-2048",
@@ -466,8 +445,49 @@
     "author": "",
     "projectType": "game",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
+  },
+  {
+    "id": "funzone-game-clumsy-bird",
+    "title": "Clumsy Bird",
+    "type": "funzone",
+    "slug": "game-clumsy-bird",
+    "tags": [
+      "Games",
+      "Retro",
+      "Arcade",
+      "game"
+    ],
+    "description": "A retro-style arcade challenge. Don't hit the pipes! Test your reflexes in this flappy adventure.",
+    "category": "game",
+    "date": "",
+    "image": "/images/games/clumsy-bird.png",
+    "url": "https://ellisonleao.github.io/clumsy-bird/",
+    "author": "",
+    "projectType": "game",
+    "time": "",
+    "schedule": []
+  },
+  {
+    "id": "funzone-game-tetris",
+    "title": "Tetris",
+    "type": "funzone",
+    "slug": "game-tetris",
+    "tags": [
+      "Games",
+      "Classic",
+      "Retro",
+      "game"
+    ],
+    "description": "The world favorite puzzle game. Clear lines, score high! A timeless classic of geometric precision.",
+    "category": "game",
+    "date": "",
+    "image": "/images/games/tetris.webp",
+    "url": "https://play.tetris.com/",
+    "author": "",
+    "projectType": "game",
+    "time": "",
+    "schedule": []
   },
   {
     "id": "funzone-graphic-design-passion",
@@ -487,14 +507,13 @@
     "author": "",
     "projectType": "meme",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
-    "id": "funzone-hero-engine",
-    "title": "Hero Engine V2",
+    "id": "funzone-hero-engine-1",
+    "title": "Hero Engine V1",
     "type": "funzone",
-    "slug": "hero-engine",
+    "slug": "hero-engine-1",
     "tags": [
       "Design",
       "Generative",
@@ -510,8 +529,29 @@
     "author": "",
     "projectType": "art",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
+  },
+  {
+    "id": "funzone-hero-engine-2",
+    "title": "Hero Engine V2",
+    "type": "funzone",
+    "slug": "hero-engine-2",
+    "tags": [
+      "Design",
+      "Generative",
+      "SVG",
+      "Performance",
+      "art"
+    ],
+    "description": "The flagship homepage background engine. Optimized for cinematic scale and sub-pixel clarity across all viewport widths.",
+    "category": "art",
+    "date": "",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "art",
+    "time": "",
+    "schedule": []
   },
   {
     "id": "funzone-primary-slant",
@@ -533,8 +573,7 @@
     "author": "",
     "projectType": "art",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "funzone-temporal-matrix",
@@ -556,8 +595,7 @@
     "author": "",
     "projectType": "art",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "funzone-ui-vs-ux-desire-path",
@@ -577,8 +615,7 @@
     "author": "",
     "projectType": "meme",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "funzone-works-on-my-machine",
@@ -598,8 +635,7 @@
     "author": "",
     "projectType": "meme",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "team-alumni-debayan",
@@ -618,8 +654,7 @@
     "author": "Debayan",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "team-alumni-gautam",
@@ -638,8 +673,7 @@
     "author": "Gautam",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "team-alumni-ronit",
@@ -658,8 +692,7 @@
     "author": "Ronit",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "team-alumni-sabarno",
@@ -678,8 +711,7 @@
     "author": "Sabarno",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "team-mentor-manish",
@@ -700,8 +732,7 @@
     "author": "Manish Behera",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "team-ob-abhinav",
@@ -722,8 +753,7 @@
     "author": "Abhinav Dhingra",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "team-ob-anu",
@@ -744,8 +774,7 @@
     "author": "Anuprovo Debnath",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   },
   {
     "id": "team-ob-sbs",
@@ -766,7 +795,6 @@
     "author": "Shuvam Banerjee Seal",
     "projectType": "",
     "time": "",
-    "schedule": [],
-    "status": ""
+    "schedule": []
   }
 ]
