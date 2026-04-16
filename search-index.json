@@ -15,7 +15,10 @@
     "image": "",
     "url": "",
     "author": "Slashdot Core",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "blog-second-post",
@@ -33,7 +36,10 @@
     "image": "/slashdot-website-2026/logos/Logo_Black_BG.png",
     "url": "",
     "author": "Design Team",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "blog-third-post",
@@ -51,7 +57,29 @@
     "image": "/slashdot-website-2026/logos/Logo_White_BG.png",
     "url": "",
     "author": "Founders",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
+  },
+  {
+    "id": "event-current-event",
+    "title": "Ongoing Workshop",
+    "type": "event",
+    "slug": "current-event",
+    "tags": [
+      "Workshop"
+    ],
+    "description": "This workshop covers the basics of Web3, blockchain fundamentals, and how to build your first dApp....",
+    "category": "Workshop",
+    "date": "2026-04-16",
+    "image": "",
+    "url": "",
+    "author": "",
+    "projectType": "Workshop",
+    "time": "00:00 - 23:59 IST",
+    "schedule": [],
+    "status": "Live"
   },
   {
     "id": "event-intro-to-web3",
@@ -67,7 +95,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Workshop"
+    "projectType": "Workshop",
+    "time": "18:00 - 20:00 IST",
+    "schedule": [],
+    "status": "Upcoming"
   },
   {
     "id": "event-live-hackathon",
@@ -83,7 +114,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Hackathon"
+    "projectType": "Hackathon",
+    "time": "10:00 - 22:00 IST",
+    "schedule": [],
+    "status": "Live"
   },
   {
     "id": "event-option-a-test",
@@ -99,7 +133,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Hackathon"
+    "projectType": "Hackathon",
+    "time": "10:00 - 18:00 IST",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "event-option-b-test",
@@ -115,7 +152,19 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Workshop"
+    "projectType": "Workshop",
+    "time": "10:00 - 18:00 IST",
+    "schedule": [
+      {
+        "date": "2026-04-12",
+        "time": "10:00 - 12:00 IST"
+      },
+      {
+        "date": "2026-04-14",
+        "time": "18:00 - 20:00 IST"
+      }
+    ],
+    "status": ""
   },
   {
     "id": "event-past-seminar",
@@ -131,7 +180,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Seminar"
+    "projectType": "Seminar",
+    "time": "17:00 - 18:30 IST",
+    "schedule": [],
+    "status": "Past"
   },
   {
     "id": "project-example-project",
@@ -151,7 +203,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Internal_Tools"
+    "projectType": "Internal_Tools",
+    "time": "",
+    "schedule": [],
+    "status": "Active"
   },
   {
     "id": "project-iiserk-app",
@@ -170,7 +225,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Internal_Tools"
+    "projectType": "Internal_Tools",
+    "time": "",
+    "schedule": [],
+    "status": "Archived"
   },
   {
     "id": "project-legacy-webpage",
@@ -189,7 +247,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Internal_Tools"
+    "projectType": "Internal_Tools",
+    "time": "",
+    "schedule": [],
+    "status": "Archived"
   },
   {
     "id": "project-qiskit-fall-fest",
@@ -207,7 +268,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Other"
+    "projectType": "Other",
+    "time": "",
+    "schedule": [],
+    "status": "Archived"
   },
   {
     "id": "project-satvik-saha",
@@ -226,7 +290,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Member_Spotlight"
+    "projectType": "Member_Spotlight",
+    "time": "",
+    "schedule": [],
+    "status": "Maintained"
   },
   {
     "id": "project-sbs",
@@ -244,7 +311,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Member_Spotlight"
+    "projectType": "Member_Spotlight",
+    "time": "",
+    "schedule": [],
+    "status": "Maintained"
   },
   {
     "id": "project-welearn-bot",
@@ -263,7 +333,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Internal_Tools"
+    "projectType": "Internal_Tools",
+    "time": "",
+    "schedule": [],
+    "status": "Active"
   },
   {
     "id": "funzone-art-morphing-anomalies",
@@ -282,7 +355,10 @@
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "art"
+    "projectType": "art",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "funzone-compilation-panic-meme",
@@ -301,7 +377,10 @@
     "image": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&auto=format&fit=crop&q=80",
     "url": "",
     "author": "",
-    "projectType": "meme"
+    "projectType": "meme",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "funzone-css-centering-meme",
@@ -320,7 +399,10 @@
     "image": "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=800&auto=format&fit=crop&q=80",
     "url": "",
     "author": "",
-    "projectType": "meme"
+    "projectType": "meme",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "funzone-game-2048",
@@ -339,7 +421,10 @@
     "image": "/images/games/2048.jpg",
     "url": "https://play2048.co/",
     "author": "",
-    "projectType": "game"
+    "projectType": "game",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "team-alumni-alex",
@@ -358,7 +443,10 @@
     "image": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&q=80&w=256&h=256",
     "url": "/team#alumni-alex",
     "author": "Alex",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "team-alumni-sam",
@@ -377,7 +465,10 @@
     "image": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=256&h=256",
     "url": "/team#alumni-sam",
     "author": "Sam",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "team-design-sarah",
@@ -396,7 +487,10 @@
     "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=256&h=256",
     "url": "/team#design-sarah",
     "author": "Sarah",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "team-dev-josh",
@@ -416,7 +510,10 @@
     "image": "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?auto=format&fit=crop&q=80&w=256&h=256",
     "url": "/team#dev-josh",
     "author": "Josh",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "team-lead-anu",
@@ -435,7 +532,10 @@
     "image": "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=256&h=256",
     "url": "/team#lead-anu",
     "author": "Anuprovo",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
   },
   {
     "id": "team-pr-mike",
@@ -454,6 +554,9 @@
     "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256",
     "url": "/team#pr-mike",
     "author": "Mike",
-    "projectType": ""
+    "projectType": "",
+    "time": "",
+    "schedule": [],
+    "status": ""
   }
 ]
