@@ -188,8 +188,54 @@ export function EventsSystem({ initialEvents }: EventsSystemProps) {
       const calHeight = calendarRef.current.offsetHeight;
       const cardsRect = cardsRef.current.getBoundingClientRect();
       const trueCardsBottom = cardsRect.bottom - CARDS_BTM_PAD;
+      // Pre-calc both versions
+      const parentRect = parentRef.current.getBoundingClientRect();
+      const parentTop = parentRect.top;
 
-      const entryOffset = Math.max(0, cardsRect.top - calTop);
+
+
+      const offsetX = Math.max(0, parentTop - STICKY_TOP_PX);
+
+      const searchRect = searchContainerRef.current.getBoundingClientRect();
+      const searchBottom = searchRect.bottom;
+
+      const offsetY = Math.max(
+        0,
+        searchBottom - STICKY_TOP_PX + SEARCH_BAR_GAP
+      );
+
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+      let entryOffset = offsetX;
+
+      // 1. Phase A → pure X
+      if (sy + PADDING_TOP < INTERPOLATION_START) {
+        entryOffset = offsetX;
+      }
+
+      // 2. X → Y interpolation
+      else if (sy < INTERPOLATION_START) {
+        const t =
+          (sy + PADDING_TOP - INTERPOLATION_START) / PADDING_TOP;
+        entryOffset = lerp(offsetX, offsetY, Math.min(Math.max(t, 0), 1));
+      }
+
+      // 3. Pure Y
+      else if (sy <= PHASE3_START) {
+        entryOffset = offsetY;
+      }
+
+      // 4. Y → X interpolation
+      else if (sy <= PHASE3_END) {
+        const t = (sy - PHASE3_START) / (PHASE3_END - PHASE3_START);
+        entryOffset = lerp(offsetY, offsetX, Math.min(Math.max(t, 0), 1));
+      }
+
+      // 5. Phase 5 → pure X again
+      else {
+        entryOffset = offsetX;
+      }
+
       const exitBoundary = trueCardsBottom - calHeight;
       const exitOffset = Math.min(0, exitBoundary - calTop);
       const translateY = exitBoundary < calTop ? exitOffset : entryOffset;
