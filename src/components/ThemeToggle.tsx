@@ -66,7 +66,7 @@ export function ThemeToggle() {
           ],
         },
         {
-          duration: 500, // Back to a snappy 500ms
+          duration: 1000,
           easing: "ease-in-out",
           pseudoElement: "::view-transition-new(root)",
         }
