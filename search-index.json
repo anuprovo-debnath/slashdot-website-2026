@@ -120,19 +120,19 @@
   },
   {
     "id": "event-live-hackathon",
-    "title": "Spring Hackathon 2026",
+    "title": "Website Designing Competition 2026",
     "type": "event",
     "slug": "live-hackathon",
     "tags": [
-      "Hackathon"
+      "Competition"
     ],
-    "description": "The annual spring hackathon is live! Join us for 72 hours of coding....",
-    "category": "Hackathon",
-    "date": "2026-04-17 - 2026-04-19",
+    "description": "Interbatch Website Designing Competition. Register now to represent your batch....",
+    "category": "Competition",
+    "date": "2026-03-22 - 2026-04-25",
     "image": "",
     "url": "",
     "author": "",
-    "projectType": "Hackathon",
+    "projectType": "Competition",
     "time": "00:01 - 23:59 IST",
     "schedule": []
   },
